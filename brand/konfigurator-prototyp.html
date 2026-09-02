@@ -1,0 +1,485 @@
+<title>Angebot in 60 Sekunden</title>
+<style>
+  :root{
+    --bg:#FAF6F0;
+    --surface:#FFFFFF;
+    --ink:#13233F;
+    --ink-soft:#5B6B82;
+    --line:rgba(19,35,63,0.14);
+    --accent:#DC5138;
+    --accent-soft:rgba(220,81,56,0.08);
+    --sage:#5E7C63;
+    --sage-soft:rgba(111,143,115,0.12);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#101A2B; --surface:#17233A; --ink:#F2EEE6; --ink-soft:#A6B2C4;
+      --line:rgba(242,238,230,0.16); --accent:#E4715A; --accent-soft:rgba(228,113,90,0.14);
+      --sage:#8FB093; --sage-soft:rgba(143,176,147,0.14);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#101A2B; --surface:#17233A; --ink:#F2EEE6; --ink-soft:#A6B2C4;
+    --line:rgba(242,238,230,0.16); --accent:#E4715A; --accent-soft:rgba(228,113,90,0.14);
+    --sage:#8FB093; --sage-soft:rgba(143,176,147,0.14);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Public Sans', Helvetica, Arial, sans-serif;
+    display:flex;
+    justify-content:center;
+    padding:40px 20px 60px;
+  }
+  .app{ width:100%; max-width:620px; }
+
+  .top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:22px;
+  }
+  .brand{
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:700;
+    font-size:18px;
+  }
+  .brand span{color:var(--accent);}
+  .steptag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.08em;
+    color:var(--ink-soft);
+  }
+
+  .progress{
+    display:flex; gap:6px;
+    margin-bottom:30px;
+  }
+  .progress i{
+    flex:1; height:3px; border-radius:2px;
+    background:var(--line);
+  }
+  .progress i.done{background:var(--sage);}
+  .progress i.active{background:var(--accent);}
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:34px 30px 30px;
+    min-height:420px;
+    display:flex;
+    flex-direction:column;
+  }
+
+  h1{
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:600;
+    font-size:26px;
+    line-height:1.2;
+    margin:0 0 6px;
+    text-wrap:balance;
+  }
+  .sub{
+    color:var(--ink-soft);
+    font-size:14.5px;
+    margin:0 0 26px;
+  }
+
+  .options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    flex:1;
+  }
+  .options.single-col{grid-template-columns:1fr;}
+
+  button.opt{
+    all:unset;
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    padding:16px 16px;
+    border:1.5px solid var(--line);
+    border-radius:5px;
+    font-family:'Public Sans', sans-serif;
+    font-size:15px;
+    font-weight:600;
+    color:var(--ink);
+    background:var(--surface);
+    transition:border-color .12s ease, background .12s ease;
+  }
+  button.opt:hover{border-color:var(--accent);}
+  button.opt:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  button.opt .emoji{font-size:22px;}
+  button.opt .hint{
+    font-family:'Public Sans', sans-serif;
+    font-weight:400;
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+  button.opt.selected{
+    border-color:var(--accent);
+    background:var(--accent-soft);
+  }
+  button.opt.selected::after{
+    content:'✓ ausgewählt';
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    color:var(--accent);
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+
+  .field{
+    display:flex; flex-direction:column; gap:6px; margin-bottom:16px;
+  }
+  .field label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .field input{
+    all:unset;
+    border:1.5px solid var(--line);
+    border-radius:5px;
+    padding:12px 14px;
+    font-size:15px;
+    color:var(--ink);
+    background:var(--surface);
+  }
+  .field input:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+
+  .nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:24px;
+  }
+  .btn{
+    all:unset;
+    cursor:pointer;
+    font-family:'Public Sans', sans-serif;
+    font-weight:700;
+    font-size:14px;
+    padding:12px 24px;
+    border-radius:5px;
+  }
+  .btn.primary{
+    background:var(--ink);
+    color:var(--bg);
+  }
+  .btn.primary:hover{background:var(--accent);}
+  .btn.primary:disabled{opacity:.35; cursor:not-allowed;}
+  .btn.ghost{
+    color:var(--ink-soft);
+    font-weight:600;
+  }
+  .btn.ghost:hover{color:var(--ink);}
+
+  .summary-list{
+    list-style:none; margin:0 0 24px; padding:0;
+    display:flex; flex-direction:column; gap:10px;
+    flex:1;
+  }
+  .summary-list li{
+    display:flex; justify-content:space-between; gap:14px;
+    padding:10px 0; border-bottom:1px solid var(--line);
+    font-size:14.5px;
+  }
+  .summary-list .k{color:var(--ink-soft); font-family:'IBM Plex Mono', monospace; font-size:12px;}
+  .summary-list .v{font-weight:600; text-align:right;}
+
+  .done-screen{
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    justify-content:center; flex:1; gap:14px;
+  }
+  .fox{width:96px; height:96px;}
+  .done-screen h1{font-size:24px;}
+
+  .radio-row{display:flex; gap:10px; margin-bottom:16px;}
+  .radio-row button.opt{padding:12px 16px; font-size:14px;}
+
+  [hidden]{display:none !important;}
+</style>
+
+<div class="app">
+  <div class="top">
+    <div class="brand">Teppich<span>labor</span> — Angebot in 60 Sekunden</div>
+    <div class="steptag" id="steptag">SCHRITT 1/6</div>
+  </div>
+  <div class="progress" id="progress"></div>
+
+  <div class="card" id="card"></div>
+</div>
+
+<script>
+const state = {
+  step: 0,
+  kundentyp: null,
+  leistung: [],
+  anlass: null,
+  ablauf: null,
+  kontaktart: null,
+  anruf: null,
+  name: '',
+  ort: '',
+  telefon: '',
+  email: ''
+};
+
+const FOX = "https://ai-toolkit-generations.imgix.net/content/-e-x-t-e-r-n-a-l_-i-m-a-g-e_-t-o_-i-m-a-g-e-v1/media__5/-e-x-t-e-r-n-a-l_-i-m-a-g-e_-t-o_-i-m-a-g-e-1a1e20a4-a9b4-4dc0-b8fb-c2bcf17c8447.png?auto=format%2Ccompress&cs=srgb&w=1280&fit=max&s=312eb6b9168d356c8299909e45551eb6";
+
+const steps = [
+  {
+    key: 'kundentyp', title: 'Wer bist du?', sub: 'Damit wir dir das richtige Angebot zeigen.',
+    type: 'single',
+    options: [
+      {v:'privat', e:'🏠', t:'Privatkunde'},
+      {v:'hotel', e:'🏨', t:'Hotel'},
+      {v:'kita', e:'🧸', t:'Kita / Tagesstätte'},
+      {v:'buero', e:'🏢', t:'Büro / Unternehmen'},
+    ]
+  },
+  {
+    key: 'leistung', title: 'Was soll gereinigt werden?', sub: 'Mehrfachauswahl möglich.',
+    type: 'multi',
+    options: [
+      {v:'teppich', e:'🟫', t:'Teppich / Auslegware'},
+      {v:'orient', e:'🧵', t:'Orientteppich / Läufer'},
+      {v:'polster', e:'🛋️', t:'Polstermöbel'},
+      {v:'matratze', e:'🛏️', t:'Matratze'},
+    ]
+  },
+  {
+    key: 'anlass', title: 'Was ist der Anlass?', sub: 'Hilft uns, die richtige Methode vorzuschlagen.',
+    type: 'single',
+    options: [
+      {v:'pflege', e:'✨', t:'Normale Pflege'},
+      {v:'flecken', e:'🔴', t:'Hartnäckige Flecken'},
+      {v:'geruch', e:'💨', t:'Gerüche (Tier, Rauch)'},
+      {v:'hygiene', e:'🩺', t:'Hygiene & Allergie', hint:'Viren, Bakterien, Babys, Haustiere'},
+    ]
+  },
+  {
+    key: 'ablauf', title: 'Wie soll es ablaufen?', sub: 'Wir richten uns nach dir.',
+    type: 'single',
+    options: [
+      {v:'abholung', e:'🚚', t:'Abholung & Lieferung'},
+      {v:'vorort', e:'📍', t:'Reinigung vor Ort'},
+      {v:'bringen', e:'🚗', t:'Ich bringe es vorbei'},
+    ]
+  },
+  {
+    key: 'kontaktart', title: 'Wie dürfen wir dich erreichen?', sub: 'Wähle deinen bevorzugten Kanal.',
+    type: 'single',
+    options: [
+      {v:'telefon', e:'📞', t:'Telefon'},
+      {v:'email', e:'✉️', t:'E-Mail'},
+      {v:'whatsapp', e:'💬', t:'WhatsApp'},
+    ]
+  },
+  {
+    key: 'kontakt', title: 'Fast geschafft', sub: 'Deine Daten, damit wir dir das Angebot schicken können.',
+    type: 'form'
+  },
+  {
+    key: 'summary', title: 'Alles richtig?', sub: 'Ein letzter Blick, dann sind wir dran.',
+    type: 'summary'
+  },
+];
+
+const labels = {
+  kundentyp: {privat:'Privatkunde', hotel:'Hotel', kita:'Kita / Tagesstätte', buero:'Büro / Unternehmen'},
+  anlass: {pflege:'Normale Pflege', flecken:'Hartnäckige Flecken', geruch:'Gerüche', hygiene:'Hygiene & Allergie'},
+  ablauf: {abholung:'Abholung & Lieferung', vorort:'Reinigung vor Ort', bringen:'Selbst vorbeibringen'},
+  kontaktart: {telefon:'Telefon', email:'E-Mail', whatsapp:'WhatsApp'},
+  leistung: {teppich:'Teppich / Auslegware', orient:'Orientteppich / Läufer', polster:'Polstermöbel', matratze:'Matratze'}
+};
+
+function renderProgress(){
+  const el = document.getElementById('progress');
+  el.innerHTML = '';
+  steps.forEach((s,i)=>{
+    const dash = document.createElement('i');
+    if(i < state.step) dash.className = 'done';
+    else if(i === state.step) dash.className = 'active';
+    el.appendChild(dash);
+  });
+  document.getElementById('steptag').textContent = `SCHRITT ${Math.min(state.step+1, steps.length)}/${steps.length}`;
+}
+
+function canProceed(){
+  const s = steps[state.step];
+  if(!s) return false;
+  if(s.type === 'single') return !!state[s.key];
+  if(s.type === 'multi') return state.leistung.length > 0;
+  if(s.type === 'form') return state.name.trim() && (state.telefon.trim() || state.email.trim());
+  return true;
+}
+
+function selectSingle(key, value){
+  state[key] = value;
+  render();
+}
+function toggleMulti(value){
+  const i = state.leistung.indexOf(value);
+  if(i>-1) state.leistung.splice(i,1); else state.leistung.push(value);
+  render();
+}
+
+function render(){
+  renderProgress();
+  const card = document.getElementById('card');
+  const s = steps[state.step];
+  card.innerHTML = '';
+
+  if(s.type === 'single' || s.type === 'multi'){
+    const h1 = document.createElement('h1'); h1.textContent = s.title;
+    const sub = document.createElement('p'); sub.className='sub'; sub.textContent = s.sub;
+    const opts = document.createElement('div'); opts.className='options';
+    s.options.forEach(o=>{
+      const b = document.createElement('button');
+      b.className = 'opt';
+      const isSel = s.type==='multi' ? state.leistung.includes(o.v) : state[s.key]===o.v;
+      if(isSel) b.classList.add('selected');
+      b.innerHTML = `<span class="emoji">${o.e}</span><span>${o.t}</span>` + (o.hint?`<span class="hint">${o.hint}</span>`:'');
+      b.onclick = ()=> s.type==='multi' ? toggleMulti(o.v) : selectSingle(s.key, o.v);
+      opts.appendChild(b);
+    });
+    card.appendChild(h1); card.appendChild(sub); card.appendChild(opts);
+    card.appendChild(navRow());
+  }
+
+  if(s.type === 'form'){
+    const h1 = document.createElement('h1'); h1.textContent = s.title;
+    const sub = document.createElement('p'); sub.className='sub'; sub.textContent = s.sub;
+    card.appendChild(h1); card.appendChild(sub);
+
+    const wrap = document.createElement('div'); wrap.style.flex='1';
+
+    const nameField = field('Name', 'text', state.name, v=>{state.name=v;});
+    wrap.appendChild(nameField);
+
+    const ortField = field('PLZ / Ort', 'text', state.ort, v=>{state.ort=v;});
+    wrap.appendChild(ortField);
+
+    if(state.kontaktart === 'telefon' || state.kontaktart === 'whatsapp'){
+      wrap.appendChild(field('Telefonnummer', 'tel', state.telefon, v=>{state.telefon=v; render2();}));
+    } else {
+      wrap.appendChild(field('E-Mail', 'email', state.email, v=>{state.email=v; render2();}));
+    }
+
+    if(state.kontaktart === 'telefon'){
+      const row = document.createElement('div');
+      const lbl = document.createElement('label');
+      lbl.className=''; lbl.style.cssText="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:6px;";
+      lbl.textContent = 'Dürfen wir dich anrufen?';
+      row.appendChild(lbl);
+      const btnRow = document.createElement('div'); btnRow.className='radio-row';
+      ['Ja','Nein'].forEach(t=>{
+        const b = document.createElement('button');
+        b.className='opt' + (state.anruf===t?' selected':'');
+        b.textContent = t;
+        b.onclick = ()=>{ state.anruf=t; render(); };
+        btnRow.appendChild(b);
+      });
+      row.appendChild(btnRow);
+      wrap.appendChild(row);
+    }
+
+    card.appendChild(wrap);
+    card.appendChild(navRow());
+  }
+
+  if(s.type === 'summary'){
+    const h1 = document.createElement('h1'); h1.textContent = s.title;
+    const sub = document.createElement('p'); sub.className='sub'; sub.textContent = s.sub;
+    const ul = document.createElement('ul'); ul.className='summary-list';
+    const rows = [
+      ['Du bist', labels.kundentyp[state.kundentyp] || '–'],
+      ['Leistung', state.leistung.map(v=>labels.leistung[v]).join(', ') || '–'],
+      ['Anlass', labels.anlass[state.anlass] || '–'],
+      ['Ablauf', labels.ablauf[state.ablauf] || '–'],
+      ['Kontakt', labels.kontaktart[state.kontaktart] || '–'],
+      ['Name', state.name || '–'],
+      ['Ort', state.ort || '–'],
+      [state.kontaktart==='email' ? 'E-Mail' : 'Telefon', state.kontaktart==='email' ? (state.email||'–') : (state.telefon||'–')],
+    ];
+    if(state.kontaktart==='telefon') rows.push(['Anruf ok?', state.anruf || '–']);
+    rows.forEach(([k,v])=>{
+      const li = document.createElement('li');
+      li.innerHTML = `<span class="k">${k}</span><span class="v">${v}</span>`;
+      ul.appendChild(li);
+    });
+    card.appendChild(h1); card.appendChild(sub); card.appendChild(ul);
+
+    const nav = document.createElement('div'); nav.className='nav';
+    const back = document.createElement('button'); back.className='btn ghost'; back.textContent='← Zurück'; back.onclick=()=>{state.step--; render();};
+    const send = document.createElement('button'); send.className='btn primary'; send.textContent='Angebot anfragen →';
+    send.onclick = ()=>{ state.step++; render(); };
+    nav.appendChild(back); nav.appendChild(send);
+    card.appendChild(nav);
+  }
+
+  if(state.step >= steps.length){
+    card.innerHTML = '';
+    const done = document.createElement('div'); done.className='done-screen';
+    done.innerHTML = `
+      <img src="${FOX}" class="fox" alt="Teppichlabor Maskottchen" />
+      <h1>Angefragt!</h1>
+      <p class="sub">Wir melden uns per ${labels.kontaktart[state.kontaktart]||'Kontakt'} bei dir — meist am selben Werktag.</p>
+    `;
+    const restart = document.createElement('button');
+    restart.className='btn ghost'; restart.textContent='Neue Anfrage starten';
+    restart.onclick = ()=>{ Object.assign(state, {step:0, kundentyp:null, leistung:[], anlass:null, ablauf:null, kontaktart:null, anruf:null, name:'', ort:'', telefon:'', email:''}); render(); };
+    done.appendChild(restart);
+    card.appendChild(done);
+    document.getElementById('progress').innerHTML = '';
+    document.getElementById('steptag').textContent = 'ABGESCHLOSSEN';
+  }
+}
+
+function field(labelText, type, value, onInput){
+  const wrap = document.createElement('div'); wrap.className='field';
+  const label = document.createElement('label'); label.textContent = labelText;
+  const input = document.createElement('input');
+  input.type = type; input.value = value;
+  input.oninput = (e)=>{ onInput(e.target.value); updateNav(); };
+  wrap.appendChild(label); wrap.appendChild(input);
+  return wrap;
+}
+
+function render2(){ updateNav(); }
+
+function navRow(){
+  const nav = document.createElement('div'); nav.className='nav';
+  const back = document.createElement('button');
+  back.className='btn ghost'; back.textContent='← Zurück';
+  back.disabled = state.step===0;
+  back.style.visibility = state.step===0 ? 'hidden' : 'visible';
+  back.onclick = ()=>{ state.step--; render(); };
+  const next = document.createElement('button');
+  next.id='nextBtn';
+  next.className='btn primary'; next.textContent='Weiter →';
+  next.disabled = !canProceed();
+  next.onclick = ()=>{ state.step++; render(); };
+  nav.appendChild(back); nav.appendChild(next);
+  return nav;
+}
+
+function updateNav(){
+  const btn = document.getElementById('nextBtn');
+  if(btn) btn.disabled = !canProceed();
+}
+
+render();
+</script>
