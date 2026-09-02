@@ -1,0 +1,415 @@
+<title>Sitemap Teppichlabor</title>
+<style>
+  :root{
+    --bg:#FAF6F0;
+    --surface:#FFFFFF;
+    --ink:#13233F;
+    --ink-soft:#5B6B82;
+    --line:rgba(19,35,63,0.16);
+    --line-strong:rgba(19,35,63,0.32);
+    --accent:#DC5138;
+    --accent-soft:rgba(220,81,56,0.09);
+    --sage:#5E7C63;
+    --sage-soft:rgba(111,143,115,0.12);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#101A2B;
+      --surface:#17233A;
+      --ink:#F2EEE6;
+      --ink-soft:#A6B2C4;
+      --line:rgba(242,238,230,0.16);
+      --line-strong:rgba(242,238,230,0.34);
+      --accent:#E4715A;
+      --accent-soft:rgba(228,113,90,0.16);
+      --sage:#8FB093;
+      --sage-soft:rgba(143,176,147,0.16);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#101A2B;
+    --surface:#17233A;
+    --ink:#F2EEE6;
+    --ink-soft:#A6B2C4;
+    --line:rgba(242,238,230,0.16);
+    --line-strong:rgba(242,238,230,0.34);
+    --accent:#E4715A;
+    --accent-soft:rgba(228,113,90,0.16);
+    --sage:#8FB093;
+    --sage-soft:rgba(143,176,147,0.16);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Public Sans', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:56px 32px 80px;
+  }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', 'Courier New', monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin:0 0 14px;
+  }
+  h1{
+    font-family:'Fraunces', 'Georgia', serif;
+    font-weight:600;
+    font-size:clamp(34px,5vw,54px);
+    line-height:1.05;
+    margin:0 0 16px;
+    text-wrap:balance;
+  }
+  .lede{
+    max-width:62ch;
+    font-size:17px;
+    line-height:1.6;
+    color:var(--ink-soft);
+    margin:0 0 34px;
+  }
+
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 22px;
+    padding:16px 20px;
+    border:1px solid var(--line);
+    border-radius:4px;
+    background:var(--surface);
+    margin-bottom:44px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    align-items:center;
+  }
+  .legend b{
+    font-family:'Public Sans', sans-serif;
+    font-weight:700;
+    color:var(--ink);
+    font-size:12px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    margin-right:4px;
+  }
+  .swatch{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+  }
+  .dot{
+    width:9px;height:9px;border-radius:50%;
+    flex:none;
+  }
+  .dot.ready{background:var(--sage);}
+  .dot.open{background:var(--accent);}
+
+  /* Home + global strip */
+  .home-block{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:18px;
+    margin-bottom:0;
+  }
+  .home-node{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:19px;
+    padding:14px 40px;
+    border:1.5px solid var(--ink);
+    border-radius:3px;
+    background:var(--surface);
+  }
+  .connector{
+    width:1px;
+    height:26px;
+    background:var(--line-strong);
+  }
+  .global-strip{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:10px;
+    padding:14px 18px;
+    margin-bottom:8px;
+  }
+  .global-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    align-self:center;
+    margin-right:6px;
+  }
+  .pill{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    padding:6px 13px;
+    border:1px dashed var(--line-strong);
+    border-radius:20px;
+    color:var(--ink-soft);
+    background:var(--surface);
+  }
+  .connector-fan{
+    width:1px;
+    height:30px;
+    background:var(--line-strong);
+    margin-bottom:2px;
+  }
+
+  .rail{
+    text-align:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    padding:10px 0 26px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:36px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
+    gap:22px;
+  }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:20px 20px 18px;
+    position:relative;
+  }
+  .card::before{
+    content:'';
+    position:absolute;
+    top:-1px; left:14px;
+    width:18px; height:2px;
+    background:var(--accent);
+  }
+  .card-head{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:14px;
+    padding-bottom:12px;
+    border-bottom:1px solid var(--line);
+  }
+  .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--accent);
+  }
+  .card-title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:19px;
+  }
+
+  .item{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+    padding:8px 0;
+    border-bottom:1px solid var(--line);
+    font-size:14.5px;
+  }
+  .item:last-child{border-bottom:none;}
+  .item-name{color:var(--ink); line-height:1.4;}
+  .item-note{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-top:2px;
+    line-height:1.4;
+  }
+  .flag{
+    flex:none;
+    width:8px;height:8px;border-radius:50%;
+    margin-top:6px;
+  }
+  .flag.ready{background:var(--sage);}
+  .flag.open{background:var(--accent);}
+
+  .faq-groups{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:10px;
+  }
+  .chip{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    padding:4px 9px;
+    border-radius:3px;
+    background:var(--sage-soft);
+    color:var(--sage);
+  }
+
+  footer{
+    margin-top:52px;
+    padding-top:26px;
+    border-top:1px solid var(--line);
+    display:flex;
+    flex-wrap:wrap;
+    gap:24px 40px;
+  }
+  .note-block{
+    flex:1 1 320px;
+  }
+  .note-title{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:10px;
+  }
+  .note-block ul{
+    margin:0; padding:0; list-style:none;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .note-block li{
+    font-size:14px;
+    color:var(--ink-soft);
+    padding-left:16px;
+    position:relative;
+    line-height:1.5;
+  }
+  .note-block li::before{
+    content:'—';
+    position:absolute; left:0; top:0;
+    color:var(--accent);
+  }
+
+  @media (max-width:520px){
+    .wrap{padding:40px 18px 60px;}
+  }
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">Struktur-Entwurf · v2 · zum Durchgehen</p>
+  <h1>Sitemap Teppichlabor</h1>
+  <p class="lede">Vollständige Seitenstruktur inkl. deiner Ergänzungen (Kundenreferenzen, Maschinenpark, Zertifizierungen) und Punkten, die bei führenden Anbietern weltweit Standard sind (Garantie, IICRC-Referenz, 24/7-Buchung).</p>
+
+  <div class="legend">
+    <span><b>Status</b></span>
+    <span class="swatch"><span class="dot ready"></span>Struktur steht</span>
+    <span class="swatch"><span class="dot open"></span>braucht echte Fakten von dir</span>
+  </div>
+
+  <div class="home-block">
+    <div class="home-node">Home</div>
+    <div class="connector"></div>
+  </div>
+  <div class="global-strip">
+    <span class="global-label">Seitenweit</span>
+    <span class="pill">KI-Chat (Fuchs)</span>
+    <span class="pill">WhatsApp</span>
+    <span class="pill">Portal-Login</span>
+    <span class="pill">Newsletter</span>
+  </div>
+  <p class="rail">Hauptnavigation</p>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head"><span class="num">01</span><span class="card-title">Privatkunden</span></div>
+      <div class="item"><span class="item-name">Leistungen & Preise</span><span class="flag ready"></span></div>
+      <div class="item"><span class="item-name">Angebot anfragen (Konfigurator)</span><span class="flag ready"></span></div>
+      <div class="item"><span class="item-name">Abholung & Liefergebiete<span class="item-note">Karte / PLZ-Check</span></span><span class="flag open"></span></div>
+      <div class="item"><span class="item-name">Garantie / Zufriedenheitsversprechen<span class="item-note">international üblich – braucht eure reale Zusage</span></span><span class="flag open"></span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="num">02</span><span class="card-title">Unternehmen</span></div>
+      <div class="item"><span class="item-name">Hotels</span><span class="flag ready"></span></div>
+      <div class="item"><span class="item-name">Kitas & Tagesstätten</span><span class="flag ready"></span></div>
+      <div class="item"><span class="item-name">Büros & Coworking</span><span class="flag ready"></span></div>
+      <div class="item"><span class="item-name">Daueraufträge & Sonderkonditionen</span><span class="flag open"></span></div>
+      <div class="item"><span class="item-name">B2B-Portal-Login</span><span class="flag ready"></span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="num">03</span><span class="card-title">Wie wir arbeiten</span></div>
+      <div class="item"><span class="item-name">Unser Reinigungsverfahren</span><span class="flag ready"></span></div>
+      <div class="item"><span class="item-name">Maschinenpark & Technologie<span class="item-note">neu – zeigt reale Geräte/Methode</span></span><span class="flag open"></span></div>
+      <div class="item"><span class="item-name">Umwelt & Wasserkreislauf<span class="item-note">Wasserwiederverwendung, Trocknungsraum</span></span><span class="flag open"></span></div>
+      <div class="item"><span class="item-name">Zertifizierungen<span class="item-note">z.B. IICRC-Äquivalent, falls vorhanden</span></span><span class="flag open"></span></div>
+      <div class="item"><span class="item-name">Werkstatt-Einblicke</span><span class="flag ready"></span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="num">04</span><span class="card-title">Wissen</span></div>
+      <div class="item"><span class="item-name">Blog / Fleckenlexikon</span><span class="flag ready"></span></div>
+      <div class="item"><span class="item-name">Erklärvideos</span><span class="flag ready"></span></div>
+      <div class="item"><span class="item-name">YouTube-Kanal</span><span class="flag ready"></span></div>
+      <div class="item"><span class="item-name">Podcast<span class="item-note">Start nach Blog + Video eingespielt</span></span><span class="flag ready"></span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="num">05</span><span class="card-title">Wer wir sind</span></div>
+      <div class="item"><span class="item-name">Über uns / Team</span><span class="flag ready"></span></div>
+      <div class="item"><span class="item-name">Kundenreferenzen<span class="item-note">nur echte Bewertungen – Quelle offen</span></span><span class="flag open"></span></div>
+      <div class="item"><span class="item-name">Partner</span><span class="flag open"></span></div>
+      <div class="item"><span class="item-name">Karriere<span class="item-note">neu – stärkt B2B-Glaubwürdigkeit</span></span><span class="flag open"></span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="num">06</span><span class="card-title">FAQ</span></div>
+      <div class="item"><span class="item-name">~100 Fragen, kategorisiert<span class="item-note">flach unnavigierbar – braucht Gruppen</span></span><span class="flag open"></span></div>
+      <div class="faq-groups">
+        <span class="chip">Buchung & Ablauf</span>
+        <span class="chip">Preise</span>
+        <span class="chip">Reinigungsprozess</span>
+        <span class="chip">Nachhaltigkeit</span>
+        <span class="chip">B2B & Verträge</span>
+        <span class="chip">Reklamation</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="num">07</span><span class="card-title">Kontakt</span></div>
+      <div class="item"><span class="item-name">Formular & Standort</span><span class="flag ready"></span></div>
+      <div class="item"><span class="item-name">Impressum, Datenschutz, AGB<span class="item-note">wartet auf reale Firmendaten</span></span><span class="flag open"></span></div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="note-block">
+      <p class="note-title">Offene Punkte vor Umsetzung</p>
+      <ul>
+        <li>Impressum/Firmendaten von teppich-fee.de</li>
+        <li>Quelle für Kundenrezensionen</li>
+        <li>Reale Garantie-/Zufriedenheitszusage</li>
+        <li>Zertifizierungsstatus (falls vorhanden)</li>
+        <li>CSR-Modell „Teppichlabor hilft" – noch Idee, nicht final</li>
+      </ul>
+    </div>
+    <div class="note-block">
+      <p class="note-title">Neu ergänzt durch Recherche</p>
+      <ul>
+        <li>Maschinenpark & Technologie-Seite</li>
+        <li>Zertifizierungen-Seite (IICRC als Branchenreferenz)</li>
+        <li>Garantie/Zufriedenheitsversprechen</li>
+        <li>Karriere-Seite (B2B-Vertrauenssignal)</li>
+        <li>FAQ-Kategorisierung statt Flachliste</li>
+      </ul>
+    </div>
+  </footer>
+</div>
