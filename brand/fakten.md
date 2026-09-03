@@ -8,6 +8,7 @@ Stand: laufend ergänzt. Nur Einträge hier sind bestätigt, alles andere in den
 - **Einzugsgebiet:** Rhein-Main.
 - **Adresse:** Großer Haingraben 9, 65779 Kelkheim.
 - **Team:** Es gibt bereits ein Team mit Mitarbeitern (kein Ein-Personen-Betrieb) — "wir" ist wörtlich korrekt.
+- **Stefano Granata:** Marketing-Berater/Partner, täglich operativ bei Teppichlabor beteiligt (nicht nur externe Agentur). Beruflicher Hintergrund: hat bei der Lufthansa gearbeitet, war danach erfolgreich Geschäftsführer eines Möbel-Outlets. Gehört mit auf die "Wer wir sind"-Seite.
 - **Gründer & Inhaber:** Cem Zeren. Quereinsteiger — nicht aus dem klassischen Reinigungshandwerk, hat sich das Thema selbst erarbeitet. Genaue vorherige Branche nicht bekannt, daher nicht erfunden/spezifiziert.
 - **Abhol- & Lieferservice:** Bereits heute aktiv im echten Betrieb (eigenes Fahrzeug/Fahrer).
 - **Wasserkreislauf:** Bestätigt echt — im Reinigungsprozess wird Wasser tatsächlich wiederverwendet/aufbereitet.
