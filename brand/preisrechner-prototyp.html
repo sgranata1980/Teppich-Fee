@@ -1,0 +1,680 @@
+<title>Preisrechner — Teppichlabor</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#FFFFFF; --surface-2:#F4F4F2;
+    --ink:#0B0F14; --ink-soft:#5A6068;
+    --line:rgba(11,15,20,0.14); --line-strong:#0B0F14;
+    --accent:#DC5138; --accent-soft:rgba(220,81,56,0.08); --accent-ink:#FFFFFF;
+    --sage:#5E7C63; --sage-soft:rgba(94,124,99,0.10);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0A0C10; --surface-2:#15181D; --ink:#F5F5F3; --ink-soft:#93989F;
+      --line:rgba(245,245,243,0.16); --line-strong:#F5F5F3;
+      --accent:#FF6A4D; --accent-soft:rgba(255,106,77,0.12); --accent-ink:#0A0C10;
+      --sage:#8FB093; --sage-soft:rgba(143,176,147,0.14);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0A0C10; --surface-2:#15181D; --ink:#F5F5F3; --ink-soft:#93989F;
+    --line:rgba(245,245,243,0.16); --line-strong:#F5F5F3;
+    --accent:#FF6A4D; --accent-soft:rgba(255,106,77,0.12); --accent-ink:#0A0C10;
+    --sage:#8FB093; --sage-soft:rgba(143,176,147,0.14);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh; background:var(--surface-2); color:var(--ink);
+    font-family:'Manrope', Helvetica, Arial, sans-serif;
+    display:flex; justify-content:center; padding:44px 20px 70px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{ width:100%; max-width:680px; }
+  .mono{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); }
+  h1,h2{ font-family:'Big Shoulders Display','Arial Narrow',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.01em; margin:0; text-wrap:balance; }
+
+  .top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; }
+  .brand{ display:flex; align-items:center; gap:8px; font-family:Georgia,'Times New Roman',serif; font-weight:700; font-size:15px; }
+  .brand svg{ width:26px; height:26px; }
+
+  .progress{ display:flex; gap:5px; margin-bottom:28px; }
+  .progress i{ flex:1; height:3px; background:var(--line); }
+  .progress i.done{ background:var(--sage); }
+  .progress i.active{ background:var(--accent); }
+
+  .card{
+    background:var(--bg); border:1px solid var(--line-strong);
+    padding:36px 32px 30px; min-height:440px; display:flex; flex-direction:column;
+  }
+  @media (max-width:560px){ .card{ padding:26px 20px 24px; } }
+
+  .card h1{ font-size:clamp(24px,4vw,32px); line-height:.98; margin:0 0 8px; }
+  .sub{ color:var(--ink-soft); font-size:14.5px; line-height:1.55; margin:0 0 26px; max-width:52ch; }
+
+  .options{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .options.single-col{ grid-template-columns:1fr; }
+  @media (max-width:520px){ .options{ grid-template-columns:1fr; } }
+
+  button.opt{
+    all:unset; cursor:pointer; display:flex; flex-direction:column; gap:3px;
+    padding:14px 15px; border:1.5px solid var(--line); font-size:14.5px; font-weight:700;
+    color:var(--ink); background:var(--bg); transition:border-color .12s ease, background .12s ease;
+  }
+  button.opt:hover{ border-color:var(--accent); }
+  button.opt:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  button.opt .hint{ font-family:'Manrope',sans-serif; font-weight:500; font-size:12px; color:var(--ink-soft); }
+  button.opt.selected{ border-color:var(--accent); background:var(--accent-soft); }
+  button.opt.selected::after{ content:'✓ ausgewählt'; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--accent); text-transform:uppercase; letter-spacing:.05em; margin-top:2px; }
+  button.opt.disabled{ opacity:.38; cursor:not-allowed; }
+  button.opt.disabled:hover{ border-color:var(--line); }
+  button.opt.locked{ border-color:var(--accent); background:var(--accent-soft); cursor:default; }
+  button.opt.locked::after{ content:'erforderlich'; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--accent); text-transform:uppercase; letter-spacing:.05em; margin-top:2px; }
+
+  .badge{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--accent); border:1px solid var(--accent); padding:4px 9px; margin-bottom:16px;
+  }
+
+  .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+  .field label{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); }
+  .field input{
+    all:unset; border:1.5px solid var(--line); padding:12px 14px; font-size:15px; color:var(--ink); background:var(--bg);
+    font-family:'Manrope',sans-serif;
+  }
+  .field input:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .m2out{
+    margin-top:2px; padding:14px 16px; background:var(--surface-2); border:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:baseline;
+  }
+  .m2out .val{ font-family:'Big Shoulders Display',sans-serif; font-size:26px; font-weight:700; }
+
+  .checkline{ display:flex; align-items:flex-start; gap:10px; padding:12px 0; border-bottom:1px solid var(--line); }
+  .checkline:last-child{ border-bottom:none; }
+  .checkline input[type=checkbox]{ margin-top:3px; width:16px; height:16px; accent-color:var(--accent); flex-shrink:0; }
+  .checkline label{ font-size:14px; font-weight:600; cursor:pointer; }
+  .checkline .note{ display:block; font-weight:500; font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+  .checkline .price{ margin-left:auto; font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-soft); white-space:nowrap; padding-left:12px; }
+  .checkline.disabled{ opacity:.4; }
+  .checkline.disabled input{ pointer-events:none; }
+  .checkline.locked label{ color:var(--accent); }
+
+  .callout{ background:var(--surface-2); border-left:2px solid var(--accent); padding:12px 14px; font-size:13px; color:var(--ink-soft); line-height:1.55; margin:16px 0; }
+  .callout.warn{ border-left-color:var(--accent); }
+
+  .nav{ display:flex; justify-content:space-between; align-items:center; margin-top:26px; }
+  .btn{ all:unset; cursor:pointer; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:12.5px; letter-spacing:.05em; text-transform:uppercase; padding:13px 24px; }
+  .btn.primary{ background:var(--ink); color:var(--bg); }
+  .btn.primary:hover{ background:var(--accent); }
+  .btn.primary:disabled{ opacity:.35; cursor:not-allowed; }
+  .btn.ghost{ color:var(--ink-soft); }
+  .btn.ghost:hover{ color:var(--ink); }
+
+  .quote-list{ list-style:none; margin:0 0 4px; padding:0; }
+  .quote-list li{ display:flex; justify-content:space-between; gap:14px; padding:11px 0; border-bottom:1px solid var(--line); font-size:14px; }
+  .quote-list .k{ color:var(--ink-soft); }
+  .quote-list .v{ font-weight:700; font-family:'IBM Plex Mono',monospace; text-align:right; white-space:nowrap; }
+  .quote-list li.sum{ border-bottom:none; border-top:2px solid var(--ink); margin-top:4px; padding-top:16px; }
+  .quote-list li.sum .k{ color:var(--ink); font-weight:700; text-transform:uppercase; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.05em; }
+  .quote-list li.sum .v{ font-family:'Big Shoulders Display',sans-serif; font-size:26px; font-weight:700; }
+
+  .legal{ font-size:11.5px; color:var(--ink-soft); line-height:1.6; margin:18px 0 0; }
+
+  .ctarow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:22px; }
+  .btn.cta{ background:var(--ink); color:var(--bg); flex:1; text-align:center; min-width:200px; }
+  .btn.cta:hover{ background:var(--accent); }
+  .btn.cta.secondary{ background:transparent; color:var(--ink); border:1.5px solid var(--line-strong); }
+  .btn.cta.secondary:hover{ border-color:var(--accent); color:var(--accent); }
+
+  .leadform{ margin-top:20px; padding-top:22px; border-top:1px solid var(--line); }
+  .filedrop{
+    border:1.5px dashed var(--line-strong); padding:22px; text-align:center; cursor:pointer;
+    font-size:13px; color:var(--ink-soft); margin-bottom:16px;
+  }
+  .filedrop:hover{ border-color:var(--accent); color:var(--accent); }
+  .thumbs{ display:flex; gap:8px; flex-wrap:wrap; margin:-6px 0 16px; }
+  .thumbs img{ width:64px; height:64px; object-fit:cover; border:1px solid var(--line); }
+
+  .done-screen{ display:flex; flex-direction:column; align-items:flex-start; text-align:left; flex:1; gap:14px; justify-content:center; }
+  .done-screen .mono{ color:var(--accent); }
+
+  [hidden]{ display:none !important; }
+</style>
+
+<div class="app">
+  <div class="top">
+    <div class="brand">
+      <svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="90" fill="none" stroke="#13233F" stroke-width="6"/><polygon points="62,34 42,84 76,78" fill="none" stroke="#13233F" stroke-width="6" stroke-linejoin="round"/><polygon points="138,34 158,84 124,78" fill="none" stroke="#13233F" stroke-width="6" stroke-linejoin="round"/><path d="M70,80 C65,58 76,44 100,44 C124,44 135,58 130,80 L128,118 C126,140 114,156 100,159 C86,156 74,140 72,118 Z" fill="none" stroke="#13233F" stroke-width="6" stroke-linejoin="round"/><circle cx="78" cy="99" r="15" fill="none" stroke="#13233F" stroke-width="5"/><circle cx="122" cy="99" r="15" fill="none" stroke="#13233F" stroke-width="5"/><line x1="93" y1="99" x2="107" y2="99" stroke="#13233F" stroke-width="5"/><circle cx="78" cy="99" r="4" fill="#13233F"/><circle cx="122" cy="99" r="4" fill="#13233F"/><path d="M93,123 L107,123 L100,132 Z" fill="#13233F"/><circle cx="158" cy="152" r="8" fill="#9CB89E"/></svg>
+      <span style="color:#13233F">TEPPICH</span><span style="color:#DC5138">LABOR</span>
+    </div>
+    <div class="mono" id="steptag">SCHRITT 1/6</div>
+  </div>
+  <div class="progress" id="progress"></div>
+  <div class="card" id="card"></div>
+</div>
+
+<script>
+/* ============================================================
+   ZENTRALE PREISKONFIGURATION
+   In der WordPress-Version wandert dieses Objekt 1:1 in eine
+   ACF-Optionsseite / Plugin-Einstellung, damit Preise zentral
+   im Admin-Bereich gepflegt werden können, statt im Code verteilt
+   zu sein. Werte mit "// Platzhalter" sind Beispielwerte aus dem
+   Case und sollten vor Livegang final bestätigt werden.
+   ============================================================ */
+const PRICING_CONFIG = {
+  minOrderValue: 89,
+  freeDeliveryThreshold: 200, // Platzhalter – "ab definiertem Auftragswert kostenlos"
+
+  materials: [
+    { v:'maschine',   t:'Maschinengefertigter Teppich', method:'machine', natural:false },
+    { v:'wolle',      t:'Wollteppich',                  method:'hand',    natural:true  },
+    { v:'orient',     t:'Orientteppich',                method:'hand',    natural:true  },
+    { v:'berbernepal',t:'Berber- / Nepalteppich',       method:'hand',    natural:true  },
+    { v:'hochflor',   t:'Hochflor / Shaggy',             method:'hand',    natural:false },
+    { v:'designer',   t:'Designerteppich',               method:'hand',    natural:false },
+    { v:'naturfaser', t:'Naturfaserteppich',             method:'hand',    natural:true  },
+    { v:'seide',      t:'Seidenteppich',                 method:'pruefung', natural:true },
+    { v:'unbekannt',  t:'Unbekannt — Prüfung nötig',     method:'pruefung', natural:false },
+  ],
+  methodPrice: { machine:8.00, hand:16.00 },
+  methodLabel: { machine:'Maschinenwäsche', hand:'Handwäsche' },
+
+  zustand: [
+    { v:'stark',    t:'Stark verschmutzt' },
+    { v:'flecken',  t:'Hartnäckige Flecken' },
+    { v:'tiergeruch', t:'Tiergeruch' },
+    { v:'urin',     t:'Urinrückstände' },
+    { v:'rauch',    t:'Rauchgeruch' },
+    { v:'motten',   t:'Mottenverdacht' },
+    { v:'wasserbrand', t:'Wasser- / Brandschaden' },
+    { v:'fransen',  t:'Beschädigte Fransen / Kanten' },
+  ],
+  starkverschmutztAufschlagPct: 0.30,
+  expressAufschlagPct: 0.35, // Platzhalter innerhalb der genannten Spanne 30–40 %
+
+  addons: [
+    { v:'fleckenschutz', t:'Fleckenschutz & Imprägnierung', perM2:5.90,
+      desc:'Unsichtbare Schutzschicht, erleichtert spätere Pflege.' },
+    { v:'wollpflege', t:'Wollpflege & Rückfettung', perM2:5.90, requiresNatural:true,
+      desc:'Für Woll-, Orient-, Berber-, Nepal- und Naturfaserteppiche.' },
+    { v:'mottenschutz', t:'Mottenschutz', perM2:6.90, requiresNatural:true,
+      desc:'Vorbeugender Schutz für Naturfaser, besonders vor Einlagerung.' },
+    { v:'geruch', t:'Geruchsneutralisierung', perM2:8.90,
+      desc:'Bei Tiergeruch, Rauch oder allgemeinem Mief.' },
+    { v:'haustier', t:'Urin- & Haustier-Sonderbehandlung', perM2:11.90,
+      desc:'Intensive Vorbehandlung, Spülung, Geruchsneutralisierung.' },
+    { v:'flecken_intensiv', t:'Intensive Fleckenbehandlung', perM2:6.90,
+      desc:'Rotwein, Kaffee, Fett, unbekannte Altflecken — ggf. nach Aufwand.' },
+    { v:'express', t:'Express-Service', pctOfBase:0.35,
+      desc:'Bevorzugte Bearbeitung, priorisierte Trocknung — Aufschlag auf den Reinigungspreis.' },
+    { v:'reparatur', t:'Reparaturprüfung', flatNote:'Preis nach Prüfung',
+      desc:'Fransen, Kanten, Löcher — separates Angebot über unseren Partner.' },
+    { v:'einlagerung', t:'Einlagerung', flatNote:'ab 15–30 €/Monat',
+      desc:'Gereinigt, verpackt, dokumentiert eingelagert.' },
+  ],
+
+  logistik: {
+    liefergebiete: [
+      { v:'nah', t:'Nahbereich', price:39 },
+      { v:'erweitert', t:'Erweiterter Bereich', price:59 },
+      { v:'weit', t:'Größere Entfernung', price:69 },
+    ],
+    trageservice: 15, // Platzhalter innerhalb der Spanne 10–20 €
+    schwererTeppich: 15, // Platzhalter, Richtwert "nach Aufwand"
+    wunschtermin: 20, // Platzhalter innerhalb der Spanne 15–25 €
+  }
+};
+
+const state = {
+  step: 0,
+  material: null,
+  breite:'', laenge:'',
+  zustand: [],
+  addons: [],
+  anlieferart: null,
+  liefergebiet: null,
+  stockwerk:'', aufzug:false, schwer:false, wunschtermin:false,
+  photos: [],
+  lead: { name:'', kontakt:'' },
+  ctaMode: null,
+  submitted: false,
+};
+
+const steps = ['material','masse','zustand','zusatz','logistik','ergebnis'];
+const stepTitles = { material:1, masse:2, zustand:3, zusatz:4, logistik:5, ergebnis:6 };
+
+function m2(){
+  const b = parseFloat(state.breite), l = parseFloat(state.laenge);
+  if(!b || !l) return 0;
+  return Math.round((b*l/10000)*100)/100;
+}
+function materialCfg(){ return PRICING_CONFIG.materials.find(m=>m.v===state.material); }
+function eur(n){ return n.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; }
+
+function recommendation(){
+  const mat = materialCfg();
+  const z = state.zustand;
+  const rec = { required:new Set(), suggested:new Set(), disabled:new Set(), notes:[], blocked:false, blockReason:'' };
+
+  if(z.includes('wasserbrand')){
+    rec.blocked = true;
+    rec.blockReason = 'Bei Wasser- oder Brandschäden ist keine automatische Kalkulation möglich. Schimmel, Verfärbungen und Materialschäden können eine Annahme ausschließen — wir prüfen das anhand von Fotos individuell.';
+    return rec;
+  }
+  if(mat && mat.method === 'pruefung'){
+    rec.blocked = true;
+    rec.blockReason = mat.v === 'seide'
+      ? 'Seidenteppiche behandeln wir ausschließlich nach persönlicher Materialprüfung — keine automatische Standardwäsche.'
+      : 'Ohne bekanntes Material können wir keinen verbindlichen Preis nennen. Bitte lade Fotos hoch, wir prüfen das für dich.';
+    return rec;
+  }
+
+  if(!mat || !mat.natural){
+    rec.disabled.add('wollpflege'); rec.disabled.add('mottenschutz');
+  } else {
+    rec.suggested.add('wollpflege'); rec.suggested.add('mottenschutz');
+    rec.notes.push('Empfehlung: Naturfaser-Paket — Wollpflege und Mottenschutz passen zu diesem Material.');
+  }
+
+  if(z.includes('urin')){
+    rec.required.add('haustier');
+    rec.notes.push('Bei Urinrückständen ist die Haustier-Sonderbehandlung erforderlich, bevor wir reinigen.');
+  } else if(z.includes('tiergeruch')){
+    rec.suggested.add('haustier');
+    rec.notes.push('Empfehlung: Haustier-Paket, passend zum angegebenen Tiergeruch.');
+  }
+  if((z.includes('rauch') || z.includes('tiergeruch')) && !rec.required.has('haustier')){
+    rec.suggested.add('geruch');
+  }
+  if(z.includes('flecken')){ rec.suggested.add('flecken_intensiv'); }
+  if(z.includes('motten')){
+    rec.suggested.add('mottenschutz');
+    rec.notes.push('Bei Mottenverdacht empfehlen wir zusätzlich eine persönliche Begutachtung vor der Reinigung.');
+  }
+  if(z.includes('fransen')){
+    rec.suggested.add('reparatur');
+    rec.notes.push('Beschädigte Fransen oder Kanten: Wir prüfen die Reparatur separat über unseren Partnerbetrieb.');
+  }
+  if(z.includes('stark')){
+    rec.notes.push('Stark verschmutzt: vorläufiger Aufschlag von 30 % auf den Reinigungspreis, wird nach Begutachtung bestätigt.');
+  }
+  return rec;
+}
+
+function applySuggestions(rec){
+  const signature = state.material + '|' + state.zustand.slice().sort().join(',');
+  if(state.suggestionSignature === signature) return;
+  state.suggestionSignature = signature;
+  rec.suggested.forEach(v=>{
+    if(!rec.disabled.has(v) && !state.addons.includes(v)) state.addons.push(v);
+  });
+}
+
+function toggleAddon(v){
+  const rec = recommendation();
+  if(rec.required.has(v) || rec.disabled.has(v)) return;
+  const i = state.addons.indexOf(v);
+  if(i>-1) state.addons.splice(i,1); else state.addons.push(v);
+  render();
+}
+
+function computeQuote(){
+  const rec = recommendation();
+  if(rec.blocked) return { blocked:true, reason:rec.blockReason };
+
+  const mat = materialCfg();
+  const area = m2();
+  const base = area * PRICING_CONFIG.methodPrice[mat.method];
+  const starkPct = state.zustand.includes('stark') ? PRICING_CONFIG.starkverschmutztAufschlagPct : 0;
+  const starkAmount = base * starkPct;
+
+  const selected = new Set(state.addons);
+  rec.required.forEach(v=>selected.add(v));
+
+  const addonLines = [];
+  let addonsTotal = 0;
+  PRICING_CONFIG.addons.forEach(a=>{
+    if(!selected.has(a.v)) return;
+    if(a.v==='reparatur' || a.v==='einlagerung'){
+      addonLines.push({ label:a.t, note:a.flatNote });
+      return;
+    }
+    if(a.v==='express'){
+      const amt = base * a.pctOfBase;
+      addonLines.push({ label:a.t, amount:amt });
+      addonsTotal += amt;
+      return;
+    }
+    const amt = area * a.perM2;
+    addonLines.push({ label:a.t, amount:amt });
+    addonsTotal += amt;
+  });
+
+  const cleaningSubtotal = base + starkAmount;
+  let subtotal = cleaningSubtotal + addonsTotal;
+  const minApplied = subtotal < PRICING_CONFIG.minOrderValue;
+  if(minApplied) subtotal = PRICING_CONFIG.minOrderValue;
+
+  const logi = { lines:[], total:0 };
+  if(state.anlieferart === 'abholung'){
+    const geb = PRICING_CONFIG.logistik.liefergebiete.find(g=>g.v===state.liefergebiet);
+    if(geb){
+      const freeDelivery = subtotal >= PRICING_CONFIG.freeDeliveryThreshold && state.liefergebiet==='nah';
+      logi.lines.push({ label:'Abholung & Lieferung ('+geb.t+')', amount: freeDelivery?0:geb.price, free:freeDelivery });
+      logi.total += freeDelivery?0:geb.price;
+    }
+    const stock = parseInt(state.stockwerk,10) || 0;
+    if(stock >= 2 && !state.aufzug){
+      logi.lines.push({ label:'Trageservice (ab 2. OG, kein Aufzug)', amount:PRICING_CONFIG.logistik.trageservice });
+      logi.total += PRICING_CONFIG.logistik.trageservice;
+    }
+    if(state.schwer){
+      logi.lines.push({ label:'Besonders schwerer Teppich', amount:PRICING_CONFIG.logistik.schwererTeppich });
+      logi.total += PRICING_CONFIG.logistik.schwererTeppich;
+    }
+    if(state.wunschtermin){
+      logi.lines.push({ label:'Fester Wunschtermin', amount:PRICING_CONFIG.logistik.wunschtermin });
+      logi.total += PRICING_CONFIG.logistik.wunschtermin;
+    }
+  }
+
+  return {
+    blocked:false, mat, area, method:mat.method, base, starkPct, starkAmount,
+    addonLines, addonsTotal, cleaningSubtotal, minApplied, subtotal,
+    logistics: logi, grandTotal: subtotal + logi.total, notes: rec.notes,
+  };
+}
+
+function renderProgress(){
+  const el = document.getElementById('progress');
+  el.innerHTML = '';
+  steps.forEach((s,i)=>{
+    const dash = document.createElement('i');
+    if(i < state.step) dash.className='done'; else if(i===state.step) dash.className='active';
+    el.appendChild(dash);
+  });
+  document.getElementById('steptag').textContent = `SCHRITT ${stepTitles[steps[state.step]]}/6`;
+}
+
+function canProceed(){
+  const s = steps[state.step];
+  if(s==='material') return !!state.material;
+  if(s==='masse') return m2() > 0;
+  if(s==='zustand') return true;
+  if(s==='zusatz') return true;
+  if(s==='logistik') return state.anlieferart==='selbst' || (state.anlieferart==='abholung' && !!state.liefergebiet);
+  return true;
+}
+
+function navRow(){
+  const nav = document.createElement('div'); nav.className='nav';
+  const back = document.createElement('button');
+  back.className='btn ghost'; back.textContent='← Zurück';
+  back.style.visibility = state.step===0 ? 'hidden':'visible';
+  back.onclick = ()=>{ state.step--; render(); };
+  const next = document.createElement('button');
+  next.className='btn primary'; next.textContent = state.step===steps.length-2 ? 'Preis berechnen →' : 'Weiter →';
+  next.disabled = !canProceed();
+  next.onclick = ()=>{ state.step++; render(); };
+  nav.appendChild(back); nav.appendChild(next);
+  return nav;
+}
+
+function optionButton(label, hint, selected, disabled, onClick){
+  const b = document.createElement('button');
+  b.className = 'opt' + (selected?' selected':'') + (disabled?' disabled':'');
+  b.innerHTML = `<span>${label}</span>` + (hint?`<span class="hint">${hint}</span>`:'');
+  if(!disabled) b.onclick = onClick;
+  return b;
+}
+
+function render(){
+  renderProgress();
+  const card = document.getElementById('card');
+  card.innerHTML = '';
+  const s = steps[state.step];
+
+  if(s==='material'){
+    const h1=document.createElement('h1'); h1.textContent='Welcher Teppich?';
+    const sub=document.createElement('p'); sub.className='sub'; sub.textContent='Das Material entscheidet über Verfahren und Preis pro Quadratmeter.';
+    const opts=document.createElement('div'); opts.className='options';
+    PRICING_CONFIG.materials.forEach(m=>{
+      const hint = m.method==='pruefung' ? 'Preis nach Fotoprüfung' : (PRICING_CONFIG.methodLabel[m.method] + ' · ab ' + eur(PRICING_CONFIG.methodPrice[m.method]) + '/m²');
+      opts.appendChild(optionButton(m.t, hint, state.material===m.v, false, ()=>{ state.material=m.v; render(); }));
+    });
+    card.append(h1,sub,opts,navRow());
+  }
+
+  if(s==='masse'){
+    const h1=document.createElement('h1'); h1.textContent='Wie groß ist er?';
+    const sub=document.createElement('p'); sub.className='sub'; sub.textContent='Breite und Länge in Zentimetern — wir rechnen automatisch in Quadratmeter um.';
+    const wrap=document.createElement('div');
+    const row=document.createElement('div'); row.className='row2';
+    row.appendChild(numField('Breite (cm)', state.breite, v=>{state.breite=v; render();}));
+    row.appendChild(numField('Länge (cm)', state.laenge, v=>{state.laenge=v; render();}));
+    wrap.appendChild(row);
+    const out=document.createElement('div'); out.className='m2out';
+    out.innerHTML = `<span class="mono">Fläche</span><span class="val">${m2()>0 ? m2()+' m²' : '—'}</span>`;
+    wrap.appendChild(out);
+    card.append(h1,sub,wrap,navRow());
+  }
+
+  if(s==='zustand'){
+    const h1=document.createElement('h1'); h1.textContent='Zustand des Teppichs';
+    const sub=document.createElement('p'); sub.className='sub'; sub.textContent='Mehrfachauswahl möglich — hilft uns, das passende Verfahren zu wählen.';
+    const opts=document.createElement('div'); opts.className='options single-col';
+    PRICING_CONFIG.zustand.forEach(z=>{
+      opts.appendChild(optionButton(z.t, null, state.zustand.includes(z.v), false, ()=>{
+        const i=state.zustand.indexOf(z.v);
+        if(i>-1) state.zustand.splice(i,1); else state.zustand.push(z.v);
+        render();
+      }));
+    });
+    card.append(h1,sub,opts,navRow());
+  }
+
+  if(s==='zusatz'){
+    const rec = recommendation();
+    applySuggestions(rec);
+    const h1=document.createElement('h1'); h1.textContent='Zusatzleistungen';
+    if(rec.blocked){
+      const sub=document.createElement('p'); sub.className='sub'; sub.textContent='Für diesen Teppich brauchen wir erst eine kurze Prüfung.';
+      const call=document.createElement('div'); call.className='callout warn'; call.textContent = rec.blockReason;
+      card.append(h1,sub,call,navRow());
+    } else {
+      const sub=document.createElement('p'); sub.className='sub'; sub.textContent='Automatisch vorgeschlagen anhand von Material und Zustand — du kannst jede Leistung abwählen.';
+      card.append(h1,sub);
+      if(rec.notes.length){
+        const call=document.createElement('div'); call.className='callout';
+        call.innerHTML = rec.notes.map(n=>`<div>${n}</div>`).join('');
+        card.appendChild(call);
+      }
+      const list=document.createElement('div');
+      PRICING_CONFIG.addons.forEach(a=>{
+        const isRequired = rec.required.has(a.v);
+        const isDisabled = rec.disabled.has(a.v);
+        const line=document.createElement('div');
+        line.className='checkline' + (isDisabled?' disabled':'') + (isRequired?' locked':'');
+        const cb=document.createElement('input'); cb.type='checkbox';
+        cb.checked = isRequired ? true : state.addons.includes(a.v);
+        cb.disabled = isRequired || isDisabled;
+        cb.onchange = ()=>toggleAddon(a.v);
+        const lbl=document.createElement('label');
+        lbl.innerHTML = `${a.t}<span class="note">${isDisabled ? 'Nicht geeignet für dieses Material' : a.desc}</span>`;
+        lbl.onclick = ()=>{ if(!isRequired && !isDisabled) toggleAddon(a.v); };
+        const price=document.createElement('span'); price.className='price';
+        price.textContent = a.perM2 ? ('+'+eur(a.perM2)+'/m²') : (a.pctOfBase ? '+'+Math.round(a.pctOfBase*100)+'%' : (a.flatNote||''));
+        line.append(cb,lbl,price);
+        list.appendChild(line);
+      });
+      card.append(list, navRow());
+    }
+  }
+
+  if(s==='logistik'){
+    const h1=document.createElement('h1'); h1.textContent='Wie liefern wir?';
+    const sub=document.createElement('p'); sub.className='sub'; sub.textContent='Selbst vorbeibringen oder bequem abholen lassen.';
+    const opts=document.createElement('div'); opts.className='options';
+    opts.appendChild(optionButton('Selbst anliefern', 'Kostenlos', state.anlieferart==='selbst', false, ()=>{ state.anlieferart='selbst'; render(); }));
+    opts.appendChild(optionButton('Abholung & Lieferung', 'Ab '+eur(PRICING_CONFIG.logistik.liefergebiete[0].price), state.anlieferart==='abholung', false, ()=>{ state.anlieferart='abholung'; render(); }));
+    card.append(h1,sub,opts);
+
+    if(state.anlieferart==='abholung'){
+      const sub2=document.createElement('p'); sub2.className='mono'; sub2.style.margin='22px 0 10px'; sub2.textContent='LIEFERGEBIET';
+      const geo=document.createElement('div'); geo.className='options';
+      PRICING_CONFIG.logistik.liefergebiete.forEach(g=>{
+        geo.appendChild(optionButton(g.t, eur(g.price), state.liefergebiet===g.v, false, ()=>{ state.liefergebiet=g.v; render(); }));
+      });
+      card.appendChild(geo);
+
+      const wrap=document.createElement('div'); wrap.style.marginTop='18px';
+      const row=document.createElement('div'); row.className='row2';
+      row.appendChild(numField('Stockwerk', state.stockwerk, v=>{state.stockwerk=v; render();}));
+      const aufzugField=document.createElement('div'); aufzugField.className='field';
+      aufzugField.innerHTML='<label>Aufzug vorhanden</label>';
+      const aufzugBtn=optionButton(state.aufzug?'Ja':'Nein', null, state.aufzug, false, ()=>{ state.aufzug=!state.aufzug; render(); });
+      aufzugField.appendChild(aufzugBtn);
+      row.appendChild(aufzugField);
+      wrap.appendChild(row);
+      card.appendChild(wrap);
+
+      const toggles=document.createElement('div'); toggles.className='options'; toggles.style.marginTop='12px';
+      toggles.appendChild(optionButton('Besonders schwerer Teppich', '+'+eur(PRICING_CONFIG.logistik.schwererTeppich), state.schwer, false, ()=>{ state.schwer=!state.schwer; render(); }));
+      toggles.appendChild(optionButton('Fester Wunschtermin', '+'+eur(PRICING_CONFIG.logistik.wunschtermin), state.wunschtermin, false, ()=>{ state.wunschtermin=!state.wunschtermin; render(); }));
+      card.appendChild(toggles);
+    }
+    card.appendChild(navRow());
+  }
+
+  if(s==='ergebnis'){
+    renderErgebnis(card);
+  }
+}
+
+function numField(labelText, value, onInput){
+  const wrap=document.createElement('div'); wrap.className='field';
+  const label=document.createElement('label'); label.textContent=labelText;
+  const input=document.createElement('input'); input.type='number'; input.min='0'; input.value=value;
+  input.oninput=(e)=>onInput(e.target.value);
+  wrap.append(label,input);
+  return wrap;
+}
+
+function renderErgebnis(card){
+  const q = computeQuote();
+  const h1=document.createElement('h1'); h1.textContent = q.blocked ? 'Fast geschafft' : 'Dein Richtpreis';
+  card.appendChild(h1);
+
+  if(q.blocked){
+    const sub=document.createElement('p'); sub.className='sub'; sub.textContent='Wir brauchen ein paar Fotos, um dir ein verbindliches Angebot zu machen.';
+    const call=document.createElement('div'); call.className='callout warn'; call.textContent=q.reason;
+    card.append(sub, call);
+    card.appendChild(ctaRow(true));
+    if(state.ctaMode) card.appendChild(leadForm(true));
+    return;
+  }
+
+  const sub=document.createElement('p'); sub.className='sub';
+  sub.textContent = `${q.mat.t} · ${q.area} m² · ${PRICING_CONFIG.methodLabel[q.method]}`;
+  card.appendChild(sub);
+
+  const ul=document.createElement('ul'); ul.className='quote-list';
+  function li(k,v){ const el=document.createElement('li'); el.innerHTML=`<span class="k">${k}</span><span class="v">${v}</span>`; return el; }
+
+  ul.appendChild(li('Grundreinigung ('+q.area+' m² × '+eur(PRICING_CONFIG.methodPrice[q.method])+')', eur(q.base)));
+  if(q.starkAmount>0) ul.appendChild(li('Zuschlag stark verschmutzt (30 %, vorläufig)', eur(q.starkAmount)));
+  q.addonLines.forEach(a=>{
+    ul.appendChild(li(a.label, a.amount!==undefined ? eur(a.amount) : a.note));
+  });
+  if(q.minApplied) ul.appendChild(li('Mindestauftragswert angewendet', eur(PRICING_CONFIG.minOrderValue)));
+  q.logistics.lines.forEach(l=>{
+    ul.appendChild(li(l.label, l.free ? 'kostenlos' : eur(l.amount)));
+  });
+  ul.appendChild((()=>{ const el=li('Voraussichtliche Gesamtsumme', eur(q.grandTotal)); el.className='sum'; return el; })());
+  card.appendChild(ul);
+
+  if(q.notes.length){
+    const call=document.createElement('div'); call.className='callout';
+    call.innerHTML = q.notes.map(n=>`<div>${n}</div>`).join('');
+    card.appendChild(call);
+  }
+
+  const legal=document.createElement('p'); legal.className='legal';
+  legal.textContent = 'Alle Preise inkl. MwSt., als Richtwert vorbehaltlich Material- und Zustandsprüfung vor Ort. Keine Garantie auf vollständige Entfernung alter oder bereits behandelter Flecken sowie Gerüche.';
+  card.appendChild(legal);
+
+  card.appendChild(ctaRow(false));
+  if(state.ctaMode) card.appendChild(leadForm(false));
+
+  const back=document.createElement('button'); back.className='btn ghost'; back.style.marginTop='18px'; back.textContent='← Angaben ändern';
+  back.onclick=()=>{ state.step=steps.length-2; render(); };
+  card.appendChild(back);
+}
+
+function ctaRow(blockedMode){
+  const row=document.createElement('div'); row.className='ctarow';
+  const a=document.createElement('button'); a.className='btn cta';
+  a.textContent = blockedMode ? 'Foto zur Prüfung senden' : 'Kostenlose Abholung anfragen';
+  a.onclick=()=>{ state.ctaMode='abholung'; render(); };
+  const b=document.createElement('button'); b.className='btn cta secondary';
+  b.textContent='Teppich per Foto prüfen lassen';
+  b.onclick=()=>{ state.ctaMode='foto'; render(); };
+  row.appendChild(a);
+  if(!blockedMode) row.appendChild(b);
+  return row;
+}
+
+function leadForm(withPhotos){
+  const wrap=document.createElement('div'); wrap.className='leadform';
+  if(state.submitted){
+    const done=document.createElement('div'); done.className='done-screen';
+    done.innerHTML = `<span class="mono">Angefragt</span><h1>Danke!</h1><p class="sub">Wir melden uns kurzfristig bei dir — meist am selben Werktag.</p>`;
+    wrap.appendChild(done);
+    return wrap;
+  }
+
+  const showPhotos = withPhotos || state.ctaMode==='foto';
+  if(showPhotos){
+    const drop=document.createElement('div'); drop.className='filedrop';
+    drop.textContent='Fotos des Teppichs hier auswählen (Vorder- und Rückseite)';
+    const input=document.createElement('input'); input.type='file'; input.accept='image/*'; input.multiple=true; input.hidden=true;
+    input.onchange=(e)=>{
+      [...e.target.files].forEach(f=>{
+        const reader=new FileReader();
+        reader.onload=(ev)=>{ state.photos.push(ev.target.result); render(); };
+        reader.readAsDataURL(f);
+      });
+    };
+    drop.onclick=()=>input.click();
+    wrap.append(drop,input);
+    if(state.photos.length){
+      const thumbs=document.createElement('div'); thumbs.className='thumbs';
+      state.photos.forEach(src=>{ const img=document.createElement('img'); img.src=src; thumbs.appendChild(img); });
+      wrap.appendChild(thumbs);
+    }
+  }
+
+  wrap.appendChild(field2('Name', state.lead.name, v=>state.lead.name=v));
+  wrap.appendChild(field2('Telefon oder E-Mail', state.lead.kontakt, v=>state.lead.kontakt=v));
+
+  const submit=document.createElement('button'); submit.className='btn primary'; submit.textContent='Anfrage senden →';
+  submit.onclick=()=>{
+    if(!state.lead.name.trim() || !state.lead.kontakt.trim()) return;
+    state.submitted=true; render();
+  };
+  wrap.appendChild(submit);
+  return wrap;
+}
+
+function field2(labelText, value, onInput){
+  const w=document.createElement('div'); w.className='field';
+  const l=document.createElement('label'); l.textContent=labelText;
+  const i=document.createElement('input'); i.type='text'; i.value=value;
+  i.oninput=(e)=>onInput(e.target.value);
+  w.append(l,i);
+  return w;
+}
+
+render();
+</script>
