@@ -1,0 +1,129 @@
+<title>Impressum & Kontakt — Teppichlabor</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#FFFFFF; --surface-2:#F4F4F2;
+    --ink:#0B0F14; --ink-soft:#5A6068;
+    --line:rgba(11,15,20,0.14); --line-strong:#0B0F14;
+    --accent:#DC5138; --accent-soft:rgba(220,81,56,0.08); --accent-ink:#FFFFFF;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0A0C10; --surface-2:#15181D; --ink:#F5F5F3; --ink-soft:#93989F;
+      --line:rgba(245,245,243,0.16); --line-strong:#F5F5F3;
+      --accent:#FF6A4D; --accent-soft:rgba(255,106,77,0.12); --accent-ink:#0A0C10;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0A0C10; --surface-2:#15181D; --ink:#F5F5F3; --ink-soft:#93989F;
+    --line:rgba(245,245,243,0.16); --line-strong:#F5F5F3;
+    --accent:#FF6A4D; --accent-soft:rgba(255,106,77,0.12); --accent-ink:#0A0C10;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:'Manrope',Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased; }
+  .container{ max-width:1160px; margin:0 auto; padding:0 32px; }
+  @media (max-width:720px){ .container{ padding:0 20px; } }
+  section{ padding:80px 0; }
+  h1,h2{ font-family:'Big Shoulders Display','Arial Narrow',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.01em; margin:0; text-wrap:balance; }
+  .mono{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+
+  header.intro{ padding:70px 0 40px; border-bottom:1px solid var(--line); }
+  header.intro h1{ font-size:clamp(30px,4.6vw,48px); line-height:.98; }
+
+  .kontakt{ background:var(--surface-2); border-bottom:1px solid var(--line); }
+  .kontakt-grid{ display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid var(--line-strong); border-left:1px solid var(--line-strong); }
+  @media (max-width:760px){ .kontakt-grid{ grid-template-columns:1fr; } }
+  .kcard{ background:var(--bg); border-right:1px solid var(--line-strong); border-bottom:1px solid var(--line-strong); padding:26px 24px; }
+  .kcard .l{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft); display:block; margin-bottom:10px; }
+  .kcard a, .kcard p{ font-size:15px; font-weight:700; color:var(--ink); text-decoration:none; margin:0; line-height:1.5; }
+  .kcard a:hover{ color:var(--accent); }
+
+  .impressum{ padding-top:80px; }
+  .imp-head{ margin-bottom:32px; }
+  .imp-head h2{ font-size:clamp(24px,3.2vw,32px); }
+  .imp-block{ max-width:64ch; margin-bottom:36px; }
+  .imp-block h3{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.05em; text-transform:uppercase; color:var(--accent); margin:0 0 10px; }
+  .imp-block p{ font-size:14.5px; line-height:1.7; color:var(--ink); margin:0 0 6px; }
+  .imp-block p.soft{ color:var(--ink-soft); }
+  .imp-block a{ color:var(--ink); }
+
+  .pending{ display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--accent); border:1px solid var(--accent); padding:2px 8px; margin-left:6px; }
+
+  .todo-box{ background:var(--surface-2); border:1px solid var(--line-strong); padding:24px 26px; max-width:70ch; margin-top:20px; }
+  .todo-box .l{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.05em; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:12px; }
+  .todo-box ul{ margin:0; padding-left:20px; font-size:13.5px; line-height:1.8; color:var(--ink-soft); }
+</style>
+
+<header class="intro">
+  <div class="container">
+    <p class="mono">Impressum &amp; Kontakt</p>
+    <h1>So erreichst du uns.</h1>
+  </div>
+</header>
+
+<section class="kontakt">
+  <div class="container">
+    <div class="kontakt-grid">
+      <div class="kcard">
+        <span class="l">Adresse</span>
+        <p>Großer Haingraben 9<br>65779 Kelkheim</p>
+      </div>
+      <div class="kcard">
+        <span class="l">Telefon</span>
+        <a href="tel:+491728293606">0172 8293606</a>
+      </div>
+      <div class="kcard">
+        <span class="l">E-Mail</span>
+        <a href="mailto:info@teppich-fee.de">info@teppich-fee.de</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="impressum">
+  <div class="container">
+    <div class="imp-head">
+      <p class="mono" style="color:var(--ink-soft)">Angaben gemäß § 5 TMG</p>
+      <h2>Impressum.</h2>
+    </div>
+
+    <div class="imp-block">
+      <h3>Anbieter</h3>
+      <p>Teppichlabor — Inh. Cem Zeren</p>
+      <p class="soft">Einzelunternehmen</p>
+      <p>Großer Haingraben 9, 65779 Kelkheim</p>
+    </div>
+
+    <div class="imp-block">
+      <h3>Verantwortlich für den Inhalt</h3>
+      <p>Cem Zeren (Anschrift wie oben)</p>
+      <p class="soft">Verantwortlich für eigene redaktionelle Inhalte gem. § 18 Abs. 2 MStV</p>
+    </div>
+
+    <div class="imp-block">
+      <h3>Kontakt</h3>
+      <p>Telefon: <a href="tel:+491728293606">0172 8293606</a></p>
+      <p>E-Mail: <a href="mailto:info@teppich-fee.de">info@teppich-fee.de</a></p>
+    </div>
+
+    <div class="imp-block">
+      <h3>Umsatzsteuer-ID gem. § 27a UStG<span class="pending">folgt</span></h3>
+      <p class="soft">Wird ergänzt, sobald final vorliegt.</p>
+    </div>
+
+    <div class="imp-block">
+      <h3>Streitschlichtung</h3>
+      <p class="soft">Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a></p>
+    </div>
+
+    <div class="todo-box">
+      <span class="l">Vor Livegang zu klären</span>
+      <ul>
+        <li>Umsatzsteuer-ID und Steuernummer eintragen, sobald final.</li>
+        <li>Prüfen, ob eine Handelsregister-Eintragung überhaupt zutrifft — bei einem einfachen Einzelunternehmen (kein e.K.) entfällt dieser Abschnitt in der Regel komplett. Bitte mit Steuerberater/Anwalt abklären, nicht einfach übernehmen.</li>
+        <li>"Geschäftsführer" ist ein Begriff für Kapitalgesellschaften — bei einem Einzelunternehmen reicht die Nennung als Inhaber. Im alten Impressum stand "Geschäftsführer: Cem Zeren", das habe ich hier bewusst nicht übernommen, bitte gegenchecken.</li>
+        <li>E-Mail-Adresse läuft noch auf teppich-fee.de — klären, ob eine neue Adresse unter der Teppichlabor-Domain eingerichtet wird.</li>
+      </ul>
+    </div>
+  </div>
+</section>
