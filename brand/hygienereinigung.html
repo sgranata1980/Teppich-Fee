@@ -1,0 +1,133 @@
+<title>Hygienereinigung — Teppichlabor</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#FFFFFF; --surface-2:#F4F4F2;
+    --ink:#0B0F14; --ink-soft:#5A6068;
+    --line:rgba(11,15,20,0.14); --line-strong:#0B0F14;
+    --accent:#DC5138; --accent-soft:rgba(220,81,56,0.08); --accent-ink:#FFFFFF;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0A0C10; --surface-2:#15181D; --ink:#F5F5F3; --ink-soft:#93989F;
+      --line:rgba(245,245,243,0.16); --line-strong:#F5F5F3;
+      --accent:#FF6A4D; --accent-soft:rgba(255,106,77,0.12); --accent-ink:#0A0C10;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0A0C10; --surface-2:#15181D; --ink:#F5F5F3; --ink-soft:#93989F;
+    --line:rgba(245,245,243,0.16); --line-strong:#F5F5F3;
+    --accent:#FF6A4D; --accent-soft:rgba(255,106,77,0.12); --accent-ink:#0A0C10;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:'Manrope',Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased; }
+  .container{ max-width:1160px; margin:0 auto; padding:0 32px; }
+  @media (max-width:720px){ .container{ padding:0 20px; } }
+  section{ padding:88px 0; }
+  h1,h2,h3{ font-family:'Big Shoulders Display','Arial Narrow',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.01em; margin:0; text-wrap:balance; }
+  .mono{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+
+  header.intro{ padding:70px 0 40px; border-bottom:1px solid var(--line); }
+  header.intro h1{ font-size:clamp(32px,5vw,54px); line-height:.96; max-width:20ch; }
+  header.intro p{ color:var(--ink-soft); font-size:16px; line-height:1.6; margin:18px 0 0; max-width:58ch; }
+
+  .verfahren{ background:var(--surface-2); border-bottom:1px solid var(--line); }
+  .verf-grid{ display:grid; grid-template-columns:0.8fr 1.2fr; gap:56px; align-items:start; }
+  @media (max-width:860px){ .verf-grid{ grid-template-columns:1fr; gap:32px; } }
+  .verf-stat{ background:var(--bg); border:1px solid var(--line-strong); padding:32px 28px; }
+  .verf-stat .v{ font-family:'Big Shoulders Display',sans-serif; font-size:56px; font-weight:700; line-height:1; color:var(--accent); }
+  .verf-stat .l{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft); margin-top:10px; display:block; }
+  .verf-stat p{ font-size:13px; color:var(--ink-soft); line-height:1.6; margin:18px 0 0; padding-top:18px; border-top:1px solid var(--line); }
+  .verf-text h2{ font-size:clamp(24px,3.2vw,34px); margin-bottom:16px; }
+  .verf-text p{ font-size:15px; line-height:1.7; color:var(--ink); margin:0 0 16px; max-width:56ch; }
+
+  .fuer-wen{ padding-top:88px; }
+  .fw-head{ margin-bottom:36px; max-width:60ch; }
+  .fw-head h2{ font-size:clamp(26px,3.6vw,38px); margin-bottom:14px; }
+  .fw-head p{ color:var(--ink-soft); font-size:15px; line-height:1.6; }
+  .fw-grid{ display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid var(--line-strong); border-left:1px solid var(--line-strong); }
+  @media (max-width:760px){ .fw-grid{ grid-template-columns:1fr; } }
+  .fw{ background:var(--bg); border-right:1px solid var(--line-strong); border-bottom:1px solid var(--line-strong); padding:26px 22px; }
+  .fw h3{ font-size:17px; margin-bottom:10px; }
+  .fw p{ font-size:13px; color:var(--ink-soft); line-height:1.6; margin:0; }
+
+  .legal{ background:var(--ink); color:rgba(245,245,243,0.72); }
+  .legal h2{ color:var(--bg); font-size:clamp(22px,3vw,30px); margin-bottom:18px; max-width:20ch; }
+  .legal p{ font-size:13.5px; line-height:1.7; max-width:70ch; margin:0 0 12px; }
+  .legal ul{ margin:0 0 20px; padding-left:20px; font-size:13.5px; line-height:1.8; max-width:70ch; }
+  .legal .note{ font-size:12px; color:rgba(245,245,243,0.5); border-top:1px solid rgba(245,245,243,.2); padding-top:16px; margin-top:20px; }
+
+  .cta-band{ text-align:center; padding:64px 0; }
+  .cta-band h2{ font-size:clamp(24px,3.6vw,36px); margin-bottom:20px; }
+  .btn{ display:inline-block; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:13px; letter-spacing:.05em; text-transform:uppercase; padding:16px 34px; background:var(--ink); color:var(--bg); text-decoration:none; }
+  .btn:hover{ background:var(--accent); }
+</style>
+
+<header class="intro">
+  <div class="container">
+    <p class="mono">Hygienereinigung</p>
+    <h1>Heißer, als eine normale Wäsche sein muss.</h1>
+    <p>Für Haushalte mit Allergien, Haustieren oder Babys reinigen wir mit Heißdampf statt mit der Standardmethode — bei einer Temperatur, die im Teppich mehr erledigt als nur den sichtbaren Schmutz.</p>
+  </div>
+</header>
+
+<section class="verfahren">
+  <div class="container verf-grid">
+    <div class="verf-stat">
+      <span class="v">60–80°</span>
+      <span class="l">Celsius, Heißdampf/Heißwasser</span>
+      <p>Ab etwa 55–60 °C sterben Hausstaubmilben bekanntermaßen ab — das ist keine Behauptung von uns, sondern allgemein anerkanntes Wissen aus der Allergologie. Unser Verfahren arbeitet oberhalb dieser Schwelle.</p>
+    </div>
+    <div class="verf-text">
+      <h2>Was das Verfahren tut — und was nicht.</h2>
+      <p>Die Hygienereinigung ist keine andere Chemie, sondern eine andere Temperatur. Heißdampf bzw. heißes Wasser im Bereich von 60 bis 80 Grad dringt tiefer in die Faser ein als eine kalte oder lauwarme Reinigung und wirkt dort, wo Hausstaubmilben und ein Teil der Bakterien empfindlich auf Hitze reagieren.</p>
+      <p>Wir haben dafür kein eigenes Laborzertifikat — die Aussage stützt sich auf den allgemein bekannten Temperaturschwellenwert, nicht auf einen unternehmenseigenen Wirksamkeitstest. Deshalb sprechen wir bewusst nicht von "Desinfektion", "antibakteriell" oder "allergenfrei", auch wenn diese Begriffe verlockend klingen.</p>
+    </div>
+  </div>
+</section>
+
+<section class="fuer-wen">
+  <div class="container">
+    <div class="fw-head">
+      <p class="mono" style="color:var(--ink-soft)">Für wen sich das lohnt</p>
+      <h2>Nicht für jeden Haushalt nötig. Für manche schon.</h2>
+      <p>Die Hygienereinigung ist ein Upgrade zur normalen Reinigung, kein Muss — sinnvoll dort, wo Teppiche mehr aushalten müssen als bei anderen.</p>
+    </div>
+    <div class="fw-grid">
+      <div class="fw">
+        <h3>Allergiker</h3>
+        <p>Hitze reduziert die Zahl der Hausstaubmilben in der Faser. Ersetzt keine ärztliche Behandlung, ergänzt aber die Wohnungshygiene.</p>
+      </div>
+      <div class="fw">
+        <h3>Haustierhaushalte</h3>
+        <p>Tierhaare, Hautschuppen und Gerüche sitzen oft tief in der Faser — Heißdampf löst mehr davon als eine kalte Wäsche.</p>
+      </div>
+      <div class="fw">
+        <h3>Babys &amp; Kleinkinder</h3>
+        <p>Krabbelalter heißt viel Bodenkontakt. Wer hier besonders gründlich sein will, ist mit der Hygienereinigung genau richtig.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="legal">
+  <div class="container">
+    <p class="mono" style="color:var(--accent)">Wichtig zu wissen</p>
+    <h2>Was wir versprechen — und was nicht.</h2>
+    <p>Die Hygienereinigung ist eine gründlichere Reinigung mit höherer Temperatur. Sie ist:</p>
+    <ul>
+      <li>kein zertifiziertes Desinfektionsverfahren im medizinischen Sinn</li>
+      <li>kein Ersatz für eine ärztliche oder allergologische Behandlung</li>
+      <li>keine Garantie auf ein keim- oder allergenfreies Ergebnis</li>
+      <li>abhängig von Material und Zustand — manche Teppiche vertragen die höhere Temperatur nicht, das prüfen wir vorher</li>
+    </ul>
+    <p class="note">Begriffe wie "Desinfektion", "antibakteriell" oder "allergenfrei" verwenden wir bewusst nicht, solange wir dafür keinen geprüften Wirksamkeitsnachweis für unser eigenes Verfahren haben.</p>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="container">
+    <h2>Für wen lohnt sich das bei dir?</h2>
+    <a href="preisrechner-prototyp.html" class="btn">Richtpreis berechnen →</a>
+  </div>
+</section>
