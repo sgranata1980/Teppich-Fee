@@ -67,12 +67,13 @@
     padding:18px 0;
   }
   .logo{
-    display:flex; align-items:baseline; gap:2px;
+    display:flex; align-items:center; gap:9px;
     font-family:'Big Shoulders Display', sans-serif; font-weight:800; font-size:24px;
     text-transform:uppercase; letter-spacing:.02em;
     text-decoration:none;
   }
   .logo span{color:var(--accent);}
+  .logo-mark{width:26px; height:26px; flex:none;}
   nav.main{display:flex; gap:0; align-items:center;}
   nav.main a{
     font-family:'IBM Plex Mono', monospace;
@@ -319,7 +320,19 @@
 
 <header>
   <div class="container nav-row">
-    <a class="logo" href="#">TEPPICH<span>LABOR</span></a>
+    <a class="logo" href="#">
+      <svg class="logo-mark" viewBox="0 0 200 200" role="img" aria-label="Teppichlabor Icon">
+        <circle cx="100" cy="100" r="90" fill="none" stroke="var(--ink)" stroke-width="6"/>
+        <polygon points="62,34 42,84 76,78" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linejoin="round"/>
+        <polygon points="138,34 158,84 124,78" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linejoin="round"/>
+        <path d="M70,80 C65,58 76,44 100,44 C124,44 135,58 130,80 L128,118 C126,140 114,156 100,159 C86,156 74,140 72,118 Z" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linejoin="round"/>
+        <circle cx="78" cy="99" r="15" fill="none" stroke="var(--ink)" stroke-width="6"/>
+        <circle cx="122" cy="99" r="15" fill="none" stroke="var(--ink)" stroke-width="6"/>
+        <line x1="93" y1="99" x2="107" y2="99" stroke="var(--ink)" stroke-width="6"/>
+        <path d="M93,123 L107,123 L100,132 Z" fill="var(--accent)"/>
+      </svg>
+      TEPPICH<span>LABOR</span>
+    </a>
     <nav class="main">
       <a href="#">Privatkunden</a>
       <a href="#">Unternehmen</a>
@@ -531,7 +544,19 @@
   <div class="container">
     <div class="foot-grid">
       <div>
-        <a class="logo" href="#" style="margin-bottom:14px; display:inline-flex;">TEPPICH<span>LABOR</span></a>
+        <a class="logo" href="#" style="margin-bottom:14px; display:inline-flex;">
+          <svg class="logo-mark" viewBox="0 0 200 200" role="img" aria-label="Teppichlabor Icon">
+            <circle cx="100" cy="100" r="90" fill="none" stroke="var(--ink)" stroke-width="6"/>
+            <polygon points="62,34 42,84 76,78" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linejoin="round"/>
+            <polygon points="138,34 158,84 124,78" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linejoin="round"/>
+            <path d="M70,80 C65,58 76,44 100,44 C124,44 135,58 130,80 L128,118 C126,140 114,156 100,159 C86,156 74,140 72,118 Z" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linejoin="round"/>
+            <circle cx="78" cy="99" r="15" fill="none" stroke="var(--ink)" stroke-width="6"/>
+            <circle cx="122" cy="99" r="15" fill="none" stroke="var(--ink)" stroke-width="6"/>
+            <line x1="93" y1="99" x2="107" y2="99" stroke="var(--ink)" stroke-width="6"/>
+            <path d="M93,123 L107,123 L100,132 Z" fill="var(--accent)"/>
+          </svg>
+          TEPPICH<span>LABOR</span>
+        </a>
         <p style="font-size:13px; color:var(--ink-soft); max-width:32ch; line-height:1.6; font-weight:500;">Teppich- und Polsterreinigung für Privatkunden und Unternehmen in Rhein-Main.</p>
       </div>
       <div>
