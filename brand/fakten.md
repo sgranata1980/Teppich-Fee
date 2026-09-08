@@ -2,8 +2,8 @@
 
 Stand: laufend ergänzt. Nur Einträge hier sind bestätigt, alles andere in den Mockups ist Annahme/Platzhalter bis zur Bestätigung.
 
-- **Markenname:** Rug Lab — Stand 08.09.2026, final laut User-Freigabe (vorher: Teppichlabor, davor: Teppich Fee). Rechtlich eingetragen bleibt weiterhin "Teppichlabor — Inh. Cem Zeren"; "Rug Lab" ist die Marke, unter der das Unternehmen auftritt (kein neuer Gewerbeeintrag vorgenommen — das wäre ein realer Verwaltungsakt, den ich nicht ausführen kann). Domain läuft unverändert auf teppichlabor.de.
-- **Firmenherkunft:** Rug Lab ist die Weiterführung von "Teppich Fee" (zwischenzeitlich "Teppichlabor") unter neuem Namen. Gleiche Firma, gleiche Historie, gleicher Kundenstamm — kein Neustart bei null.
+- **Markenname:** Care Lab — Stand 08.09.2026, final laut User-Freigabe (vorher: Rug Lab, davor: Teppichlabor, davor: Teppich Fee — mehrfach geändert im Laufe der Design-Session). Rechtlich eingetragen bleibt weiterhin "Teppichlabor — Inh. Cem Zeren"; "Care Lab" ist die Marke, unter der das Unternehmen auftritt (kein neuer Gewerbeeintrag vorgenommen — das wäre ein realer Verwaltungsakt, den ich nicht ausführen kann). Domain läuft unverändert auf teppichlabor.de. Logo-Wortmarke in Orbitron (Google Font), angelehnt an eine vom User vorgelegte Referenz.
+- **Firmenherkunft:** Care Lab ist die Weiterführung von "Teppich Fee" (zwischenzeitlich "Teppichlabor", dann "Rug Lab") unter neuem Namen. Gleiche Firma, gleiche Historie, gleicher Kundenstamm — kein Neustart bei null.
 - **Firmenalter:** unter 5 Jahre (Betrieb existiert noch nicht lange).
 - **Einzugsgebiet:** Rhein-Main.
 - **Adresse:** Großer Haingraben 9, 65779 Kelkheim.
