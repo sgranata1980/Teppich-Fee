@@ -38,6 +38,12 @@ Stand: laufend ergänzt. Nur Einträge hier sind bestätigt, alles andere in den
   - R&D-Konzept: kamerabasierte Reinigungsmaschinen — eine speziell entwickelte, nicht schäumende Seife soll es einer Kamera erlauben, Fehlstellen/Schäden direkt in der Faser zu erkennen, um gezielt einzelne Bereiche nachzureinigen. Laut User "wir versuchen gerade" / "wir entwickeln da weiterhin Konzepte" — klar als Entwicklungsstadium, keine im Einsatz befindliche Technik.
   - App-Konzept: Teppich fotografieren, um den Verschmutzungsgrad automatisch einzuschätzen. Zielgruppe primär Privatkunden mit wertvollen Teppichen sowie öffentlicher Bereich (Hotels, Kitas). Ebenfalls "in Arbeit", nicht live.
   - Diese drei Punkte NIE als aktuell verfügbare Leistung/Produkt darstellen — immer als "in Entwicklung"/"geplant" kennzeichnen, analog zur bestehenden Praxis bei B2B-Neuausrichtung und CSR-Idee.
+  - Reinigungsmaschinen-Konzept zusätzlich als "KI-basiert" beschrieben (User-Wunsch 09.09.2026) — gleiche Vorsicht: Konzept/Entwicklung, kein Serieneinsatz.
+- **Netzwerk/Team-Claims (User-Diktat 09.09.2026, explizit als korrekt bestätigt auf Nachfrage — als Fakt/Präsens auf der Innovation-Seite verwendet):**
+  - Großes Team an Entwicklern arbeitet an der Reinigungstechnik.
+  - Stefano Granata war 2024 bei den "Hidden Champions" in China eingeladen, hat dort Kontakte im deutsch-chinesischen Gewerbegebiet in Peking aufgebaut.
+  - Bestehendes Expertenteam aus der Türkei, spezialisiert auf wertvolle Orientteppiche — laut User bereits real, nicht nur geplant, deshalb als Fakt formuliert (anders als die anderen Innovation-Punkte, die klar als "in Entwicklung" markiert bleiben).
+  - **Hinweis:** Diese drei Punkte sind NICHT unabhängig verifiziert (anders als Stefanos übrige Karrieredaten, die auf seiner privaten Projektseite öffentlich stehen) — beruhen ausschließlich auf User-Aussage im Diktat, auf explizite Nachfrage als korrekt bestätigt.
 
 - **Rechtsform:** Einzelunternehmen, Cem Zeren als Inhaber.
 - **Telefon:** 0172 8293606.
