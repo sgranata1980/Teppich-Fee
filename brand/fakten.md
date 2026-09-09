@@ -52,6 +52,14 @@ Stand: laufend ergänzt. Nur Einträge hier sind bestätigt, alles andere in den
 
 - **Hinweis für später (CSR-Idee "Teppichlabor hilft"):** Stefano hat aus seiner Pacarada-Zeit reale, einschlägige Erfahrung mit Flüchtlingsunterkünften (Planung/Bau von drei Wohnheimen im Hochtaunuskreis 2015, siehe seine private Projektseite). Falls die CSR-Idee (Task #13, aktuell "nur Idee, nicht final") später konkretisiert wird, ist das ein echter, nicht erfundener Anknüpfungspunkt — aber weiterhin nicht als bestehendes Programm auf der Teppichlabor-Seite darstellen, bis es final ist.
 
+- **Maschinenpark (User-Foto von echten CE-Konformitätserklärungen, 09.09.2026):** Care Lab besitzt eine reale, professionelle Reinigungsstraße von GAR-MAK Makine Kimya Mühendislik Demir Çelik İnşaat Nakliyat San. ve Tic. Ltd. Şti. (Bursa, Türkei), alle CE-zertifiziert nach Maschinenrichtlinie 2006/42/EC, EMC 2014/30/EU, Niederspannungsrichtlinie 2014/35/EU (Dokumente datiert 20.12.2024):
+  - Automatic Carpet Washing Machine, Modell XP3032F8RVB
+  - Carpet Wringing Centrifuge Machine (Schleuder), Modell G1032
+  - Carpet Dust Remover Machine (Staubentfernung), Modell D4032S
+  - Carpet Sweeping and Finishing Machine (Kehr-/Finish-Maschine), Modell S6032
+  - Zusätzlich ein Dehumidifier Unit (Entfeuchter) der Marke Iklimet (İklimet İklimlendirme San. ve Tic. Ltd. Şti., Istanbul), Serie HK (u. a. HK4400, HK6400), CE 2023 — vermutlich für die Trocknung/Klimatisierung im Betrieb.
+  - **Verwendung geklärt (09.09.2026):** Auf Nachfrage bestätigt — die Fakten werden als "Ausstattung"-Sektion auf der Hygienereinigung-Seite verwendet (vier Prozessschritte: Staubentfernung → Waschanlage → Schleuder → Finish), als Beleg für die Hygienereinigung-Claims. Konkrete Modellnummern und der türkische Hersteller werden dabei bewusst NICHT auf der Website genannt (zu viel technisches Detail für Endkunden) — nur die Funktionsbeschreibung.
+
 ## Noch offen (nicht erfinden, bei Bedarf nachfragen)
 - Anzahl Mitarbeiter, konkrete Rollen (Fahrer, Reinigungsteam, …), Namen fürs Team.
 - Cem Zerens vorherige Branche/Beruf vor dem Quereinstieg.
