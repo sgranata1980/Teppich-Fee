@@ -60,6 +60,8 @@ Stand: laufend ergänzt. Nur Einträge hier sind bestätigt, alles andere in den
   - Zusätzlich ein Dehumidifier Unit (Entfeuchter) der Marke Iklimet (İklimet İklimlendirme San. ve Tic. Ltd. Şti., Istanbul), Serie HK (u. a. HK4400, HK6400), CE 2023 — vermutlich für die Trocknung/Klimatisierung im Betrieb.
   - **Verwendung geklärt (09.09.2026):** Auf Nachfrage bestätigt — die Fakten werden als "Ausstattung"-Sektion auf der Hygienereinigung-Seite verwendet (vier Prozessschritte: Staubentfernung → Waschanlage → Schleuder → Finish), als Beleg für die Hygienereinigung-Claims. Konkrete Modellnummern und der türkische Hersteller werden dabei bewusst NICHT auf der Website genannt (zu viel technisches Detail für Endkunden) — nur die Funktionsbeschreibung.
 
+- **Lokale Mitgliedschaften (User-Aussage 09.09.2026, explizit als Fakt formuliert):** Care Lab ist Mitglied in der IHK (Industrie- und Handelskammer), im Gewerbeverein Kelkheim und im Gewerbeverein Königstein. **Nicht bestätigt:** Gewerbeverein Frankfurt — User selbst unsicher ("lass uns gucken, ob wir auch..."), dort noch keine Mitgliedschaft, ggf. geplant. Auf der Website nur die drei bestätigten Mitgliedschaften zeigen, Frankfurt nicht erwähnen bis geklärt.
+
 ## Noch offen (nicht erfinden, bei Bedarf nachfragen)
 - Anzahl Mitarbeiter, konkrete Rollen (Fahrer, Reinigungsteam, …), Namen fürs Team.
 - Cem Zerens vorherige Branche/Beruf vor dem Quereinstieg.
