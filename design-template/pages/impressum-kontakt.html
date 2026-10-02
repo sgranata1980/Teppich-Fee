@@ -1,0 +1,452 @@
+<div class="tl-page alignfull">
+<header class="tl-intro tl-intro-hero" style="background-image:url('https://teppichlabor.de/wp-content/uploads/2026/09/hero-kontakt-v2.png');">
+  <div class="container">
+    <p class="mono">Kontakt für Privatkunden</p>
+    <h1>Angebot anfragen oder Termin vereinbaren.</h1>
+    <p>Fünf kurze Schritte, mit Live-Preisschätzung für deine Teppiche. Danach senden wir deine Anfrage direkt an uns, kein Umweg über dein E-Mail-Programm. Unternehmen, Hotel, Kita oder Büro? <a href="/profi-kontakt/" style="color:inherit; text-decoration:underline;">Zur Profi-Anfrage →</a></p>
+  </div>
+</header>
+
+<section style="padding-top:24px;">
+  <div class="container">
+    <div class="wizard" id="tl-wizard">
+      <div class="wizard-progress" id="wizard-progress">
+        <div class="bar active" data-bar="1"><div class="fill"></div></div>
+        <div class="bar" data-bar="2"><div class="fill"></div></div>
+        <div class="bar" data-bar="3"><div class="fill"></div></div>
+        <div class="bar" data-bar="4"><div class="fill"></div></div>
+        <div class="bar" data-bar="5"><div class="fill"></div></div>
+      </div>
+      <p class="mono" id="wizard-steplabel" style="margin-bottom:20px;">Schritt 1 von 5</p>
+
+      <form id="wizard-form">
+        <div class="wizard-step active" data-step="1">
+          <h2>Worum geht's?</h2>
+          <p class="step-sub">Wähl aus, was du brauchst.</p>
+          <div class="wizard-options" data-group="anliegen">
+            <div class="wizard-option" data-value="Angebot anfragen">
+              <h4>Angebot anfragen</h4>
+              <p>Unverbindlicher Preis, bevor wir loslegen.</p>
+            </div>
+            <div class="wizard-option" data-value="Termin vereinbaren">
+              <h4>Termin vereinbaren</h4>
+              <p>Du weißt schon, was du willst: Wir stimmen den Termin ab.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="wizard-step" data-step="2">
+          <h2>Deine Teppiche</h2>
+          <p class="step-sub">Maße und Verfahren pro Teppich, wir rechnen live mit. Der Betrag ist ein Richtwert, final bestätigt nach Prüfung vor Ort.</p>
+          <div id="w-carpets"></div>
+          <button type="button" class="btn secondary" id="w-add-carpet" style="margin:4px 0 28px;">+ Weiteren Teppich hinzufügen</button>
+          <div class="wizard-summary" style="margin-bottom:0;">
+            <div class="row"><span>Zwischensumme (Richtwert)</span><span id="w-subtotal">89,00 €</span></div>
+          </div>
+          <p class="basetable-note" style="margin-top:12px;">Mindestauftragswert 89 €, inkl. MwSt. Abholung nicht enthalten, ab 39 € je nach Entfernung.</p>
+        </div>
+
+        <div class="wizard-step" data-step="3">
+          <h2>Sollen wir abholen?</h2>
+          <p class="step-sub">Wir holen ab und bringen zurück, oder du kommst vorbei.</p>
+          <div class="wizard-options" data-group="abholung" style="margin-bottom:24px;">
+            <div class="wizard-option" data-value="Ja, bitte abholen"><h4>Ja, bitte abholen</h4><p>Eigenes Fahrzeug, eigener Fahrer.</p></div>
+            <div class="wizard-option" data-value="Nein, ich bringe ihn vorbei"><h4>Ich bringe ihn vorbei</h4><p>Direkt nach Kelkheim.</p></div>
+          </div>
+          <div class="wizard-field" id="w-plz-wrap" style="display:none;">
+            <label for="w-plz">PLZ &amp; Ort der Abholung</label>
+            <input type="text" id="w-plz" placeholder="z. B. 65779 Kelkheim" />
+          </div>
+        </div>
+
+        <div class="wizard-step" data-step="4">
+          <h2>Deine Kontaktdaten</h2>
+          <p class="step-sub">Damit wir uns bei dir melden können.</p>
+          <div class="wizard-field">
+            <label for="w-name">Name</label>
+            <input type="text" id="w-name" required />
+          </div>
+          <div class="wizard-field">
+            <label for="w-tel">Telefon</label>
+            <input type="tel" id="w-tel" required />
+          </div>
+          <div class="wizard-field">
+            <label for="w-email">E-Mail</label>
+            <input type="email" id="w-email" required />
+          </div>
+          <div class="wizard-field">
+            <label for="w-msg">Nachricht (optional)</label>
+            <textarea id="w-msg" placeholder="Zustand, Material, Wunschtermin, was du sonst noch mitteilen willst."></textarea>
+          </div>
+        </div>
+
+        <div class="wizard-step" data-step="5">
+          <h2>Fast fertig.</h2>
+          <p class="step-sub">Kurz prüfen, dann senden wir deine Anfrage direkt an uns.</p>
+          <div class="wizard-summary" id="wizard-summary"></div>
+          <div class="honest-box" style="margin-bottom:24px; font-size:13.5px; padding:24px 28px;">
+            <b>Zur Preisschätzung.</b> Der berechnete Betrag ist ein Richtwert auf Basis der Angaben zu Maßen und Verfahren, keine verbindliche Rechnung. Die finale Einschätzung erfolgt nach Materialprüfung vor Ort, Abholung ist darin noch nicht enthalten.
+          </div>
+          <div class="honest-box" style="margin-bottom:24px; font-size:13.5px; padding:24px 28px;">
+            <b>Haftungsausschluss.</b> Die Reinigung erfolgt nach bestem fachlichem Ermessen. Für Vorschäden, die erst während der Reinigung sichtbar werden, sowie für Farbveränderungen bei stark beanspruchten oder minderwertigen Materialien übernehmen wir keine Haftung. Unsere Haftung ist auf Vorsatz und grobe Fahrlässigkeit beschränkt, außer bei Schäden aus der Verletzung von Leben, Körper oder Gesundheit. Reklamationen bitte innerhalb von 3 Werktagen nach Rückgabe melden.
+          </div>
+          <div class="wizard-consent">
+            <input type="checkbox" id="w-consent" required />
+            <label for="w-consent">Ich habe den Haftungsausschluss gelesen und akzeptiere ihn.</label>
+          </div>
+        </div>
+      </form>
+
+      <div class="wizard-nav">
+        <button type="button" class="btn-back" id="wizard-back" style="visibility:hidden;">← Zurück</button>
+        <button type="button" class="btn-next" id="wizard-next" disabled>Weiter →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="kontakt">
+  <div class="container">
+    <div class="container section-head" style="padding-top:0;">
+      <div>
+        <p class="mono eyebrow">Direkt erreichbar</p>
+        <h2>Lieber gleich anrufen oder schreiben?</h2>
+      </div>
+    </div>
+    <div class="kontakt-grid">
+      <div class="kcard">
+        <span class="l">Adresse</span>
+        <p>Großer Haingraben 9<br>65779 Kelkheim</p>
+      </div>
+      <div class="kcard">
+        <span class="l">Telefon</span>
+        <a href="tel:+491728293606">0172 8293606</a>
+      </div>
+      <div class="kcard">
+        <span class="l">E-Mail</span>
+        <a href="mailto:info@teppichlabor.de">E-Mail schreiben</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var wizard = document.getElementById('tl-wizard');
+  if (!wizard) return;
+  var steps = Array.prototype.slice.call(wizard.querySelectorAll('.wizard-step'));
+  var total = steps.length;
+  var current = 1;
+  var data = { anliegen:'', abholung:'', plz:'', name:'', tel:'', email:'', msg:'' };
+
+  var VERFAHREN = { 'Maschinenwäsche': 8.00, 'Handwäsche': 16.00 };
+  var ZUSATZ = [
+    { key:'fleckenschutz', label:'Fleckenschutz & Imprägnierung', preis:5.90 },
+    { key:'wollpflege', label:'Wollpflege & Rückfettung', preis:5.90 },
+    { key:'mottenschutz', label:'Mottenschutz', preis:6.90 },
+    { key:'geruch', label:'Geruchsneutralisierung', preis:8.90 },
+    { key:'urin', label:'Urin- & Haustier-Sonderbehandlung', preis:11.90 },
+    { key:'flecken', label:'Intensive Fleckenbehandlung', preis:6.90 }
+  ];
+  var MINDESTAUFTRAG = 89.00;
+  var carpetSeq = 0;
+  var carpets = [];
+
+  function newCarpet(){
+    carpetSeq++;
+    return { id: carpetSeq, laenge:'', breite:'', verfahren:'Maschinenwäsche', zusatz:[] };
+  }
+  carpets.push(newCarpet());
+
+  var backBtn = document.getElementById('wizard-back');
+  var nextBtn = document.getElementById('wizard-next');
+  var stepLabel = document.getElementById('wizard-steplabel');
+  var bars = wizard.querySelectorAll('#wizard-progress .bar');
+  var plzWrap = document.getElementById('w-plz-wrap');
+  var form = document.getElementById('wizard-form');
+  var carpetsWrap = document.getElementById('w-carpets');
+  var addCarpetBtn = document.getElementById('w-add-carpet');
+  var subtotalEl = document.getElementById('w-subtotal');
+
+  function fmt(n){
+    return n.toLocaleString('de-DE', { minimumFractionDigits:2, maximumFractionDigits:2 }) + ' €';
+  }
+
+  function carpetArea(c){
+    var l = parseFloat((c.laenge + '').replace(',', '.'));
+    var b = parseFloat((c.breite + '').replace(',', '.'));
+    if (!l || !b) return 0;
+    return l * b;
+  }
+
+  function carpetPrice(c){
+    var area = carpetArea(c);
+    if (!area) return 0;
+    var rate = VERFAHREN[c.verfahren] || 0;
+    c.zusatz.forEach(function(key){
+      var z = ZUSATZ.filter(function(item){ return item.key === key; })[0];
+      if (z) rate += z.preis;
+    });
+    return area * rate;
+  }
+
+  function calcSubtotal(){
+    var sum = 0;
+    carpets.forEach(function(c){ sum += carpetPrice(c); });
+    return Math.max(sum, MINDESTAUFTRAG);
+  }
+
+  function renderCarpets(){
+    carpetsWrap.innerHTML = carpets.map(function(c, idx){
+      var area = carpetArea(c);
+      var price = carpetPrice(c);
+      var zusatzHtml = ZUSATZ.map(function(z){
+        var checked = c.zusatz.indexOf(z.key) > -1 ? 'checked' : '';
+        return '<label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-soft); margin-bottom:8px;">' +
+          '<input type="checkbox" data-carpet="' + c.id + '" data-zusatz="' + z.key + '" ' + checked + ' /> ' + z.label + ' (' + z.preis.toFixed(2).replace('.', ',') + ' €/m²)</label>';
+      }).join('');
+      var removeBtn = carpets.length > 1 ? '<button type="button" class="btn-back" data-remove="' + c.id + '" style="padding:8px 16px; font-size:13px;">Entfernen</button>' : '';
+      return '<div class="honest-box" style="margin-bottom:20px; padding:24px 28px;">' +
+        '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">' +
+          '<b style="font-size:14px;">Teppich ' + (idx+1) + '</b>' + removeBtn +
+        '</div>' +
+        '<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">' +
+          '<div class="wizard-field" style="margin-bottom:0;"><label>Länge (m)</label><input type="text" inputmode="decimal" placeholder="z. B. 2,5" data-carpet="' + c.id + '" data-field="laenge" value="' + c.laenge + '" /></div>' +
+          '<div class="wizard-field" style="margin-bottom:0;"><label>Breite (m)</label><input type="text" inputmode="decimal" placeholder="z. B. 1,8" data-carpet="' + c.id + '" data-field="breite" value="' + c.breite + '" /></div>' +
+        '</div>' +
+        '<div class="wizard-field" style="margin-bottom:16px;"><label>Verfahren</label><select data-carpet="' + c.id + '" data-field="verfahren">' +
+          '<option value="Maschinenwäsche" ' + (c.verfahren==='Maschinenwäsche'?'selected':'') + '>Maschinenwäsche (ab 8,00 €/m²)</option>' +
+          '<option value="Handwäsche" ' + (c.verfahren==='Handwäsche'?'selected':'') + '>Handwäsche (ab 16,00 €/m²)</option>' +
+        '</select></div>' +
+        '<div style="margin-bottom:12px;"><span style="font-family:Inter,sans-serif; font-size:11px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft); display:block; margin-bottom:8px;">Zusatzleistungen (optional)</span>' + zusatzHtml + '</div>' +
+        '<div style="font-size:13.5px; color:var(--ink-soft);" id="carpet-line-' + c.id + '">' + (area ? area.toFixed(2).replace('.', ',') + ' m² · ' + fmt(price) : 'Maße eingeben für Preisschätzung') + '</div>' +
+      '</div>';
+    }).join('');
+    subtotalEl.textContent = fmt(calcSubtotal());
+  }
+
+  carpetsWrap.addEventListener('input', function(e){
+    var t = e.target;
+    var id = parseInt(t.dataset.carpet, 10);
+    var c = carpets.filter(function(x){ return x.id === id; })[0];
+    if (!c) return;
+    if (t.dataset.field) c[t.dataset.field] = t.value;
+    subtotalEl.textContent = fmt(calcSubtotal());
+    var lineEl = document.getElementById('carpet-line-' + id);
+    if (lineEl) {
+      var area = carpetArea(c);
+      lineEl.textContent = area ? area.toFixed(2).replace('.', ',') + ' m² · ' + fmt(carpetPrice(c)) : 'Maße eingeben für Preisschätzung';
+    }
+  });
+
+  carpetsWrap.addEventListener('change', function(e){
+    var t = e.target;
+    var id = parseInt(t.dataset.carpet, 10);
+    var c = carpets.filter(function(x){ return x.id === id; })[0];
+    if (!c) return;
+    var needsRerender = false;
+    if (t.dataset.field === 'verfahren') { c.verfahren = t.value; needsRerender = true; }
+    if (t.dataset.zusatz) {
+      var key = t.dataset.zusatz;
+      if (t.checked) { if (c.zusatz.indexOf(key) === -1) c.zusatz.push(key); }
+      else { c.zusatz = c.zusatz.filter(function(k){ return k !== key; }); }
+      needsRerender = true;
+    }
+    if (needsRerender) renderCarpets();
+    updateNextState();
+  });
+
+  carpetsWrap.addEventListener('click', function(e){
+    var btn = e.target.closest('[data-remove]');
+    if (!btn) return;
+    var id = parseInt(btn.dataset.remove, 10);
+    carpets = carpets.filter(function(c){ return c.id !== id; });
+    renderCarpets();
+    updateNextState();
+  });
+
+  addCarpetBtn.addEventListener('click', function(){
+    carpets.push(newCarpet());
+    renderCarpets();
+    updateNextState();
+  });
+
+  renderCarpets();
+
+  wizard.querySelectorAll('.wizard-options').forEach(function(group){
+    group.addEventListener('click', function(e){
+      var opt = e.target.closest('.wizard-option');
+      if (!opt) return;
+      group.querySelectorAll('.wizard-option').forEach(function(o){ o.classList.remove('selected'); });
+      opt.classList.add('selected');
+      data[group.dataset.group] = opt.dataset.value;
+      if (group.dataset.group === 'abholung') {
+        plzWrap.style.display = opt.dataset.value.indexOf('Ja') === 0 ? 'block' : 'none';
+      }
+      updateNextState();
+    });
+  });
+
+  function currentStepValid(){
+    if (current === 1) return !!data.anliegen;
+    if (current === 2) {
+      return carpets.some(function(c){ return carpetArea(c) > 0; });
+    }
+    if (current === 3) {
+      if (!data.abholung) return false;
+      if (data.abholung.indexOf('Ja') === 0) {
+        data.plz = document.getElementById('w-plz').value.trim();
+        return !!data.plz;
+      }
+      return true;
+    }
+    if (current === 4) {
+      data.name = document.getElementById('w-name').value.trim();
+      data.tel = document.getElementById('w-tel').value.trim();
+      data.email = document.getElementById('w-email').value.trim();
+      data.msg = document.getElementById('w-msg').value.trim();
+      return !!data.name && !!data.tel && !!data.email;
+    }
+    if (current === 5) {
+      return document.getElementById('w-consent').checked;
+    }
+    return true;
+  }
+
+  function updateNextState(){
+    nextBtn.disabled = !currentStepValid();
+  }
+
+  ['input','change'].forEach(function(evt){
+    form.addEventListener(evt, updateNextState);
+  });
+
+  function row(label, val){
+    return '<div class="row"><span>' + label + '</span><span>' + (val || '-') + '</span></div>';
+  }
+
+  function carpetSummaryLine(c, idx){
+    var area = carpetArea(c);
+    if (!area) return '';
+    var zusatzLabels = c.zusatz.map(function(key){
+      var z = ZUSATZ.filter(function(item){ return item.key === key; })[0];
+      return z ? z.label : key;
+    }).join(', ');
+    return row('Teppich ' + (idx+1), area.toFixed(2).replace('.', ',') + ' m², ' + c.verfahren + (zusatzLabels ? ', ' + zusatzLabels : '') + ' - ' + fmt(carpetPrice(c)));
+  }
+
+  function renderSummary(){
+    var s = document.getElementById('wizard-summary');
+    var carpetLines = carpets.map(carpetSummaryLine).join('');
+    s.innerHTML =
+      row('Anliegen', data.anliegen) +
+      carpetLines +
+      row('Zwischensumme (Richtwert)', fmt(calcSubtotal())) +
+      row('Abholung', data.abholung + (data.plz ? ' - ' + data.plz : '')) +
+      row('Name', data.name) +
+      row('Telefon', data.tel) +
+      row('E-Mail', data.email) +
+      (data.msg ? row('Nachricht', data.msg) : '');
+  }
+
+  function goTo(n){
+    steps.forEach(function(s){ s.classList.toggle('active', parseInt(s.dataset.step,10) === n); });
+    bars.forEach(function(b){ b.classList.toggle('active', parseInt(b.dataset.bar,10) <= n); });
+    stepLabel.textContent = 'Schritt ' + n + ' von ' + total;
+    backBtn.style.visibility = n === 1 ? 'hidden' : 'visible';
+    nextBtn.textContent = n === total ? 'Anfrage senden →' : 'Weiter →';
+    if (n === total) renderSummary();
+    current = n;
+    updateNextState();
+  }
+
+  backBtn.addEventListener('click', function(){ if (current > 1) goTo(current - 1); });
+
+  function mailtoFallback(subjectText, bodyText){
+    window.location.href = 'mailto:info@teppichlabor.de?subject=' + encodeURIComponent(subjectText) + '&body=' + encodeURIComponent(bodyText);
+  }
+
+  function showSendState(kind, msg){
+    var wrap = document.getElementById('wizard-send-state');
+    if (!wrap) {
+      wrap = document.createElement('div');
+      wrap.id = 'wizard-send-state';
+      wrap.style.margin = '20px 0';
+      document.getElementById('wizard-summary').insertAdjacentElement('afterend', wrap);
+    }
+    wrap.innerHTML = '<div class="honest-box" style="' + (kind === 'error' ? 'border-color:#c0392b;' : '') + '">' + msg + '</div>';
+  }
+
+  nextBtn.addEventListener('click', function(){
+    if (!currentStepValid()) return;
+    if (current < total) {
+      goTo(current + 1);
+    } else {
+      var subjectText = data.anliegen + ' - ' + data.name;
+      var carpetBodyLines = carpets.map(function(c, idx){
+        var area = carpetArea(c);
+        if (!area) return null;
+        var zusatzLabels = c.zusatz.map(function(key){
+          var z = ZUSATZ.filter(function(item){ return item.key === key; })[0];
+          return z ? z.label : key;
+        }).join(', ');
+        return 'Teppich ' + (idx+1) + ': ' + area.toFixed(2).replace('.', ',') + ' m², ' + c.verfahren + (zusatzLabels ? ', ' + zusatzLabels : '') + ' - ' + fmt(carpetPrice(c));
+      }).filter(function(l){ return l; });
+      var bodyLines = [
+        'Anliegen: ' + data.anliegen,
+        ''
+      ].concat(carpetBodyLines).concat([
+        '',
+        'Zwischensumme (Richtwert, ohne Abholung): ' + fmt(calcSubtotal()),
+        '',
+        'Abholung: ' + data.abholung + (data.plz ? ' (' + data.plz + ')' : ''),
+        '',
+        'Telefon: ' + data.tel,
+        '',
+        'Nachricht: ' + (data.msg || '-')
+      ]);
+      var bodyText = bodyLines.join('\n');
+
+      nextBtn.disabled = true;
+      nextBtn.textContent = 'Wird gesendet …';
+
+      var fd = new FormData();
+      fd.append('your-name', data.name || '');
+      fd.append('your-email', data.email || '');
+      fd.append('your-subject', 'Neue Privatkunden-Anfrage: ' + subjectText);
+      fd.append('your-message', bodyText);
+      fd.append('_wpcf7', '307');
+      fd.append('_wpcf7_version', '6.1.7');
+      fd.append('_wpcf7_locale', 'de_DE');
+      fd.append('_wpcf7_unit_tag', 'wpcf7-f307-p17-o1');
+      fd.append('_wpcf7_container_post', '17');
+      fd.append('_wpcf7_posted_data_hash', '');
+
+      fetch('https://teppichlabor.de/wp-json/contact-form-7/v1/contact-forms/307/feedback', {
+        method: 'POST',
+        body: fd
+      }).then(function(res){ return res.json(); }).then(function(json){
+        if (json.status === 'mail_sent') {
+          nextBtn.style.display = 'none';
+          backBtn.style.display = 'none';
+          showSendState('ok', '<b>Danke, deine Anfrage ist raus.</b> Wir melden uns zeitnah bei dir, meist innerhalb eines Werktags.');
+        } else {
+          throw new Error('not sent');
+        }
+      }).catch(function(){
+        nextBtn.disabled = false;
+        nextBtn.textContent = 'Anfrage senden →';
+        showSendState('error', 'Das Senden hat gerade nicht geklappt. <a href="#" id="wizard-mailto-fallback">Stattdessen per E-Mail-Programm senden →</a>');
+        var link = document.getElementById('wizard-mailto-fallback');
+        if (link) link.addEventListener('click', function(e){
+          e.preventDefault();
+          mailtoFallback('Neue Privatkunden-Anfrage: ' + subjectText, bodyText + '\n\nName: ' + data.name + '\nE-Mail: ' + data.email);
+        });
+      });
+    }
+  });
+
+  goTo(1);
+})();
+</script>
+</div>

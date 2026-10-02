@@ -1,0 +1,166 @@
+{
+  "icon": [
+    7,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/icon-real.png"
+  ],
+  "hero": [
+    8,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/maskottchen-hero-web.jpg"
+  ],
+  "expertise": [
+    9,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/maskottchen-laborfuchs-web.jpg"
+  ],
+  "hero_cutout": [
+    23,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/maskottchen-hero-cutout.png"
+  ],
+  "expertise_cutout": [
+    24,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/maskottchen-laborfuchs-cutout.png"
+  ],
+  "cem_photo": [
+    163,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/cem-zeren-labportrait-v3.png"
+  ],
+  "stefano_photo": [
+    195,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/stefano-redo-v7-anzug.png"
+  ],
+  "tile_privatkunden": [
+    249,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/privat-frame1.jpg"
+  ],
+  "tile_unternehmen": [
+    252,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/unt-frame1.jpg"
+  ],
+  "tile_hygiene": [
+    243,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/vid-frame-mid.jpg"
+  ],
+  "logo_wordmark": [
+    90,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/logo-wordmark-transparent.png"
+  ],
+  "hero_bg_photo": [
+    95,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/hero-teppich-naheaufnahme-4k.jpg"
+  ],
+  "sketch_kamera": [
+    117,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/sketch-kamera-reinigung.png"
+  ],
+  "sketch_app": [
+    118,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/sketch-app-schmutzgrad.png"
+  ],
+  "spray_capri": [
+    258,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/spray_capri-portrait.jpg"
+  ],
+  "spray_orient": [
+    259,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/spray_orient-portrait.jpg"
+  ],
+  "spray_bagara": [
+    128,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/spray-bagara-carelab-scaled.png"
+  ],
+  "spray_leder": [
+    261,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/spray_leder-portrait.jpg"
+  ],
+  "spray_toscana": [
+    262,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/spray_toscana-portrait.jpg"
+  ],
+  "spray_saigon": [
+    260,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/spray_saigon-portrait.jpg"
+  ],
+  "site_icon": [
+    143,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/carelab-site-icon.png"
+  ],
+  "amalfi_hero": [
+    159,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/amalfi-coast-capri-hero-scaled.png"
+  ],
+  "carpet_einzelhandel": [
+    186,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/carpet-einzelhandel-v2.png"
+  ],
+  "carpet_gastro": [
+    187,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/carpet-gastro-v2.png"
+  ],
+  "hero_leistungen": [
+    232,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/hero-leistungen-v2.png"
+  ],
+  "hero_abholung": [
+    202,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/van-wrapped-v2-scaled.png"
+  ],
+  "hero_team": [
+    203,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/labor-clean-v1-scaled.png"
+  ],
+  "hero_journal": [
+    222,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/hero-journal-v2.png"
+  ],
+  "hero_innovation": [
+    223,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/hero-innovation-v2.png"
+  ],
+  "hero_app": [
+    224,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/hero-app-v2.png"
+  ],
+  "hero_shop": [
+    225,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/hero-shop-v2.png"
+  ],
+  "hero_hygiene": [
+    231,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/hero-hygiene-v2.png"
+  ],
+  "hero_unternehmen": [
+    221,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/hero-unternehmen-v2.png"
+  ],
+  "hero_kontakt": [
+    233,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/hero-kontakt-v2.png"
+  ],
+  "tile_hygiene_video": [
+    245,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/tile-hygiene-loop-opt.mp4"
+  ],
+  "tile_privat_video": [
+    248,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/tile-privat-loop-opt.mp4"
+  ],
+  "tile_unternehmen_video": [
+    251,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/tile-unternehmen-loop-opt.mp4"
+  ],
+  "hero_slide_kamera": [
+    268,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/hero-slide-kamera.jpg"
+  ],
+  "hero_slide_maschine": [
+    269,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/hero-slide-maschine.jpg"
+  ],
+  "hero_slide_faser": [
+    0,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/hero-teppich-naheaufnahme-4k.jpg"
+  ],
+  "chat_icon": [
+    294,
+    "https://teppichlabor.de/wp-content/uploads/2026/09/chat-icon.png"
+  ]
+}

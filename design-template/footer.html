@@ -1,0 +1,205 @@
+<footer class="tl-footer">
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <a class="logo" href="/">
+          <img src="https://teppichlabor.de/wp-content/uploads/2026/09/logo-wordmark-transparent.png" alt="Care Lab" />
+        </a>
+        <p style="font-size:13px; color:var(--ink-soft); max-width:32ch; line-height:1.6; font-weight:500;">Teppich- und Polsterreinigung für Privatkunden und Unternehmen in Rhein-Main.</p>
+      </div>
+      <div>
+        <h5>Privatkunden</h5>
+        <ul>
+          <li><a href="/leistungen-pakete/">Leistungen &amp; Preise</a></li>
+          <li><a href="/teppichbodenreinigung/">Teppichbodenreinigung</a></li>
+          <li><a href="/abholung/">Abholung</a></li>
+          <li><a href="/faq/">Häufige Fragen</a></li>
+          <li><a href="/impressum-kontakt/">Angebot anfragen</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Unternehmen</h5>
+        <ul>
+          <li><a href="/unternehmen/">Hotels</a></li>
+          <li><a href="/unternehmen/">Kitas &amp; Büros</a></li>
+          <li><a href="/unternehmen/">Hausverwaltungen</a></li>
+          <li><a href="/logo-teppiche/">Logo-Teppiche</a></li>
+          <li><a href="/profi-kontakt/">Profi-Anfrage</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Hygiene</h5>
+        <ul>
+          <li><a href="/hygienereinigung/">Hygienereinigung</a></li>
+          <li><a href="/maschinenpark/">Maschinenpark</a></li>
+          <li><a href="/wer-wir-sind/">Wer wir sind</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Innovation</h5>
+        <ul>
+          <li><a href="/shop/">Shop</a></li>
+          <li><a href="/app/">App</a></li>
+          <li><a href="/innovation/">Was wir entwickeln</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Journal</h5>
+        <ul>
+          <li><a href="/journal/">Blog &amp; News</a></li>
+          <li><a href="/newsletter/">Newsletter</a></li>
+          <li><span class="soon-item">Podcast</span><span class="soon-tag">Bald</span></li>
+          <li><span class="soon-item">Erklärvideos</span><span class="soon-tag">Bald</span></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Kontakt</h5>
+        <ul>
+          <li><a href="tel:+491728293606">0172 8293606</a></li>
+          <li><a href="mailto:info@teppichlabor.de">E-Mail schreiben</a></li>
+          <li><a href="/impressum-kontakt/">Anfrage &amp; Standort</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© Care Lab, Inh. Cem Zeren</span>
+      <span style="display:flex; gap:16px;">
+        <a href="/impressum/" style="color:inherit;">Impressum</a>
+        <a href="/datenschutz/" style="color:inherit;">Datenschutz</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.net.min.js"></script>
+<script>
+(function(){
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hasGsap = !!window.gsap && !!window.ScrollTrigger;
+  if (hasGsap) gsap.registerPlugin(ScrollTrigger);
+
+  if (!reduceMotion && window.Lenis) {
+    var lenis = new Lenis({ duration: 1.05, smoothWheel: true });
+    window.__lenis = lenis;
+    if (hasGsap) {
+      gsap.ticker.add(function(time){ lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+      lenis.on('scroll', ScrollTrigger.update);
+    } else {
+      var raf = function(time){ lenis.raf(time); requestAnimationFrame(raf); };
+      requestAnimationFrame(raf);
+    }
+  }
+
+  if (!reduceMotion && hasGsap) {
+    var selectors = '.step, .service-card, .wissen-card, .expertise-figure, .expertise-text, .partner-main, .partner-col, .paket, .seg, .fw, .value, .p-step, .modell-col, .kcard, .story-figure, .story-text, .verf-stat, .verf-text';
+    document.querySelectorAll(selectors).forEach(function(el){
+      gsap.fromTo(el, { opacity: 0, y: 24 }, {
+        opacity: 1, y: 0, duration: 0.75, ease: 'power2.out',
+        scrollTrigger: { trigger: el, start: 'top 90%' }
+      });
+    });
+  }
+
+  var heroSlides = document.getElementById('hero-slides');
+  var heroDots = document.getElementById('hero-dots');
+  if (heroSlides && heroDots) {
+    var dots = heroDots.querySelectorAll('span');
+    var slides = heroSlides.querySelectorAll('.hero-slide');
+    var setActive = function(i){
+      dots.forEach(function(d, idx){ d.classList.toggle('active', idx === i); });
+    };
+    dots.forEach(function(d, idx){
+      d.style.cursor = 'pointer';
+      d.addEventListener('click', function(){
+        slides[idx].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+      });
+    });
+    var io2 = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          var idx = Array.prototype.indexOf.call(slides, entry.target);
+          setActive(idx);
+        }
+      });
+    }, { root: heroSlides, threshold: 0.6 });
+    slides.forEach(function(s){ io2.observe(s); });
+  }
+
+  var showcaseWrap = document.querySelector('.showcase');
+  var showcaseDots = document.querySelector('.showcase-dots');
+  if (showcaseWrap && showcaseDots) {
+    var sDots = showcaseDots.querySelectorAll('span');
+    var sTiles = showcaseWrap.querySelectorAll('.showcase-tile');
+    var setActiveS = function(i){
+      sDots.forEach(function(d, idx){ d.classList.toggle('active', idx === i); });
+    };
+    sDots.forEach(function(d, idx){
+      d.style.cursor = 'pointer';
+      d.addEventListener('click', function(){
+        sTiles[idx].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+      });
+    });
+    var io3 = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          var idx = Array.prototype.indexOf.call(sTiles, entry.target);
+          setActiveS(idx);
+        }
+      });
+    }, { root: showcaseWrap, threshold: 0.6 });
+    sTiles.forEach(function(t){ io3.observe(t); });
+    setActiveS(0);
+  }
+
+  function initVantaNet(el, opts) {
+    if (!el || !window.VANTA || !window.VANTA.NET) return;
+    var effect = null;
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting && !effect) {
+          effect = VANTA.NET(Object.assign({
+            el: el,
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.0,
+            scaleMobile: 1.0
+          }, opts));
+        }
+      });
+    }, { threshold: 0.05 });
+    io.observe(el);
+  }
+
+  if (!reduceMotion) {
+    initVantaNet(document.getElementById('vanta-partner'), {
+      color: 0xf5f5f3, backgroundColor: 0x0b0f14,
+      points: 8.0, maxDistance: 22.0, spacing: 20.0, showDots: false
+    });
+  }
+
+  var tileVideos = document.querySelectorAll('.showcase-tile video');
+  if (tileVideos.length) {
+    var ioVid = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var v = entry.target;
+        if (entry.isIntersecting) {
+          v.muted = true;
+          var p = v.play();
+          if (p && p.catch) p.catch(function(){});
+        } else {
+          v.pause();
+        }
+      });
+    }, { threshold: 0.25 });
+    tileVideos.forEach(function(v){ ioVid.observe(v); });
+  }
+})();
+</script>

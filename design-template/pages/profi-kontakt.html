@@ -1,0 +1,314 @@
+<div class="tl-page alignfull">
+<header class="tl-intro tl-intro-hero" style="background-image:url('https://teppichlabor.de/wp-content/uploads/2026/09/hero-unternehmen-v2.png');">
+  <div class="container">
+    <p class="mono">Für Unternehmen</p>
+    <h1>Angebot für Gewerbekunden anfragen.</h1>
+    <p>Für Hotels, Kitas, Büros, Gastronomie und Hausverwaltungen: ein paar Angaben mehr als im Privatkunden-Formular, damit wir ein realistisches Angebot erstellen können, statt mit einer Preisliste zu raten.</p>
+  </div>
+</header>
+
+<section style="padding-top:24px;">
+  <div class="container">
+    <div class="wizard" id="tl-wizard-profi">
+      <div class="wizard-progress" id="wizard-p-progress">
+        <div class="bar active" data-bar="1"><div class="fill"></div></div>
+        <div class="bar" data-bar="2"><div class="fill"></div></div>
+        <div class="bar" data-bar="3"><div class="fill"></div></div>
+        <div class="bar" data-bar="4"><div class="fill"></div></div>
+        <div class="bar" data-bar="5"><div class="fill"></div></div>
+      </div>
+      <p class="mono" id="wizard-p-steplabel" style="margin-bottom:20px;">Schritt 1 von 5</p>
+
+      <form id="wizard-p-form">
+        <div class="wizard-step active" data-step="1">
+          <h2>Worum geht's?</h2>
+          <p class="step-sub">Wähl aus, was angefragt werden soll.</p>
+          <div class="wizard-options" data-group="anliegen">
+            <div class="wizard-option" data-value="Teppichreinigung (Abholung)">
+              <h4>Teppichreinigung</h4>
+              <p>Lose Teppiche, Abholung, Reinigung im Labor, Rückgabe.</p>
+            </div>
+            <div class="wizard-option" data-value="Teppichbodenreinigung (vor Ort)">
+              <h4>Teppichbodenreinigung</h4>
+              <p>Fest verlegter Teppichboden, Reinigung direkt vor Ort im Objekt.</p>
+            </div>
+            <div class="wizard-option" data-value="Beides">
+              <h4>Beides</h4>
+              <p>Lose Teppiche und fest verlegter Teppichboden im selben Objekt.</p>
+            </div>
+            <div class="wizard-option" data-value="Noch unklar / Beratung gewünscht">
+              <h4>Noch unklar</h4>
+              <p>Erstmal Beratung, was für unser Objekt sinnvoll ist.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="wizard-step" data-step="2">
+          <h2>Unternehmen &amp; Objekt</h2>
+          <p class="step-sub">Damit wir wissen, mit wem und mit welcher Art Objekt wir es zu tun haben.</p>
+          <div class="wizard-field">
+            <label for="wp-firma">Firma / Einrichtung</label>
+            <input type="text" id="wp-firma" required />
+          </div>
+          <div class="wizard-options" data-group="objekttyp" style="margin-bottom:20px;">
+            <div class="wizard-option" data-value="Hotel"><h4>Hotel</h4></div>
+            <div class="wizard-option" data-value="Büro"><h4>Büro</h4></div>
+            <div class="wizard-option" data-value="Kita"><h4>Kita</h4></div>
+            <div class="wizard-option" data-value="Gastronomie"><h4>Gastronomie</h4></div>
+            <div class="wizard-option" data-value="Hausverwaltung"><h4>Hausverwaltung</h4></div>
+            <div class="wizard-option" data-value="Sonstiges"><h4>Sonstiges</h4></div>
+          </div>
+          <div class="wizard-field">
+            <label for="wp-flaeche">Ungefähre Fläche (m²) oder Anzahl Teppiche</label>
+            <input type="text" id="wp-flaeche" placeholder="z. B. 180 m² oder 6 Teppiche" required />
+          </div>
+        </div>
+
+        <div class="wizard-step" data-step="3">
+          <h2>Wie oft?</h2>
+          <p class="step-sub">Einmalig oder als wiederkehrende Vereinbarung.</p>
+          <div class="wizard-options" data-group="rhythmus">
+            <div class="wizard-option" data-value="Einmalig"><h4>Einmalig</h4><p>Einzelauftrag, ohne Vertragsbindung.</p></div>
+            <div class="wizard-option" data-value="Regelmäßig / Jahresvertrag"><h4>Regelmäßig</h4><p>Fester Turnus, ein Ansprechpartner, planbare Kosten.</p></div>
+          </div>
+        </div>
+
+        <div class="wizard-step" data-step="4">
+          <h2>Ansprechperson</h2>
+          <p class="step-sub">Damit wir uns bei der richtigen Person melden können.</p>
+          <div class="wizard-field">
+            <label for="wp-name">Name</label>
+            <input type="text" id="wp-name" required />
+          </div>
+          <div class="wizard-field">
+            <label for="wp-tel">Telefon</label>
+            <input type="tel" id="wp-tel" required />
+          </div>
+          <div class="wizard-field">
+            <label for="wp-email">E-Mail</label>
+            <input type="email" id="wp-email" required />
+          </div>
+          <div class="wizard-field">
+            <label for="wp-adresse">Adresse des Objekts</label>
+            <input type="text" id="wp-adresse" placeholder="Straße, PLZ, Ort" required />
+          </div>
+          <div class="wizard-field">
+            <label for="wp-msg">Nachricht (optional)</label>
+            <textarea id="wp-msg" placeholder="Besonderheiten, Wunschtermin, was du sonst noch mitteilen willst."></textarea>
+          </div>
+        </div>
+
+        <div class="wizard-step" data-step="5">
+          <h2>Fast fertig.</h2>
+          <p class="step-sub">Kurz prüfen, dann senden wir deine Anfrage direkt an uns.</p>
+          <div class="wizard-summary" id="wizard-p-summary"></div>
+          <div class="honest-box" style="margin-bottom:24px; font-size:13.5px; padding:24px 28px;">
+            <b>Haftungsausschluss.</b> Die Reinigung erfolgt nach bestem fachlichem Ermessen. Für Vorschäden, die erst während der Reinigung sichtbar werden, sowie für Farbveränderungen bei stark beanspruchten oder minderwertigen Materialien übernehmen wir keine Haftung. Unsere Haftung ist auf Vorsatz und grobe Fahrlässigkeit beschränkt, außer bei Schäden aus der Verletzung von Leben, Körper oder Gesundheit. Reklamationen bitte innerhalb von 3 Werktagen nach Rückgabe melden.
+          </div>
+          <div class="wizard-consent">
+            <input type="checkbox" id="wp-consent" required />
+            <label for="wp-consent">Ich habe den Haftungsausschluss gelesen und akzeptiere ihn.</label>
+          </div>
+        </div>
+      </form>
+
+      <div class="wizard-nav">
+        <button type="button" class="btn-back" id="wizard-p-back" style="visibility:hidden;">← Zurück</button>
+        <button type="button" class="btn-next" id="wizard-p-next" disabled>Weiter →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="kontakt">
+  <div class="container">
+    <div class="container section-head" style="padding-top:0;">
+      <div>
+        <p class="mono eyebrow">Lieber unkompliziert?</p>
+        <h2>Privatkunde? Zum kurzen Formular.</h2>
+      </div>
+      <a href="/impressum-kontakt/" class="btn secondary">Privatkunden-Anfrage →</a>
+    </div>
+    <div class="kontakt-grid">
+      <div class="kcard">
+        <span class="l">Adresse</span>
+        <p>Großer Haingraben 9<br>65779 Kelkheim</p>
+      </div>
+      <div class="kcard">
+        <span class="l">Telefon</span>
+        <a href="tel:+491728293606">0172 8293606</a>
+      </div>
+      <div class="kcard">
+        <span class="l">E-Mail</span>
+        <a href="mailto:info@teppichlabor.de">E-Mail schreiben</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var wizard = document.getElementById('tl-wizard-profi');
+  if (!wizard) return;
+  var steps = Array.prototype.slice.call(wizard.querySelectorAll('.wizard-step'));
+  var total = steps.length;
+  var current = 1;
+  var data = { anliegen:'', firma:'', objekttyp:'', flaeche:'', rhythmus:'', name:'', tel:'', email:'', adresse:'', msg:'' };
+
+  var backBtn = document.getElementById('wizard-p-back');
+  var nextBtn = document.getElementById('wizard-p-next');
+  var stepLabel = document.getElementById('wizard-p-steplabel');
+  var bars = wizard.querySelectorAll('#wizard-p-progress .bar');
+  var form = document.getElementById('wizard-p-form');
+
+  wizard.querySelectorAll('.wizard-options').forEach(function(group){
+    group.addEventListener('click', function(e){
+      var opt = e.target.closest('.wizard-option');
+      if (!opt) return;
+      group.querySelectorAll('.wizard-option').forEach(function(o){ o.classList.remove('selected'); });
+      opt.classList.add('selected');
+      data[group.dataset.group] = opt.dataset.value;
+      updateNextState();
+    });
+  });
+
+  function currentStepValid(){
+    if (current === 1) return !!data.anliegen;
+    if (current === 2) {
+      data.firma = document.getElementById('wp-firma').value.trim();
+      data.flaeche = document.getElementById('wp-flaeche').value.trim();
+      return !!data.firma && !!data.objekttyp && !!data.flaeche;
+    }
+    if (current === 3) return !!data.rhythmus;
+    if (current === 4) {
+      data.name = document.getElementById('wp-name').value.trim();
+      data.tel = document.getElementById('wp-tel').value.trim();
+      data.email = document.getElementById('wp-email').value.trim();
+      data.adresse = document.getElementById('wp-adresse').value.trim();
+      data.msg = document.getElementById('wp-msg').value.trim();
+      return !!data.name && !!data.tel && !!data.email && !!data.adresse;
+    }
+    if (current === 5) {
+      return document.getElementById('wp-consent').checked;
+    }
+    return true;
+  }
+
+  function updateNextState(){
+    nextBtn.disabled = !currentStepValid();
+  }
+
+  ['input','change'].forEach(function(evt){
+    form.addEventListener(evt, updateNextState);
+  });
+
+  function row(label, val){
+    return '<div class="row"><span>' + label + '</span><span>' + (val || '-') + '</span></div>';
+  }
+
+  function renderSummary(){
+    var s = document.getElementById('wizard-p-summary');
+    s.innerHTML =
+      row('Anliegen', data.anliegen) +
+      row('Firma', data.firma) +
+      row('Objekttyp', data.objekttyp) +
+      row('Fläche / Anzahl', data.flaeche) +
+      row('Rhythmus', data.rhythmus) +
+      row('Ansprechperson', data.name) +
+      row('Telefon', data.tel) +
+      row('E-Mail', data.email) +
+      row('Adresse', data.adresse) +
+      (data.msg ? row('Nachricht', data.msg) : '');
+  }
+
+  function goTo(n){
+    steps.forEach(function(s){ s.classList.toggle('active', parseInt(s.dataset.step,10) === n); });
+    bars.forEach(function(b){ b.classList.toggle('active', parseInt(b.dataset.bar,10) <= n); });
+    stepLabel.textContent = 'Schritt ' + n + ' von ' + total;
+    backBtn.style.visibility = n === 1 ? 'hidden' : 'visible';
+    nextBtn.textContent = n === total ? 'Anfrage senden →' : 'Weiter →';
+    if (n === total) renderSummary();
+    current = n;
+    updateNextState();
+  }
+
+  backBtn.addEventListener('click', function(){ if (current > 1) goTo(current - 1); });
+
+  function mailtoFallback(subjectText, bodyText){
+    window.location.href = 'mailto:info@teppichlabor.de?subject=' + encodeURIComponent(subjectText) + '&body=' + encodeURIComponent(bodyText);
+  }
+
+  function showSendState(kind, msg){
+    var wrap = document.getElementById('wizard-p-send-state');
+    if (!wrap) {
+      wrap = document.createElement('div');
+      wrap.id = 'wizard-p-send-state';
+      wrap.style.margin = '20px 0';
+      document.getElementById('wizard-p-summary').insertAdjacentElement('afterend', wrap);
+    }
+    wrap.innerHTML = '<div class="honest-box" style="' + (kind === 'error' ? 'border-color:#c0392b;' : '') + '">' + msg + '</div>';
+  }
+
+  nextBtn.addEventListener('click', function(){
+    if (!currentStepValid()) return;
+    if (current < total) {
+      goTo(current + 1);
+    } else {
+      var subjectText = 'Gewerbeanfrage: ' + data.anliegen + ' - ' + data.firma;
+      var bodyLines = [
+        'Anliegen: ' + data.anliegen,
+        'Firma: ' + data.firma,
+        'Objekttyp: ' + data.objekttyp,
+        'Fläche / Anzahl: ' + data.flaeche,
+        'Rhythmus: ' + data.rhythmus,
+        '',
+        'Telefon: ' + data.tel,
+        'Adresse des Objekts: ' + data.adresse,
+        '',
+        'Nachricht: ' + (data.msg || '-')
+      ];
+      var bodyText = bodyLines.join('\n');
+
+      nextBtn.disabled = true;
+      nextBtn.textContent = 'Wird gesendet …';
+
+      var fd = new FormData();
+      fd.append('your-name', data.name || '');
+      fd.append('your-email', data.email || '');
+      fd.append('your-subject', subjectText);
+      fd.append('your-message', bodyText);
+      fd.append('_wpcf7', '307');
+      fd.append('_wpcf7_version', '6.1.7');
+      fd.append('_wpcf7_locale', 'de_DE');
+      fd.append('_wpcf7_unit_tag', 'wpcf7-f307-p274-o1');
+      fd.append('_wpcf7_container_post', '274');
+      fd.append('_wpcf7_posted_data_hash', '');
+
+      fetch('https://teppichlabor.de/wp-json/contact-form-7/v1/contact-forms/307/feedback', {
+        method: 'POST',
+        body: fd
+      }).then(function(res){ return res.json(); }).then(function(json){
+        if (json.status === 'mail_sent') {
+          nextBtn.style.display = 'none';
+          backBtn.style.display = 'none';
+          showSendState('ok', '<b>Danke, deine Anfrage ist raus.</b> Wir melden uns zeitnah bei dir, meist innerhalb eines Werktags.');
+        } else {
+          throw new Error('not sent');
+        }
+      }).catch(function(){
+        nextBtn.disabled = false;
+        nextBtn.textContent = 'Anfrage senden →';
+        showSendState('error', 'Das Senden hat gerade nicht geklappt. <a href="#" id="wizard-p-mailto-fallback">Stattdessen per E-Mail-Programm senden →</a>');
+        var link = document.getElementById('wizard-p-mailto-fallback');
+        if (link) link.addEventListener('click', function(e){
+          e.preventDefault();
+          mailtoFallback(subjectText, bodyText + '\n\nAnsprechperson: ' + data.name + '\nE-Mail: ' + data.email);
+        });
+      });
+    }
+  });
+
+  goTo(1);
+})();
+</script>
+</div>

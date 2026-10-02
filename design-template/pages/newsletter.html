@@ -1,0 +1,90 @@
+<div class="tl-page alignfull">
+<header class="tl-intro tl-intro-hero" style="background-image:url('https://teppichlabor.de/wp-content/uploads/2026/09/hero-journal-v2.png');">
+  <div class="container">
+    <p class="mono">Newsletter</p>
+    <h1>Kein Spam. Nur, wenn's was zu sagen gibt.</h1>
+    <p>Neue Düfte, neue Leistungen, Plätze in der Werkstatt, wenn's eng wird. Kein festes Intervall, wir schreiben, wenn's sich lohnt.</p>
+  </div>
+</header>
+
+<section style="padding-top:56px;">
+  <div class="container" style="max-width:640px;">
+    <p class="mono eyebrow">Anmelden</p>
+    <h2>Trag dich ein, wir schreiben nicht oft.</h2>
+    <p style="color:var(--ink-soft); margin:12px 0 28px;">Abmelden geht jederzeit über den Link in jeder Mail, keine Fragen gestellt.</p>
+    <form id="nl-form" style="display:flex; gap:10px; flex-wrap:wrap;">
+      <input type="email" id="nl-email" required placeholder="deine@email.de" style="flex:1 1 260px; padding:14px 16px; border:1px solid var(--line); border-radius:4px; font-family:inherit; font-size:15px;" />
+      <button type="submit" class="btn primary" id="nl-submit">Anmelden →</button>
+    </form>
+    <div id="nl-state"></div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="p-steps">
+      <div class="p-step"><span class="n">01</span><h4>Eintragen</h4><p>Name ist optional, die E-Mail-Adresse reicht.</p></div>
+      <div class="p-step"><span class="n">02</span><h4>Bestätigen</h4><p>Ein Klick in der Bestätigungsmail, danach bist du drin.</p></div>
+      <div class="p-step"><span class="n">03</span><h4>Lesen oder löschen</h4><p>Kommt selten genug, dass es sich lohnt reinzuschauen.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="container">
+    <h2>Lieber direkt ein Angebot?</h2>
+    <p>Newsletter ist für später, falls du jetzt schon einen Teppich hast.</p>
+    <a href="/impressum-kontakt/" class="btn">Angebot anfragen →</a>
+  </div>
+</section>
+</div>
+
+<script>
+(function(){
+  var form = document.getElementById('nl-form');
+  if (!form) return;
+  var emailInput = document.getElementById('nl-email');
+  var submitBtn = document.getElementById('nl-submit');
+  var stateBox = document.getElementById('nl-state');
+
+  function showState(kind, msg){
+    stateBox.innerHTML = '<div class="honest-box" style="margin-top:16px;' + (kind === 'error' ? 'border-color:#c0392b;' : '') + '">' + msg + '</div>';
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var email = emailInput.value.trim();
+    if (!email) return;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Wird gesendet …';
+
+    var fd = new FormData();
+    fd.append('your-name', 'Newsletter-Anmeldung');
+    fd.append('your-email', email);
+    fd.append('your-subject', 'Neue Newsletter-Anmeldung');
+    fd.append('your-message', 'Bitte in den Newsletter eintragen.\n\nE-Mail: ' + email);
+    fd.append('_wpcf7', '307');
+    fd.append('_wpcf7_version', '6.1.7');
+    fd.append('_wpcf7_locale', 'de_DE');
+    fd.append('_wpcf7_unit_tag', 'wpcf7-f307-p304-o1');
+    fd.append('_wpcf7_container_post', '304');
+    fd.append('_wpcf7_posted_data_hash', '');
+
+    fetch('https://teppichlabor.de/wp-json/contact-form-7/v1/contact-forms/307/feedback', {
+      method: 'POST',
+      body: fd
+    }).then(function(res){ return res.json(); }).then(function(json){
+      if (json.status === 'mail_sent') {
+        form.style.display = 'none';
+        showState('ok', '<b>Danke.</b> Wir tragen dich manuell ein, solange die automatische Anmeldung noch nicht live ist.');
+      } else {
+        throw new Error('not sent');
+      }
+    }).catch(function(){
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Anmelden →';
+      showState('error', 'Das hat gerade nicht geklappt. <a href="mailto:info@teppichlabor.de?subject=Newsletter-Anmeldung">Schreib uns stattdessen direkt →</a>');
+    });
+  });
+})();
+</script>
