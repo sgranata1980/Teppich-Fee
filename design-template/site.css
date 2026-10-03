@@ -200,6 +200,10 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
 
 /* ---------- Wissen / Content-Platzhalter ---------- */
 .wissen{ border-bottom:1px solid var(--line-strong); }
+.newsletter-band{ padding:clamp(48px,7vw,88px) 0; background:var(--surface-2); border-bottom:1px solid var(--line-strong); }
+.newsletter-band-form{ display:flex; gap:10px; flex-wrap:wrap; max-width:480px; }
+.newsletter-band-form input{ flex:1 1 240px; padding:14px 16px; border:1px solid var(--line); border-radius:4px; font-family:inherit; font-size:15px; background:var(--bg); }
+.newsletter-band #home-nl-state .honest-box{ margin-top:16px; max-width:480px; }
 .wissen-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:48px; }
 @media (max-width:820px){ .wissen-grid{ grid-template-columns:1fr; gap:40px; } }
 .wissen-card{ padding:32px 0 0; border-top:2px solid var(--line-strong); display:flex; flex-direction:column; gap:16px; }
