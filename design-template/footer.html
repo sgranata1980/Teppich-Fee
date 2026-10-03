@@ -78,6 +78,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.net.min.js"></script>
 <script>
 (function(){
+  function setHeaderHeightVar(){
+    var h = document.querySelector('.tl-header');
+    if (h) document.documentElement.style.setProperty('--header-h', h.offsetHeight + 'px');
+  }
+  setHeaderHeightVar();
+  window.addEventListener('resize', setHeaderHeightVar);
+
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var hasGsap = !!window.gsap && !!window.ScrollTrigger;
   if (hasGsap) gsap.registerPlugin(ScrollTrigger);
