@@ -252,12 +252,17 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
 
 /* ---------- Leistungen & Pakete ---------- */
 .basetable{ padding-top:56px; }
-.basetable .table-scroll{ width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.basetable .table-scroll{ width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; position:relative; }
 .basetable table{ width:100%; min-width:520px; border-collapse:collapse; }
 .basetable th, .basetable td{ text-align:left; padding:16px 18px; border-bottom:1px solid var(--line); font-size:16px; }
 .basetable th{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); font-weight:500; }
 .basetable td.price{ font-family:'Inter',Helvetica,Arial,sans-serif; font-weight:600; text-align:right; }
 .basetable-note{ margin-top:16px; font-size:12.5px; color:var(--ink-soft); }
+.basetable-swipe-hint{ display:none; font-size:11.5px; color:var(--ink-soft); margin-top:8px; }
+@media (max-width:620px){
+  .basetable .table-scroll::after{ content:''; position:absolute; top:0; right:0; bottom:0; width:28px; background:linear-gradient(90deg, rgba(255,255,255,0), var(--surface,#fff)); pointer-events:none; }
+  .basetable-swipe-hint{ display:block; }
+}
 .pakete{ background:var(--surface-2); }
 .pakete-head{ margin-bottom:44px; }
 .pakete-head h2{ font-size:clamp(24px,4vw,40px); }
