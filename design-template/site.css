@@ -447,3 +447,25 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
 .faq-item.open .faq-a{ max-height:600px; }
 .faq-a p{ padding:0 0 24px; font-size:15px; line-height:1.7; color:var(--ink-soft); max-width:70ch; margin:0; }
 .faq-a a{ color:var(--ink); font-weight:600; }
+
+/* ---------- Journal / Artikel ---------- */
+.article-body{ padding:clamp(56px,8vw,96px) 0 32px; }
+.article-body .container{ max-width:760px; }
+.article-meta{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 28px; }
+.article-body .lede{ font-size:19px; line-height:1.65; color:var(--ink-soft); margin:0 0 8px; max-width:68ch; }
+.article-body h2{ font-size:clamp(21px,2.6vw,28px); line-height:1.28; margin:48px 0 16px; max-width:30ch; }
+.article-body p{ font-size:16.5px; line-height:1.75; margin:0 0 20px; max-width:68ch; }
+.article-body ul{ font-size:16.5px; line-height:1.75; margin:0 0 24px; padding-left:22px; max-width:68ch; }
+.article-body ul li{ margin-bottom:8px; }
+.article-body .honest-box{ margin:36px 0; max-width:68ch; }
+.article-back{ padding:8px 0 48px; }
+.article-back a{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:13.5px; font-weight:600; color:var(--ink-soft); text-decoration:none; }
+.article-back a:hover{ color:var(--ink); }
+.journal-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:32px; }
+.journal-card{ background:var(--bg); padding:32px; text-decoration:none; color:inherit; display:flex; flex-direction:column; transition:background .15s ease; }
+.journal-card:hover{ background:var(--surface-2); }
+.journal-card .cat{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:14px; }
+.journal-card h3{ font-size:19px; line-height:1.3; margin:0 0 10px; }
+.journal-card p{ font-size:14px; line-height:1.6; color:var(--ink-soft); margin:0; flex:1; }
+.journal-card .read-more{ margin-top:16px; font-family:'Inter',Helvetica,Arial,sans-serif; font-size:13px; font-weight:600; }
+@media (max-width:760px){ .journal-grid{ grid-template-columns:1fr; } }
