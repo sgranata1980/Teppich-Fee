@@ -284,7 +284,7 @@
       fd.append('_wpcf7_container_post', '274');
       fd.append('_wpcf7_posted_data_hash', '');
 
-      fetch('https://teppichlabor.de/wp-json/contact-form-7/v1/contact-forms/307/feedback', {
+      fetch('/wp-json/contact-form-7/v1/contact-forms/307/feedback', {
         method: 'POST',
         body: fd
       }).then(function(res){ return res.json(); }).then(function(json){
