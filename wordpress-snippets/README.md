@@ -9,6 +9,7 @@ entspricht der Snippet-ID auf der Live-Seite.
 | 5 | Care Lab Chat Assistent | `../chat-worker/wordpress-snippet.php` | REST-Endpoint `/wp-json/care-lab/v1/chat` für das Chat-Widget, siehe `chat-worker/README.md` |
 | 6 | Care Lab Zweit-Domain (care-lab.app) | `domain-care-lab-app.php` | Verhindert den WordPress-Redirect von care-lab.app auf teppichlabor.de |
 | 7 | Care Lab Login-Design (Apple-Look) | `login-design.php` | Stylt wp-login.php: weiß, blaue Buttons, eigenes Logo statt WordPress-Logo |
+| 8 | Care Lab SEO-Basics (Meta-Description + LocalBusiness-Schema) | `seo-basics.php` | Meta-Description pro Seite + LocalBusiness-JSON-LD, ohne SEO-Plugin |
 
 ## Warum als Backup im Repo
 
