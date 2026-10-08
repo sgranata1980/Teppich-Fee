@@ -232,9 +232,13 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
 .product-card.sold-out .product-img{ opacity:.55; filter:grayscale(1); }
 
 .duft-teaser{ background:var(--surface-2); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
-.duft-row{ display:flex; gap:28px; overflow-x:auto; padding:4px 0 8px; margin-top:32px; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
-.duft-row::-webkit-scrollbar{ display:none; }
-.duft-bottle{ flex:0 0 130px; text-align:center; }
+.duft-row{ display:grid; grid-template-columns:repeat(5,1fr); gap:28px; margin-top:32px; }
+.duft-bottle{ text-align:center; }
+@media (max-width:760px){
+  .duft-row{ display:flex; gap:16px; overflow-x:auto; padding:4px 0 8px; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+  .duft-row::-webkit-scrollbar{ display:none; }
+  .duft-bottle{ flex:0 0 130px; }
+}
 .duft-bottle img{ width:100%; aspect-ratio:4/5; height:auto; object-fit:cover; display:block; margin-bottom:12px; border-radius:4px; filter:drop-shadow(0 14px 22px rgba(11,15,20,.14)); }
 .duft-bottle span{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:13px; font-weight:600; color:var(--ink); }
 .scent-hero{ padding:0; }
