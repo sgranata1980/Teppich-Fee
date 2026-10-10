@@ -210,41 +210,5 @@
     tileVideos.forEach(function(v){ ioVid.observe(v); });
   }
 
-  var homeNlForm = document.getElementById('home-nl-form');
-  if (homeNlForm) {
-    var homeNlEmail = document.getElementById('home-nl-email');
-    var homeNlSubmit = document.getElementById('home-nl-submit');
-    var homeNlState = document.getElementById('home-nl-state');
-    homeNlForm.addEventListener('submit', function(e){
-      e.preventDefault();
-      var email = homeNlEmail.value.trim();
-      if (!email) return;
-      homeNlSubmit.disabled = true;
-      homeNlSubmit.textContent = 'Wird gesendet …';
-      var fd = new FormData();
-      fd.append('your-name', 'Newsletter-Anmeldung');
-      fd.append('your-email', email);
-      fd.append('your-subject', 'Neue Newsletter-Anmeldung');
-      fd.append('your-message', 'Bitte in den Newsletter eintragen.\n\nE-Mail: ' + email);
-      fd.append('_wpcf7', '307');
-      fd.append('_wpcf7_version', '6.1.7');
-      fd.append('_wpcf7_locale', 'de_DE');
-      fd.append('_wpcf7_unit_tag', 'wpcf7-f307-p12-o2');
-      fd.append('_wpcf7_container_post', '12');
-      fd.append('_wpcf7_posted_data_hash', '');
-      fetch('/wp-json/contact-form-7/v1/contact-forms/307/feedback', {
-        method: 'POST', body: fd
-      }).then(function(res){ return res.json(); }).then(function(json){
-        if (json.status === 'mail_sent') {
-          homeNlForm.style.display = 'none';
-          homeNlState.innerHTML = '<div class="honest-box"><b>Danke.</b> Wir tragen dich manuell ein, solange die automatische Anmeldung noch nicht live ist.</div>';
-        } else { throw new Error('not sent'); }
-      }).catch(function(){
-        homeNlSubmit.disabled = false;
-        homeNlSubmit.textContent = 'Anmelden →';
-        homeNlState.innerHTML = '<div class="honest-box" style="border-color:#c0392b;">Das hat gerade nicht geklappt. <a href="mailto:info@teppichlabor.de?subject=Newsletter-Anmeldung">Schreib uns stattdessen direkt →</a></div>';
-      });
-    });
-  }
 })();
 </script>
