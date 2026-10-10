@@ -118,6 +118,16 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
 .honest-box{ background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:32px 36px; font-size:15px; line-height:1.65; color:var(--ink-soft); }
 .honest-box b{ color:var(--ink); }
 
+.mailpoet_form{ display:flex !important; flex-wrap:wrap; gap:10px; align-items:flex-start; }
+.mailpoet_form .mailpoet_paragraph{ margin:0 !important; }
+.mailpoet_form .mailpoet_paragraph:has(.mailpoet_text){ flex:1 1 260px; }
+.mailpoet_form .mailpoet_paragraph:has(.mailpoet_submit){ flex:0 0 auto; }
+.mailpoet_form .mailpoet_text{ width:100% !important; padding:14px 16px !important; margin:0 !important; border:1px solid var(--line) !important; border-radius:4px !important; font-family:'Inter',Helvetica,Arial,sans-serif !important; font-size:15px !important; color:var(--ink); background:var(--bg); box-sizing:border-box; }
+.mailpoet_form .mailpoet_submit{ width:auto !important; padding:15px 34px !important; margin:0 !important; background:var(--ink) !important; color:var(--bg) !important; border:none !important; border-radius:4px !important; font-family:'Inter',Helvetica,Arial,sans-serif !important; font-weight:600 !important; font-size:15px !important; letter-spacing:0; text-transform:none; cursor:pointer; transition:opacity .15s ease; }
+.mailpoet_form .mailpoet_submit:hover{ opacity:.8; }
+.mailpoet_form .mailpoet_message{ flex-basis:100%; margin:12px 0 0; }
+.mailpoet_form .mailpoet_validate_success, .mailpoet_form .mailpoet_validate_error{ background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:16px 20px; font-size:14px; color:var(--ink-soft); margin:0; }
+
 /* ---------- Homepage ---------- */
 .hero{ position:relative; overflow:hidden; background:var(--surface-2); height:calc(100vh - var(--header-h,68px)); height:calc(100svh - var(--header-h,68px)); display:flex; flex-direction:column; align-items:center; justify-content:flex-start; text-align:center; }
 .hero-slides{ position:absolute; inset:0; z-index:1; width:100%; height:100%; display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
