@@ -15,6 +15,7 @@
   --cta:#3E6AE1; --cta-hover:#5c85e8; --cta-ink:#FFFFFF;
 }
 
+html, body{ overflow-x:hidden; max-width:100%; }
 .tl-page{ background:var(--bg); color:var(--ink); font-family:'Inter',Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased; font-size:14px; line-height:1.43; }
 .tl-page *{ box-sizing:border-box; }
 .tl-page a{ color:inherit; }
@@ -72,14 +73,14 @@
 .tl-footer .foot-grid{ display:grid; grid-template-columns:1.3fr repeat(6,1fr); gap:32px; border-top:1px solid var(--line-strong); }
 @media (max-width:980px){ .tl-footer .foot-grid{ grid-template-columns:1fr 1fr 1fr; } }
 @media (max-width:640px){ .tl-footer .foot-grid{ grid-template-columns:1fr 1fr; } }
-.tl-footer .foot-grid > div{ padding:44px 0 28px; }
+.tl-footer .foot-grid > div{ padding:44px 0 28px; min-width:0; }
 .tl-footer .foot-grid h5{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 14px; }
 .tl-footer .foot-grid ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
 .tl-footer .foot-grid a{ text-decoration:none; font-size:13.5px; color:var(--ink); font-weight:600; }
 .tl-footer .foot-grid a:hover{ color:var(--accent); }
 .tl-footer .foot-bottom{ padding-top:20px; padding-bottom:20px; border-top:1px solid var(--line-strong); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-family:'Inter',Helvetica,Arial,sans-serif; font-size:10.5px; color:var(--ink-soft); max-width:1600px; margin:0 auto; padding-left:clamp(20px, 5vw, 96px); padding-right:clamp(20px, 5vw, 96px); }
 .tl-footer .logo{ display:inline-flex; align-items:center; text-decoration:none; margin-bottom:14px; }
-.tl-footer .logo img{ display:block; height:18px; width:auto; }
+.tl-footer .logo img{ display:block; height:18px; width:auto; max-width:100%; }
 
 /* ---------- Generic components ---------- */
 .tl-page .btn{ display:inline-block; font-family:'Inter',Helvetica,Arial,sans-serif; font-weight:600; font-size:15px; letter-spacing:0; text-transform:none; padding:15px 34px; background:var(--ink); color:var(--bg); text-decoration:none; border-radius:4px; transition:opacity .15s ease; }
