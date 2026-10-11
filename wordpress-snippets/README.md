@@ -10,6 +10,7 @@ entspricht der Snippet-ID auf der Live-Seite.
 | 6 | Care Lab Zweit-Domain (care-lab.app) | `domain-care-lab-app.php` | Verhindert den WordPress-Redirect von care-lab.app auf teppichlabor.de |
 | 7 | Care Lab Login-Design (Apple-Look) | `login-design.php` | Stylt wp-login.php: weiß, blaue Buttons, eigenes Logo statt WordPress-Logo |
 | 8 | Care Lab SEO-Basics (Meta-Description + LocalBusiness-Schema) | `seo-basics.php` | Meta-Description pro Seite + LocalBusiness-JSON-LD, ohne SEO-Plugin |
+| 9 | Care Lab Backend — API-Key-Verwaltung | `api-keys-backend.php` | Eigenes Admin-Menü "Care Lab" → "API-Keys": speichert Anthropic/OpenAI-Keys als WP-Optionen statt im Code. Muss aktiv sein, sonst bleibt der Chat-Assistent (Snippet 5) auf `503 not_configured` |
 
 ## Warum als Backup im Repo
 

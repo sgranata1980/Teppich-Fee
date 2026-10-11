@@ -2,16 +2,11 @@
 /**
  * Care Lab Chat-Assistent — REST-Endpoint
  *
- * WICHTIG: Trag deinen echten Anthropic-API-Key unten bei
- * CL_CLAUDE_API_KEY ein (zwischen den Anführungszeichen), statt
- * PASTE_YOUR_KEY_HERE. Den Key gibt's auf console.anthropic.com
- * (nicht das claude.ai-Abo). Danach einfach "Aktualisieren" klicken,
- * das Snippet ist schon aktiv.
+ * Der Anthropic-API-Key wird NICHT mehr hier im Code eingetragen,
+ * sondern unter wp-admin → Care Lab → API-Keys gespeichert (Snippet
+ * "Care Lab Backend — API-Key-Verwaltung" muss aktiv sein). Dieses
+ * Snippet liest den Key zur Laufzeit über cl_get_api_key( 'claude' ).
  */
-
-if ( ! defined( 'CL_CLAUDE_API_KEY' ) ) {
-	define( 'CL_CLAUDE_API_KEY', 'PASTE_YOUR_KEY_HERE' );
-}
 
 define( 'CL_CHAT_MODEL', 'claude-haiku-4-5-20251001' );
 define( 'CL_CHAT_MAX_TOKENS', 400 );
@@ -110,7 +105,8 @@ function cl_chat_rate_limited( $ip ) {
 }
 
 function cl_handle_chat_request( WP_REST_Request $request ) {
-	if ( ! CL_CLAUDE_API_KEY || CL_CLAUDE_API_KEY === 'PASTE_YOUR_KEY_HERE' ) {
+	$claude_key = function_exists( 'cl_get_api_key' ) ? cl_get_api_key( 'claude' ) : '';
+	if ( ! $claude_key ) {
 		return new WP_Error( 'not_configured', 'Chat ist noch nicht eingerichtet.', array( 'status' => 503 ) );
 	}
 
@@ -151,7 +147,7 @@ function cl_handle_chat_request( WP_REST_Request $request ) {
 		array(
 			'timeout' => 25,
 			'headers' => array(
-				'x-api-key'         => CL_CLAUDE_API_KEY,
+				'x-api-key'         => $claude_key,
 				'anthropic-version' => '2023-06-01',
 				'content-type'      => 'application/json',
 			),

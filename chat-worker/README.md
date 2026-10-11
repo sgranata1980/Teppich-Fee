@@ -1,6 +1,7 @@
 # Care Lab Chat-Assistent — Stand & Anleitung
 
-**Aktueller Stand (07.10.2026): Läuft bereits live, fehlt nur der API-Key.**
+**Aktueller Stand (11.10.2026): Läuft live, Key wird jetzt über die
+Backend-API-Key-Seite verwaltet statt fest im Code zu stehen.**
 
 Backend läuft als WordPress-Code-Snippet direkt auf teppichlabor.de
 (`wordpress-snippet.php` in diesem Ordner, Plugin "Code Snippets",
@@ -9,25 +10,27 @@ Worker. Das Frontend (Chat-Widget auf der Startseite) zeigt bereits
 auf den eigenen REST-Endpoint `/wp-json/care-lab/v1/chat`, same-origin,
 kein CORS nötig.
 
-Der Endpoint antwortet aktuell mit `503 not_configured`, weil noch der
-Platzhalter `PASTE_YOUR_KEY_HERE` im Code steht. Sobald der echte
-Anthropic-Key eingetragen ist, läuft der Chat.
+Der Anthropic-Key liegt nicht mehr als Konstante in dieser Datei,
+sondern als WordPress-Option, gepflegt über ein zweites Snippet
+("Care Lab Backend — API-Key-Verwaltung", siehe
+`../wordpress-snippets/api-keys-backend.php`). Dieses Snippet muss
+zusätzlich zu Snippet 5 aktiv sein, sonst bleibt der Chat auf
+`503 not_configured`.
 
-## Den API-Key eintragen (einziger fehlender Schritt)
+## Den API-Key eintragen
 
-1. wp-admin öffnen → im linken Menü **Snippets** → **All Snippets**
-2. **"Care Lab Chat Assistent"** anklicken → **Edit**
-3. Ganz oben im Code die Zeile suchen:
-   `define( 'CL_CLAUDE_API_KEY', 'PASTE_YOUR_KEY_HERE' );`
-4. `PASTE_YOUR_KEY_HERE` durch den echten Key von
-   **console.anthropic.com** ersetzen (NICHT das claude.ai-Abo — das
-   separate Konto mit dem $20-Guthaben), Anführungszeichen drumherum
-   lassen.
-5. **Update** klicken. Das Snippet ist schon aktiv, kein weiterer
-   Schritt nötig.
+1. wp-admin öffnen → im linken Menü **Care Lab** → **API-Keys**
+   (erscheint erst, wenn das Snippet "Care Lab Backend —
+   API-Key-Verwaltung" aktiv ist)
+2. Beim Feld **Anthropic / Claude API-Key** den echten Key von
+   **console.anthropic.com** eintragen (NICHT das claude.ai-Abo — das
+   separate Konto mit dem Guthaben)
+3. **Speichern** klicken. Kein weiterer Schritt nötig, der Chat liest
+   den Key sofort darüber.
 
-Der Key bleibt serverseitig in der WordPress-Datenbank, taucht nie im
-Frontend-Code auf und geht nie durch den Chat mit Claude.
+Der Key bleibt serverseitig in der WordPress-Datenbank, erscheint in
+der Einstellungsseite nur noch maskiert, taucht nie im Frontend-Code
+auf und geht nie durch den Chat mit Claude.
 
 ## Testen
 
