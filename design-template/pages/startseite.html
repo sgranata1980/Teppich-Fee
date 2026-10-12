@@ -340,8 +340,19 @@
         <span id="cl-order-dropzone-text">Foto auswählen oder hierher ziehen</span>
         <img id="cl-order-preview" alt="" hidden />
       </label>
+
+      <div class="cl-order-divider"><span>oder</span></div>
+
+      <label class="cl-order-select-label" for="cl-order-kategorie">Teppichart auswählen</label>
+      <select id="cl-order-kategorie">
+        <option value="">Bitte wählen ...</option>
+        <option value="maschinenwaesche">Maschinengefertigter Teppich (z. B. Kurzflor, Webteppich)</option>
+        <option value="handwaesche">Woll-, Orient-, Berber-, Nepal- oder Designerteppich</option>
+        <option value="pruefung">Bin mir nicht sicher / Seidenteppich</option>
+      </select>
+
       <p class="cl-order-error" id="cl-order-error" hidden></p>
-      <button type="button" class="btn primary" id="cl-order-submit" disabled>Teppich prüfen</button>
+      <button type="button" class="btn primary" id="cl-order-submit" disabled>Weiter →</button>
     </div>
 
     <div id="cl-order-step-loading" hidden>
@@ -351,10 +362,10 @@
     <div id="cl-order-step-result" hidden>
       <h3 id="cl-order-result-kategorie"></h3>
       <p id="cl-order-result-preis"></p>
-      <p class="cl-order-disclaimer">Automatische Einschätzung per Foto, ersetzt keine finale Prüfung. Der genaue Preis hängt von Größe und Zustand ab (Mindestauftragswert 89 €).</p>
+      <p class="cl-order-disclaimer">Automatische Einschätzung, ersetzt keine finale Prüfung. Der genaue Preis hängt von Größe und Zustand ab (Mindestauftragswert 89 €).</p>
       <div class="cl-order-result-ctas">
         <a href="/impressum-kontakt/" class="btn primary">Weiter zur Anfrage →</a>
-        <button type="button" class="btn secondary" id="cl-order-retry">Anderes Foto</button>
+        <button type="button" class="btn secondary" id="cl-order-retry">Neu starten</button>
       </div>
     </div>
   </div>
@@ -373,6 +384,12 @@
 .cl-order-dropzone:hover{ border-color:var(--ink); background:var(--surface-2); }
 .cl-order-dropzone span{ font-size:14px; color:var(--ink-soft); font-weight:500; }
 .cl-order-dropzone img{ max-width:100%; max-height:220px; border-radius:6px; object-fit:contain; }
+.cl-order-divider{ display:flex; align-items:center; text-align:center; margin:4px 0 16px; color:var(--ink-soft); font-size:12.5px; text-transform:uppercase; letter-spacing:.06em; }
+.cl-order-divider::before, .cl-order-divider::after{ content:''; flex:1; height:1px; background:var(--line); }
+.cl-order-divider span{ padding:0 12px; }
+.cl-order-select-label{ display:block; font-size:13px; font-weight:600; color:var(--ink); margin-bottom:8px; }
+#cl-order-kategorie{ width:100%; padding:13px 14px; margin-bottom:20px; border:1px solid var(--line); border-radius:6px; font-size:14.5px; font-family:inherit; color:var(--ink); background:var(--bg); }
+#cl-order-kategorie:focus{ outline:none; border-color:var(--ink); }
 #cl-order-submit{ width:100%; }
 .cl-order-error{ color:#C0392B !important; font-size:13.5px !important; margin:-6px 0 14px !important; }
 .cl-order-loading-text{ text-align:center; padding:40px 0; font-size:15px; }
@@ -393,6 +410,7 @@
   var fileInput = document.getElementById('cl-order-file');
   var dzText   = document.getElementById('cl-order-dropzone-text');
   var preview  = document.getElementById('cl-order-preview');
+  var kategorieSelect = document.getElementById('cl-order-kategorie');
   var submitBtn = document.getElementById('cl-order-submit');
   var errorEl  = document.getElementById('cl-order-error');
   var retryBtn = document.getElementById('cl-order-retry');
@@ -432,6 +450,7 @@
     preview.hidden = true;
     preview.src = '';
     dzText.hidden = false;
+    kategorieSelect.value = '';
     submitBtn.disabled = true;
     errorEl.hidden = true;
     showStep('upload');
@@ -467,6 +486,7 @@
     }
 
     selectedFile = file;
+    kategorieSelect.value = '';
     var reader = new FileReader();
     reader.onload = function(e){
       preview.src = e.target.result;
@@ -477,10 +497,48 @@
     reader.readAsDataURL(file);
   });
 
+  kategorieSelect.addEventListener('change', function(){
+    if (!kategorieSelect.value) {
+      submitBtn.disabled = !selectedFile;
+      return;
+    }
+    selectedFile = null;
+    fileInput.value = '';
+    preview.hidden = true;
+    preview.src = '';
+    dzText.hidden = false;
+    errorEl.hidden = true;
+    submitBtn.disabled = false;
+  });
+
   submitBtn.addEventListener('click', function(){
-    if (!selectedFile) return;
+    if (!selectedFile && !kategorieSelect.value) return;
     errorEl.hidden = true;
     showStep('loading');
+
+    if (!selectedFile) {
+      // Manuelle Auswahl ohne Foto: kein API-Call nötig, Kategorie steht schon fest.
+      fetch(IDENTIFY_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ kategorie: kategorieSelect.value })
+      }).then(function(r){ return r.json(); }).then(function(data){
+        if (data && data.kategorie_label) {
+          resultKategorie.textContent = data.kategorie_label;
+          resultPreis.textContent = data.preis_hinweis || '';
+          showStep('result');
+        } else {
+          showStep('upload');
+          errorEl.textContent = (data && data.message) || 'Da ist etwas schiefgelaufen. Bitte nutzen Sie stattdessen das Kontaktformular.';
+          errorEl.hidden = false;
+        }
+      }).catch(function(){
+        showStep('upload');
+        errorEl.textContent = 'Gerade nicht erreichbar. Bitte nutzen Sie stattdessen das Kontaktformular oder versuchen Sie es später erneut.';
+        errorEl.hidden = false;
+      });
+      return;
+    }
 
     var reader = new FileReader();
     reader.onload = function(e){

@@ -88,6 +88,24 @@ function cl_identify_parse_category( $text ) {
 }
 
 function cl_handle_identify_request( WP_REST_Request $request ) {
+	$body      = $request->get_json_params();
+	$kategorie = isset( $body['kategorie'] ) ? strtolower( trim( (string) $body['kategorie'] ) ) : '';
+
+	// Manuelle Auswahl ohne Foto: braucht weder API-Key noch KI-Aufruf,
+	// die Kategorie steht ja schon fest.
+	if ( '' !== $kategorie ) {
+		if ( ! in_array( $kategorie, array( 'maschinenwaesche', 'handwaesche', 'pruefung' ), true ) ) {
+			return new WP_Error( 'invalid_kategorie', 'Ungültige Teppichart.', array( 'status' => 400 ) );
+		}
+		$info = cl_identify_category_info( $kategorie );
+		return array(
+			'kategorie'       => $kategorie,
+			'kategorie_label' => $info['label'],
+			'preis_hinweis'   => $info['preis'],
+			'begruendung'     => '',
+		);
+	}
+
 	$claude_key = function_exists( 'cl_get_api_key' ) ? cl_get_api_key( 'claude' ) : '';
 	if ( ! $claude_key ) {
 		return new WP_Error( 'not_configured', 'Teppich-Erkennung ist noch nicht eingerichtet.', array( 'status' => 503 ) );
@@ -98,10 +116,9 @@ function cl_handle_identify_request( WP_REST_Request $request ) {
 		return new WP_Error( 'rate_limited', 'Zu viele Anfragen. Bitte in einer Stunde erneut versuchen.', array( 'status' => 429 ) );
 	}
 
-	$body       = $request->get_json_params();
-	$image_b64  = isset( $body['image_base64'] ) ? (string) $body['image_base64'] : '';
-	$mime_type  = isset( $body['mime_type'] ) ? (string) $body['mime_type'] : '';
-	$allowed    = array( 'image/jpeg', 'image/png', 'image/webp' );
+	$image_b64 = isset( $body['image_base64'] ) ? (string) $body['image_base64'] : '';
+	$mime_type = isset( $body['mime_type'] ) ? (string) $body['mime_type'] : '';
+	$allowed   = array( 'image/jpeg', 'image/png', 'image/webp' );
 
 	if ( '' === $image_b64 || ! in_array( $mime_type, $allowed, true ) ) {
 		return new WP_Error( 'invalid_image', 'Bitte ein Foto als JPEG, PNG oder WebP hochladen.', array( 'status' => 400 ) );
