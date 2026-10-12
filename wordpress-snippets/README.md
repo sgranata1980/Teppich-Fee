@@ -11,6 +11,7 @@ entspricht der Snippet-ID auf der Live-Seite.
 | 7 | Care Lab Login-Design (Apple-Look) | `login-design.php` | Stylt wp-login.php: weiß, blaue Buttons, eigenes Logo statt WordPress-Logo |
 | 8 | Care Lab SEO-Basics (Meta-Description + LocalBusiness-Schema) | `seo-basics.php` | Meta-Description pro Seite + LocalBusiness-JSON-LD, ohne SEO-Plugin |
 | 9 | Care Lab Backend — API-Key-Verwaltung | `api-keys-backend.php` | Eigenes Admin-Menü "Care Lab" → "API-Keys": speichert Anthropic/OpenAI-Keys als WP-Optionen statt im Code. Muss aktiv sein, sonst bleibt der Chat-Assistent (Snippet 5) auf `503 not_configured` |
+| 10 | Care Lab Teppich-Erkennung | `../chat-worker/carpet-identify-snippet.php` | REST-Endpoint `/wp-json/care-lab/v1/identify-carpet`: nimmt ein Teppich-Foto entgegen, lässt Claude (Vision) die Material-Kategorie einschätzen, Preistext kommt fest aus PHP (nie von der KI erfunden). Für die "Jetzt Teppich bestellen"-Box auf der Startseite |
 
 ## Warum als Backup im Repo
 
@@ -20,6 +21,17 @@ Snippet in wp-admin aus Versehen verändert oder gelöscht wird — dann
 einfach den Inhalt der passenden Datei hier zurück ins Snippet kopieren
 (wp-admin → Snippets → betroffenes Snippet → Edit → Code ersetzen →
 Update).
+
+## Deployment per REST-API (seit 12.10.2026 bekannt)
+
+Entgegen der ursprünglichen Annahme lässt sich Code Snippets doch per
+REST-API verwalten: `/wp-json/code-snippets/v1/snippets` (GET/POST),
+`/wp-json/code-snippets/v1/snippets/{id}` (GET/PUT/DELETE), Schema unter
+`/wp-json/code-snippets/v1/snippets/schema`. Das `code`-Feld enthält den
+PHP-Code OHNE öffnendes `<?php` (das beim Senden abschneiden). Snippets 9
+und 10 wurden so direkt live angelegt, ohne manuellen Copy-Paste-Schritt
+in wp-admin. Für neue Snippets ab jetzt bevorzugt so vorgehen, nicht mehr
+den User um manuelles Einfügen bitten.
 
 ## Ändert sich live etwas an einem Snippet
 

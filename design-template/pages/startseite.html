@@ -34,6 +34,15 @@
   <div class="hero-dots" id="hero-dots"><span class="active"></span><span></span><span></span></div>
 </section>
 
+<section class="order-band" id="order-band">
+  <div class="container order-band-inner">
+    <p class="mono eyebrow">Teppichreinigung bestellen</p>
+    <h2>Bestellen Sie Ihre Teppichreinigung.</h2>
+    <p class="lede">Wir holen Ihren Teppich ab. Foto hochladen, wir geben eine erste Einschätzung zu Material und Preisrahmen.</p>
+    <button type="button" class="btn primary btn-large" id="cl-order-open">Jetzt Teppich bestellen</button>
+  </div>
+</section>
+
 <div class="trust-row">
   <span>Privat &amp; Unternehmen</span>
   <span>Umweltfreundliches Verfahren</span>
@@ -314,6 +323,191 @@
       busy = false;
       addMsg('Entschuldige, da ist etwas schiefgelaufen. Bitte nutze das Kontaktformular oder ruf uns an: 0172 8293606.', 'cl-msg-bot');
     });
+  });
+})();
+</script>
+
+<div class="cl-order-modal" id="cl-order-modal" aria-hidden="true">
+  <div class="cl-order-backdrop" id="cl-order-backdrop"></div>
+  <div class="cl-order-dialog" role="dialog" aria-modal="true" aria-labelledby="cl-order-title">
+    <button type="button" class="cl-order-close" id="cl-order-close" aria-label="Schließen">×</button>
+
+    <div id="cl-order-step-upload">
+      <h3 id="cl-order-title">Foto von Ihrem Teppich</h3>
+      <p>Laden Sie ein Foto hoch, damit wir eine erste Einschätzung geben können, um welche Art Teppich es sich handelt.</p>
+      <label class="cl-order-dropzone" id="cl-order-dropzone">
+        <input type="file" id="cl-order-file" accept="image/jpeg,image/png,image/webp" hidden />
+        <span id="cl-order-dropzone-text">Foto auswählen oder hierher ziehen</span>
+        <img id="cl-order-preview" alt="" hidden />
+      </label>
+      <p class="cl-order-error" id="cl-order-error" hidden></p>
+      <button type="button" class="btn primary" id="cl-order-submit" disabled>Teppich prüfen</button>
+    </div>
+
+    <div id="cl-order-step-loading" hidden>
+      <p class="cl-order-loading-text">Wird geprüft ...</p>
+    </div>
+
+    <div id="cl-order-step-result" hidden>
+      <h3 id="cl-order-result-kategorie"></h3>
+      <p id="cl-order-result-preis"></p>
+      <p class="cl-order-disclaimer">Automatische Einschätzung per Foto, ersetzt keine finale Prüfung. Der genaue Preis hängt von Größe und Zustand ab (Mindestauftragswert 89 €).</p>
+      <div class="cl-order-result-ctas">
+        <a href="/impressum-kontakt/" class="btn primary">Weiter zur Anfrage →</a>
+        <button type="button" class="btn secondary" id="cl-order-retry">Anderes Foto</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.cl-order-modal{ display:none; position:fixed; inset:0; z-index:300; }
+.cl-order-modal.open{ display:block; }
+.cl-order-backdrop{ position:absolute; inset:0; background:rgba(10,12,16,.55); }
+.cl-order-dialog{ position:relative; margin:6vh auto; width:min(480px, calc(100vw - 40px)); max-height:88vh; overflow-y:auto; background:var(--bg); color:var(--ink); border-radius:12px; padding:40px 32px; box-shadow:0 24px 64px rgba(0,0,0,.28); font-family:'Inter',Helvetica,Arial,sans-serif; }
+.cl-order-close{ position:absolute; top:16px; right:16px; width:36px; height:36px; border:none; background:none; font-size:26px; line-height:1; color:var(--ink-soft); cursor:pointer; }
+.cl-order-close:hover{ color:var(--ink); }
+.cl-order-dialog h3{ font-size:22px; margin:0 0 10px; }
+.cl-order-dialog p{ font-size:14.5px; color:var(--ink-soft); line-height:1.6; margin:0 0 20px; }
+.cl-order-dropzone{ display:flex; align-items:center; justify-content:center; flex-direction:column; min-height:160px; border:1.5px dashed var(--line-strong); border-radius:8px; cursor:pointer; margin-bottom:16px; padding:16px; text-align:center; transition:border-color .15s ease, background .15s ease; }
+.cl-order-dropzone:hover{ border-color:var(--ink); background:var(--surface-2); }
+.cl-order-dropzone span{ font-size:14px; color:var(--ink-soft); font-weight:500; }
+.cl-order-dropzone img{ max-width:100%; max-height:220px; border-radius:6px; object-fit:contain; }
+#cl-order-submit{ width:100%; }
+.cl-order-error{ color:#C0392B !important; font-size:13.5px !important; margin:-6px 0 14px !important; }
+.cl-order-loading-text{ text-align:center; padding:40px 0; font-size:15px; }
+#cl-order-result-kategorie{ font-size:19px; margin-bottom:8px; }
+#cl-order-result-preis{ font-weight:600; color:var(--ink); font-size:15px; margin-bottom:16px; }
+.cl-order-disclaimer{ font-size:12.5px !important; color:var(--ink-soft); }
+.cl-order-result-ctas{ display:flex; gap:10px; flex-wrap:wrap; margin-top:20px; }
+</style>
+
+<script>
+(function(){
+  var IDENTIFY_ENDPOINT = "/wp-json/care-lab/v1/identify-carpet";
+  var openBtn  = document.getElementById('cl-order-open');
+  var modal    = document.getElementById('cl-order-modal');
+  var backdrop = document.getElementById('cl-order-backdrop');
+  var closeBtn = document.getElementById('cl-order-close');
+  var dropzone = document.getElementById('cl-order-dropzone');
+  var fileInput = document.getElementById('cl-order-file');
+  var dzText   = document.getElementById('cl-order-dropzone-text');
+  var preview  = document.getElementById('cl-order-preview');
+  var submitBtn = document.getElementById('cl-order-submit');
+  var errorEl  = document.getElementById('cl-order-error');
+  var retryBtn = document.getElementById('cl-order-retry');
+
+  var stepUpload  = document.getElementById('cl-order-step-upload');
+  var stepLoading = document.getElementById('cl-order-step-loading');
+  var stepResult  = document.getElementById('cl-order-step-result');
+
+  var resultKategorie = document.getElementById('cl-order-result-kategorie');
+  var resultPreis      = document.getElementById('cl-order-result-preis');
+
+  if (!openBtn || !modal) return;
+
+  var selectedFile = null;
+
+  function showStep(step){
+    stepUpload.hidden  = step !== 'upload';
+    stepLoading.hidden = step !== 'loading';
+    stepResult.hidden  = step !== 'result';
+  }
+
+  function openModal(){
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(){
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  function resetForm(){
+    selectedFile = null;
+    fileInput.value = '';
+    preview.hidden = true;
+    preview.src = '';
+    dzText.hidden = false;
+    submitBtn.disabled = true;
+    errorEl.hidden = true;
+    showStep('upload');
+  }
+
+  openBtn.addEventListener('click', function(){ resetForm(); openModal(); });
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+  });
+  retryBtn.addEventListener('click', resetForm);
+
+  dropzone.addEventListener('click', function(e){
+    if (e.target !== fileInput) fileInput.click();
+  });
+
+  fileInput.addEventListener('change', function(){
+    var file = fileInput.files && fileInput.files[0];
+    errorEl.hidden = true;
+    if (!file) return;
+
+    var allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    if (allowed.indexOf(file.type) === -1) {
+      errorEl.textContent = 'Bitte ein Foto als JPEG, PNG oder WebP wählen.';
+      errorEl.hidden = false;
+      return;
+    }
+    if (file.size > 6 * 1024 * 1024) {
+      errorEl.textContent = 'Das Foto ist größer als 6 MB. Bitte ein kleineres Foto wählen.';
+      errorEl.hidden = false;
+      return;
+    }
+
+    selectedFile = file;
+    var reader = new FileReader();
+    reader.onload = function(e){
+      preview.src = e.target.result;
+      preview.hidden = false;
+      dzText.hidden = true;
+      submitBtn.disabled = false;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  submitBtn.addEventListener('click', function(){
+    if (!selectedFile) return;
+    errorEl.hidden = true;
+    showStep('loading');
+
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var dataUrl = e.target.result;
+      var base64 = dataUrl.split(',')[1] || '';
+
+      fetch(IDENTIFY_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image_base64: base64, mime_type: selectedFile.type })
+      }).then(function(r){ return r.json(); }).then(function(data){
+        if (data && data.kategorie_label) {
+          resultKategorie.textContent = data.kategorie_label;
+          resultPreis.textContent = data.preis_hinweis || '';
+          showStep('result');
+        } else {
+          showStep('upload');
+          errorEl.textContent = (data && data.message) || 'Da ist etwas schiefgelaufen. Bitte nutzen Sie stattdessen das Kontaktformular.';
+          errorEl.hidden = false;
+        }
+      }).catch(function(){
+        showStep('upload');
+        errorEl.textContent = 'Gerade nicht erreichbar. Bitte nutzen Sie stattdessen das Kontaktformular oder versuchen Sie es später erneut.';
+        errorEl.hidden = false;
+      });
+    };
+    reader.readAsDataURL(selectedFile);
   });
 })();
 </script>

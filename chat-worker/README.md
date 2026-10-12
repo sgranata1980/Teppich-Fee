@@ -54,6 +54,28 @@ läuft alles.
   gedeckelt, nur die letzten 6 Nachrichten gehen pro Anfrage raus.
 - **Kein Key im Frontend**: Der Key verlässt den Server nie.
 
+## Teppich-Erkennung per Foto (neu, 12.10.2026)
+
+Zweiter, separater REST-Endpoint `/wp-json/care-lab/v1/identify-carpet`
+(`carpet-identify-snippet.php`, Snippet-ID 10), angebunden an die neue
+"Jetzt Teppich bestellen"-Box direkt unter dem Hero auf der Startseite.
+Nutzer lädt ein Foto hoch, Claude (Vision, gleiches Haiku-Modell wie der
+Chat) ordnet es einer von drei Kategorien zu (Maschinenwäsche /
+Handwäsche / Materialprüfung nötig). Der Preistext kommt NICHT von der
+KI, sondern aus einer festen PHP-Zuordnung (`cl_identify_category_info`),
+damit nie ein erfundener Preis angezeigt wird. Nutzt denselben Claude-Key
+aus der API-Key-Verwaltung (Snippet 9) — ohne Key läuft auch dieser
+Endpoint auf `503 not_configured`.
+
+Ergebnis zeigt nur Kategorie + Richtwert + Disclaimer, danach Link weiter
+zum bestehenden 5-Schritte-Anfrage-Formular (`/impressum-kontakt/`) —
+es gibt noch keinen echten Checkout/Bestellabschluss, das Foto-Tool ist
+eine Einschätzungshilfe, kein fertiger Bestellprozess.
+
+**Noch offen:** User will später die exakten Preise je Teppichtyp
+durchgeben — aktuell nutzt die Zuordnung die bereits bekannten
+Richtwerte aus `brand/fakten.md` (ab 8 €/m² bzw. ab 16 €/m²).
+
 ## Alternative: Cloudflare Worker (nicht mehr aktiv genutzt)
 
 `worker.js` ist eine funktionsgleiche Variante als Cloudflare Worker,
