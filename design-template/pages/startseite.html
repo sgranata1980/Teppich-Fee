@@ -343,13 +343,27 @@
 
       <div class="cl-order-divider"><span>oder</span></div>
 
-      <label class="cl-order-select-label" for="cl-order-kategorie">Teppichart auswählen</label>
-      <select id="cl-order-kategorie">
-        <option value="">Bitte wählen ...</option>
-        <option value="maschinenwaesche">Maschinengefertigter Teppich (z. B. Kurzflor, Webteppich)</option>
-        <option value="handwaesche">Woll-, Orient-, Berber-, Nepal- oder Designerteppich</option>
-        <option value="pruefung">Bin mir nicht sicher / Seidenteppich</option>
-      </select>
+      <p class="cl-order-select-label">Teppichart auswählen</p>
+      <div class="cl-order-type-grid" id="cl-order-type-grid">
+        <button type="button" class="cl-order-type-card" data-kategorie="maschinenwaesche" aria-pressed="false">
+          <span class="cl-order-type-img" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="1.5"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="3.5" y1="14.5" x2="20.5" y2="14.5"/><line x1="9.5" y1="3.5" x2="9.5" y2="20.5"/><line x1="14.5" y1="3.5" x2="14.5" y2="20.5"/></svg>
+          </span>
+          <span class="cl-order-type-label">Maschinengefertigt<br />(Kurzflor, Webteppich)</span>
+        </button>
+        <button type="button" class="cl-order-type-card" data-kategorie="handwaesche" aria-pressed="false">
+          <span class="cl-order-type-img" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4 5 6.5 8.3 6.5 11.2A6.5 6.5 0 1 1 5.5 14.2C5.5 11.3 8 8 12 3z"/></svg>
+          </span>
+          <span class="cl-order-type-label">Woll-, Orient-,<br />Designerteppich</span>
+        </button>
+        <button type="button" class="cl-order-type-card" data-kategorie="pruefung" aria-pressed="false">
+          <span class="cl-order-type-img" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.3" y1="15.3" x2="20.5" y2="20.5"/></svg>
+          </span>
+          <span class="cl-order-type-label">Bin mir nicht<br />sicher</span>
+        </button>
+      </div>
 
       <p class="cl-order-error" id="cl-order-error" hidden></p>
       <button type="button" class="btn primary" id="cl-order-submit" disabled>Weiter →</button>
@@ -387,9 +401,17 @@
 .cl-order-divider{ display:flex; align-items:center; text-align:center; margin:4px 0 16px; color:var(--ink-soft); font-size:12.5px; text-transform:uppercase; letter-spacing:.06em; }
 .cl-order-divider::before, .cl-order-divider::after{ content:''; flex:1; height:1px; background:var(--line); }
 .cl-order-divider span{ padding:0 12px; }
-.cl-order-select-label{ display:block; font-size:13px; font-weight:600; color:var(--ink); margin-bottom:8px; }
-#cl-order-kategorie{ width:100%; padding:13px 14px; margin-bottom:20px; border:1px solid var(--line); border-radius:6px; font-size:14.5px; font-family:inherit; color:var(--ink); background:var(--bg); }
-#cl-order-kategorie:focus{ outline:none; border-color:var(--ink); }
+.cl-order-select-label{ display:block; font-size:13px; font-weight:600; color:var(--ink); margin-bottom:10px; }
+.cl-order-type-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:20px; }
+.cl-order-type-card{ display:flex; flex-direction:column; align-items:center; gap:8px; padding:14px 8px; border:1.5px solid var(--line); border-radius:8px; background:var(--bg); cursor:pointer; font-family:inherit; transition:border-color .15s ease, background .15s ease; }
+.cl-order-type-card:hover{ border-color:var(--ink-soft); }
+.cl-order-type-card.selected{ border-color:var(--ink); background:var(--surface-2); }
+.cl-order-type-img{ width:34px; height:34px; display:flex; align-items:center; justify-content:center; color:var(--ink-soft); }
+.cl-order-type-card.selected .cl-order-type-img{ color:var(--ink); }
+.cl-order-type-img svg{ width:28px; height:28px; }
+.cl-order-type-label{ font-size:11.5px; line-height:1.35; color:var(--ink-soft); text-align:center; }
+.cl-order-type-card.selected .cl-order-type-label{ color:var(--ink); font-weight:600; }
+@media (max-width:420px){ .cl-order-type-label{ font-size:10.5px; } }
 #cl-order-submit{ width:100%; }
 .cl-order-error{ color:#C0392B !important; font-size:13.5px !important; margin:-6px 0 14px !important; }
 .cl-order-loading-text{ text-align:center; padding:40px 0; font-size:15px; }
@@ -410,7 +432,7 @@
   var fileInput = document.getElementById('cl-order-file');
   var dzText   = document.getElementById('cl-order-dropzone-text');
   var preview  = document.getElementById('cl-order-preview');
-  var kategorieSelect = document.getElementById('cl-order-kategorie');
+  var typeCards = document.querySelectorAll('.cl-order-type-card');
   var submitBtn = document.getElementById('cl-order-submit');
   var errorEl  = document.getElementById('cl-order-error');
   var retryBtn = document.getElementById('cl-order-retry');
@@ -425,6 +447,15 @@
   if (!openBtn || !modal) return;
 
   var selectedFile = null;
+  var selectedKategorie = '';
+
+  function clearTypeSelection(){
+    selectedKategorie = '';
+    typeCards.forEach(function(c){
+      c.classList.remove('selected');
+      c.setAttribute('aria-pressed', 'false');
+    });
+  }
 
   function showStep(step){
     stepUpload.hidden  = step !== 'upload';
@@ -450,7 +481,7 @@
     preview.hidden = true;
     preview.src = '';
     dzText.hidden = false;
-    kategorieSelect.value = '';
+    clearTypeSelection();
     submitBtn.disabled = true;
     errorEl.hidden = true;
     showStep('upload');
@@ -486,7 +517,7 @@
     }
 
     selectedFile = file;
-    kategorieSelect.value = '';
+    clearTypeSelection();
     var reader = new FileReader();
     reader.onload = function(e){
       preview.src = e.target.result;
@@ -497,22 +528,27 @@
     reader.readAsDataURL(file);
   });
 
-  kategorieSelect.addEventListener('change', function(){
-    if (!kategorieSelect.value) {
-      submitBtn.disabled = !selectedFile;
-      return;
-    }
-    selectedFile = null;
-    fileInput.value = '';
-    preview.hidden = true;
-    preview.src = '';
-    dzText.hidden = false;
-    errorEl.hidden = true;
-    submitBtn.disabled = false;
+  typeCards.forEach(function(card){
+    card.addEventListener('click', function(){
+      selectedFile = null;
+      fileInput.value = '';
+      preview.hidden = true;
+      preview.src = '';
+      dzText.hidden = false;
+      errorEl.hidden = true;
+
+      selectedKategorie = card.getAttribute('data-kategorie');
+      typeCards.forEach(function(c){
+        var isSelected = c === card;
+        c.classList.toggle('selected', isSelected);
+        c.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+      });
+      submitBtn.disabled = false;
+    });
   });
 
   submitBtn.addEventListener('click', function(){
-    if (!selectedFile && !kategorieSelect.value) return;
+    if (!selectedFile && !selectedKategorie) return;
     errorEl.hidden = true;
     showStep('loading');
 
@@ -521,7 +557,7 @@
       fetch(IDENTIFY_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ kategorie: kategorieSelect.value })
+        body: JSON.stringify({ kategorie: selectedKategorie })
       }).then(function(r){ return r.json(); }).then(function(data){
         if (data && data.kategorie_label) {
           resultKategorie.textContent = data.kategorie_label;
