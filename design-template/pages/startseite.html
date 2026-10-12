@@ -346,20 +346,20 @@
       <p class="cl-order-select-label">Teppichart auswählen</p>
       <div class="cl-order-type-grid" id="cl-order-type-grid">
         <button type="button" class="cl-order-type-card" data-kategorie="maschinenwaesche" aria-pressed="false">
-          <span class="cl-order-type-img" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="1.5"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="3.5" y1="14.5" x2="20.5" y2="14.5"/><line x1="9.5" y1="3.5" x2="9.5" y2="20.5"/><line x1="14.5" y1="3.5" x2="14.5" y2="20.5"/></svg>
+          <span class="cl-order-type-img">
+            <img src="https://teppichlabor.de/wp-content/uploads/2026/10/teppich-maschinenwaesche.png" alt="Maschinengefertigter Teppich" loading="lazy" />
           </span>
           <span class="cl-order-type-label">Maschinengefertigt<br />(Kurzflor, Webteppich)</span>
         </button>
         <button type="button" class="cl-order-type-card" data-kategorie="handwaesche" aria-pressed="false">
-          <span class="cl-order-type-img" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4 5 6.5 8.3 6.5 11.2A6.5 6.5 0 1 1 5.5 14.2C5.5 11.3 8 8 12 3z"/></svg>
+          <span class="cl-order-type-img">
+            <img src="https://teppichlabor.de/wp-content/uploads/2026/10/teppich-handwaesche.png" alt="Woll- oder Orientteppich" loading="lazy" />
           </span>
           <span class="cl-order-type-label">Woll-, Orient-,<br />Designerteppich</span>
         </button>
         <button type="button" class="cl-order-type-card" data-kategorie="pruefung" aria-pressed="false">
-          <span class="cl-order-type-img" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.3" y1="15.3" x2="20.5" y2="20.5"/></svg>
+          <span class="cl-order-type-img">
+            <img src="https://teppichlabor.de/wp-content/uploads/2026/10/teppich-pruefung.png" alt="Material unklar oder Seide" loading="lazy" />
           </span>
           <span class="cl-order-type-label">Bin mir nicht<br />sicher</span>
         </button>
@@ -403,13 +403,12 @@
 .cl-order-divider span{ padding:0 12px; }
 .cl-order-select-label{ display:block; font-size:13px; font-weight:600; color:var(--ink); margin-bottom:10px; }
 .cl-order-type-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:20px; }
-.cl-order-type-card{ display:flex; flex-direction:column; align-items:center; gap:8px; padding:14px 8px; border:1.5px solid var(--line); border-radius:8px; background:var(--bg); cursor:pointer; font-family:inherit; transition:border-color .15s ease, background .15s ease; }
+.cl-order-type-card{ display:flex; flex-direction:column; align-items:center; gap:8px; padding:6px; border:1.5px solid var(--line); border-radius:8px; background:var(--bg); cursor:pointer; font-family:inherit; transition:border-color .15s ease, background .15s ease; overflow:hidden; }
 .cl-order-type-card:hover{ border-color:var(--ink-soft); }
 .cl-order-type-card.selected{ border-color:var(--ink); background:var(--surface-2); }
-.cl-order-type-img{ width:34px; height:34px; display:flex; align-items:center; justify-content:center; color:var(--ink-soft); }
-.cl-order-type-card.selected .cl-order-type-img{ color:var(--ink); }
-.cl-order-type-img svg{ width:28px; height:28px; }
-.cl-order-type-label{ font-size:11.5px; line-height:1.35; color:var(--ink-soft); text-align:center; }
+.cl-order-type-img{ display:block; width:100%; aspect-ratio:1/1; border-radius:5px; overflow:hidden; background:var(--surface-2); }
+.cl-order-type-img img{ display:block; width:100%; height:100%; object-fit:cover; }
+.cl-order-type-label{ font-size:11.5px; line-height:1.35; color:var(--ink-soft); text-align:center; padding:0 2px 4px; }
 .cl-order-type-card.selected .cl-order-type-label{ color:var(--ink); font-weight:600; }
 @media (max-width:420px){ .cl-order-type-label{ font-size:10.5px; } }
 #cl-order-submit{ width:100%; }
