@@ -12,6 +12,17 @@
  * Konstante CL_CLAUDE_API_KEY.
  */
 
+add_action( 'init', function () {
+	$args = array(
+		'type'              => 'string',
+		'sanitize_callback' => 'sanitize_text_field',
+		'show_in_rest'      => true,
+		'default'           => '',
+	);
+	register_setting( 'cl_api_keys_group', 'cl_api_key_claude', $args );
+	register_setting( 'cl_api_keys_group', 'cl_api_key_openai', $args );
+} );
+
 add_action( 'admin_menu', function () {
 	add_menu_page(
 		'Care Lab Backend',
