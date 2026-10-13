@@ -470,16 +470,30 @@
     stepResult.hidden  = step !== 'result';
   }
 
+  var modalScrollY = 0;
+
   function openModal(){
+    modalScrollY = window.scrollY || window.pageYOffset || 0;
+    document.body.style.position = 'fixed';
+    document.body.style.top = (-modalScrollY) + 'px';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+    if (window.__lenis) window.__lenis.stop();
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
   }
 
   function closeModal(){
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    window.scrollTo(0, modalScrollY);
+    if (window.__lenis) window.__lenis.start();
   }
 
   function resetForm(){
@@ -530,8 +544,14 @@
   function handleFile(file){
     errorEl.hidden = true;
 
+    // Manche Kamera-Apps (v.a. Android) liefern Fotos ohne sauberen MIME-Typ
+    // zurueck (file.type ist dann leer) - in dem Fall anhand der Dateiendung pruefen.
     var allowed = ['image/jpeg', 'image/png', 'image/webp'];
-    if (allowed.indexOf(file.type) === -1) {
+    var allowedExt = ['.jpg', '.jpeg', '.png', '.webp'];
+    var nameLower = (file.name || '').toLowerCase();
+    var typeOk = allowed.indexOf(file.type) !== -1;
+    var extOk = allowedExt.some(function(ext){ return nameLower.slice(-1 * ext.length) === ext; });
+    if (!typeOk && !(file.type === '' && extOk)) {
       errorEl.textContent = 'Bitte ein Foto als JPEG, PNG oder WebP wählen.';
       errorEl.hidden = false;
       return;
