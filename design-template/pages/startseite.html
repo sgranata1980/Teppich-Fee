@@ -387,10 +387,10 @@
 </div>
 
 <style>
-.cl-order-modal{ display:none; position:fixed; inset:0; z-index:300; }
+.cl-order-modal{ display:none; position:fixed; inset:0; z-index:300; overscroll-behavior:contain; }
 .cl-order-modal.open{ display:block; }
 .cl-order-backdrop{ position:absolute; inset:0; background:rgba(10,12,16,.55); opacity:0; animation:clFadeIn .2s ease forwards; }
-.cl-order-dialog{ position:relative; margin:6vh auto; width:min(480px, calc(100vw - 40px)); max-height:88vh; overflow-y:auto; background:var(--bg); color:var(--ink); border-radius:12px; padding:40px 32px; box-shadow:0 24px 64px rgba(0,0,0,.28); font-family:'Inter',Helvetica,Arial,sans-serif; opacity:0; transform:scale(.96) translateY(8px); animation:clDialogIn .25s cubic-bezier(.2,.8,.2,1) forwards; }
+.cl-order-dialog{ position:relative; margin:6vh auto; width:min(480px, calc(100vw - 40px)); max-height:88vh; max-height:88dvh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; background:var(--bg); color:var(--ink); border-radius:12px; padding:40px 32px; box-shadow:0 24px 64px rgba(0,0,0,.28); font-family:'Inter',Helvetica,Arial,sans-serif; opacity:0; transform:scale(.96) translateY(8px); animation:clDialogIn .25s cubic-bezier(.2,.8,.2,1) forwards; }
 @keyframes clFadeIn{ to{ opacity:1; } }
 @keyframes clDialogIn{ to{ opacity:1; transform:scale(1) translateY(0); } }
 @keyframes clStepIn{ from{ opacity:0; transform:translateY(5px); } to{ opacity:1; transform:translateY(0); } }
