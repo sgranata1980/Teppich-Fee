@@ -562,6 +562,47 @@
       errorEl.hidden = false;
       return;
     }
+    // Handy-Kamerafotos sind oft 8-15 MB in voller Aufloesung - statt
+    // abzulehnen, im Browser auf eine fuer die KI-Einschaetzung
+    // ausreichende Groesse verkleinern.
+    if (file.size > 1.5 * 1024 * 1024) {
+      compressImage(file, function(compressed){
+        finishFileSelect(compressed);
+      }, function(){
+        finishFileSelect(file);
+      });
+      return;
+    }
+
+    finishFileSelect(file);
+  }
+
+  function compressImage(file, onDone, onError){
+    var img = new Image();
+    var url = URL.createObjectURL(file);
+    img.onload = function(){
+      URL.revokeObjectURL(url);
+      var maxDim = 1600;
+      var w = img.width, h = img.height;
+      if (w > maxDim || h > maxDim) {
+        if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+        else { w = Math.round(w * maxDim / h); h = maxDim; }
+      }
+      var canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      canvas.toBlob(function(blob){
+        if (!blob) { onError(); return; }
+        onDone(blob);
+      }, 'image/jpeg', 0.82);
+    };
+    img.onerror = function(){ URL.revokeObjectURL(url); onError(); };
+    img.src = url;
+  }
+
+  function finishFileSelect(file){
     if (file.size > 6 * 1024 * 1024) {
       errorEl.textContent = 'Das Foto ist größer als 6 MB. Bitte ein kleineres Foto wählen.';
       errorEl.hidden = false;
