@@ -446,7 +446,22 @@
     }
   });
 
-  goTo(1);
+  var presetParams = new URLSearchParams(window.location.search);
+  var presetTeppichart = presetParams.get('teppichart');
+  if (presetTeppichart === 'maschinenwaesche' || presetTeppichart === 'handwaesche') {
+    carpets[0].verfahren = presetTeppichart === 'maschinenwaesche' ? 'Maschinenwäsche' : 'Handwäsche';
+    renderCarpets();
+    data.anliegen = 'Angebot anfragen';
+    var presetAnliegenOpt = wizard.querySelector('.wizard-options[data-group="anliegen"] .wizard-option[data-value="Angebot anfragen"]');
+    if (presetAnliegenOpt) presetAnliegenOpt.classList.add('selected');
+    goTo(2);
+  } else if (presetTeppichart === 'pruefung') {
+    var presetMsg = document.getElementById('w-msg');
+    if (presetMsg) presetMsg.value = 'Laut Foto-Einschätzung: Material nicht eindeutig erkennbar oder empfindlich (z. B. Seide) - bitte genauer prüfen.';
+    goTo(1);
+  } else {
+    goTo(1);
+  }
 })();
 </script>
 </div>

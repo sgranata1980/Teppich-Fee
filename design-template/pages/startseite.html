@@ -111,7 +111,7 @@
 </section>
 
 <section class="scent-hero">
-  <div class="scent-hero-bg" style="background-image:url('__AMALFI_HERO__');">
+  <div class="scent-hero-bg" style="background-image:url('__OFFICE_HERO__');">
     <div class="scent-hero-copy">
       <p class="mono">Teppichduft</p>
       <h2>Probieren Sie unseren Duft Capri.</h2>
@@ -370,6 +370,7 @@
     </div>
 
     <div id="cl-order-step-loading" hidden>
+      <div class="cl-order-spinner" aria-hidden="true"></div>
       <p class="cl-order-loading-text">Wird geprüft ...</p>
     </div>
 
@@ -378,7 +379,7 @@
       <p id="cl-order-result-preis"></p>
       <p class="cl-order-disclaimer">Automatische Einschätzung, ersetzt keine finale Prüfung. Der genaue Preis hängt von Größe und Zustand ab (Mindestauftragswert 89 €).</p>
       <div class="cl-order-result-ctas">
-        <a href="/impressum-kontakt/" class="btn primary">Weiter zur Anfrage →</a>
+        <a href="/impressum-kontakt/" class="btn primary" id="cl-order-result-cta">Weiter zur Anfrage →</a>
         <button type="button" class="btn secondary" id="cl-order-retry">Neu starten</button>
       </div>
     </div>
@@ -388,14 +389,20 @@
 <style>
 .cl-order-modal{ display:none; position:fixed; inset:0; z-index:300; }
 .cl-order-modal.open{ display:block; }
-.cl-order-backdrop{ position:absolute; inset:0; background:rgba(10,12,16,.55); }
-.cl-order-dialog{ position:relative; margin:6vh auto; width:min(480px, calc(100vw - 40px)); max-height:88vh; overflow-y:auto; background:var(--bg); color:var(--ink); border-radius:12px; padding:40px 32px; box-shadow:0 24px 64px rgba(0,0,0,.28); font-family:'Inter',Helvetica,Arial,sans-serif; }
+.cl-order-backdrop{ position:absolute; inset:0; background:rgba(10,12,16,.55); opacity:0; animation:clFadeIn .2s ease forwards; }
+.cl-order-dialog{ position:relative; margin:6vh auto; width:min(480px, calc(100vw - 40px)); max-height:88vh; overflow-y:auto; background:var(--bg); color:var(--ink); border-radius:12px; padding:40px 32px; box-shadow:0 24px 64px rgba(0,0,0,.28); font-family:'Inter',Helvetica,Arial,sans-serif; opacity:0; transform:scale(.96) translateY(8px); animation:clDialogIn .25s cubic-bezier(.2,.8,.2,1) forwards; }
+@keyframes clFadeIn{ to{ opacity:1; } }
+@keyframes clDialogIn{ to{ opacity:1; transform:scale(1) translateY(0); } }
+@keyframes clStepIn{ from{ opacity:0; transform:translateY(5px); } to{ opacity:1; transform:translateY(0); } }
+#cl-order-step-upload, #cl-order-step-loading, #cl-order-step-result{ animation:clStepIn .2s ease; }
+@keyframes clSpin{ to{ transform:rotate(360deg); } }
+.cl-order-spinner{ width:26px; height:26px; margin:28px auto 18px; border:2.5px solid var(--line); border-top-color:var(--ink); border-radius:50%; animation:clSpin .7s linear infinite; }
 .cl-order-close{ position:absolute; top:16px; right:16px; width:36px; height:36px; border:none; background:none; font-size:26px; line-height:1; color:var(--ink-soft); cursor:pointer; }
 .cl-order-close:hover{ color:var(--ink); }
 .cl-order-dialog h3{ font-size:22px; margin:0 0 10px; }
 .cl-order-dialog p{ font-size:14.5px; color:var(--ink-soft); line-height:1.6; margin:0 0 20px; }
 .cl-order-dropzone{ display:flex; align-items:center; justify-content:center; flex-direction:column; min-height:160px; border:1.5px dashed var(--line-strong); border-radius:8px; cursor:pointer; margin-bottom:16px; padding:16px; text-align:center; transition:border-color .15s ease, background .15s ease; }
-.cl-order-dropzone:hover{ border-color:var(--ink); background:var(--surface-2); }
+.cl-order-dropzone:hover, .cl-order-dropzone.dragover{ border-color:var(--ink); background:var(--surface-2); }
 .cl-order-dropzone span{ font-size:14px; color:var(--ink-soft); font-weight:500; }
 .cl-order-dropzone img{ max-width:100%; max-height:220px; border-radius:6px; object-fit:contain; }
 .cl-order-divider{ display:flex; align-items:center; text-align:center; margin:4px 0 16px; color:var(--ink-soft); font-size:12.5px; text-transform:uppercase; letter-spacing:.06em; }
@@ -413,7 +420,7 @@
 @media (max-width:420px){ .cl-order-type-label{ font-size:10.5px; } }
 #cl-order-submit{ width:100%; }
 .cl-order-error{ color:#C0392B !important; font-size:13.5px !important; margin:-6px 0 14px !important; }
-.cl-order-loading-text{ text-align:center; padding:40px 0; font-size:15px; }
+.cl-order-loading-text{ text-align:center; padding:0 0 28px; font-size:15px; }
 #cl-order-result-kategorie{ font-size:19px; margin-bottom:8px; }
 #cl-order-result-preis{ font-weight:600; color:var(--ink); font-size:15px; margin-bottom:16px; }
 .cl-order-disclaimer{ font-size:12.5px !important; color:var(--ink-soft); }
@@ -442,6 +449,7 @@
 
   var resultKategorie = document.getElementById('cl-order-result-kategorie');
   var resultPreis      = document.getElementById('cl-order-result-preis');
+  var resultCta        = document.getElementById('cl-order-result-cta');
 
   if (!openBtn || !modal) return;
 
@@ -498,10 +506,29 @@
     if (e.target !== fileInput) fileInput.click();
   });
 
+  ['dragover', 'dragenter'].forEach(function(evt){
+    dropzone.addEventListener(evt, function(e){
+      e.preventDefault();
+      dropzone.classList.add('dragover');
+    });
+  });
+  ['dragleave', 'dragend'].forEach(function(evt){
+    dropzone.addEventListener(evt, function(){ dropzone.classList.remove('dragover'); });
+  });
+  dropzone.addEventListener('drop', function(e){
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+    var file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  });
+
   fileInput.addEventListener('change', function(){
     var file = fileInput.files && fileInput.files[0];
+    if (file) handleFile(file);
+  });
+
+  function handleFile(file){
     errorEl.hidden = true;
-    if (!file) return;
 
     var allowed = ['image/jpeg', 'image/png', 'image/webp'];
     if (allowed.indexOf(file.type) === -1) {
@@ -525,7 +552,7 @@
       submitBtn.disabled = false;
     };
     reader.readAsDataURL(file);
-  });
+  }
 
   typeCards.forEach(function(card){
     card.addEventListener('click', function(){
@@ -546,6 +573,25 @@
     });
   });
 
+  function applyResult(data){
+    if (data && data.kategorie_label) {
+      resultKategorie.textContent = data.kategorie_label;
+      resultPreis.textContent = data.preis_hinweis || '';
+      resultCta.href = '/impressum-kontakt/?teppichart=' + encodeURIComponent(data.kategorie || '');
+      showStep('result');
+    } else {
+      showStep('upload');
+      errorEl.textContent = (data && data.message) || 'Da ist etwas schiefgelaufen. Bitte nutzen Sie stattdessen das Kontaktformular.';
+      errorEl.hidden = false;
+    }
+  }
+
+  function applyError(){
+    showStep('upload');
+    errorEl.textContent = 'Gerade nicht erreichbar. Bitte nutzen Sie stattdessen das Kontaktformular oder versuchen Sie es später erneut.';
+    errorEl.hidden = false;
+  }
+
   submitBtn.addEventListener('click', function(){
     if (!selectedFile && !selectedKategorie) return;
     errorEl.hidden = true;
@@ -557,21 +603,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ kategorie: selectedKategorie })
-      }).then(function(r){ return r.json(); }).then(function(data){
-        if (data && data.kategorie_label) {
-          resultKategorie.textContent = data.kategorie_label;
-          resultPreis.textContent = data.preis_hinweis || '';
-          showStep('result');
-        } else {
-          showStep('upload');
-          errorEl.textContent = (data && data.message) || 'Da ist etwas schiefgelaufen. Bitte nutzen Sie stattdessen das Kontaktformular.';
-          errorEl.hidden = false;
-        }
-      }).catch(function(){
-        showStep('upload');
-        errorEl.textContent = 'Gerade nicht erreichbar. Bitte nutzen Sie stattdessen das Kontaktformular oder versuchen Sie es später erneut.';
-        errorEl.hidden = false;
-      });
+      }).then(function(r){ return r.json(); }).then(applyResult).catch(applyError);
       return;
     }
 
@@ -584,21 +616,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ image_base64: base64, mime_type: selectedFile.type })
-      }).then(function(r){ return r.json(); }).then(function(data){
-        if (data && data.kategorie_label) {
-          resultKategorie.textContent = data.kategorie_label;
-          resultPreis.textContent = data.preis_hinweis || '';
-          showStep('result');
-        } else {
-          showStep('upload');
-          errorEl.textContent = (data && data.message) || 'Da ist etwas schiefgelaufen. Bitte nutzen Sie stattdessen das Kontaktformular.';
-          errorEl.hidden = false;
-        }
-      }).catch(function(){
-        showStep('upload');
-        errorEl.textContent = 'Gerade nicht erreichbar. Bitte nutzen Sie stattdessen das Kontaktformular oder versuchen Sie es später erneut.';
-        errorEl.hidden = false;
-      });
+      }).then(function(r){ return r.json(); }).then(applyResult).catch(applyError);
     };
     reader.readAsDataURL(selectedFile);
   });
