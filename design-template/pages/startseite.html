@@ -365,8 +365,6 @@
         </button>
       </div>
 
-      <p class="cl-order-error" id="cl-order-error" hidden></p>
-      <button type="button" class="btn primary" id="cl-order-submit" disabled>Weiter →</button>
     </div>
 
     <div id="cl-order-step-loading" hidden>
@@ -383,6 +381,10 @@
         <button type="button" class="btn secondary" id="cl-order-retry">Neu starten</button>
       </div>
     </div>
+  </div>
+  <div class="cl-order-footer" id="cl-order-footer">
+    <p class="cl-order-error" id="cl-order-error" hidden></p>
+    <button type="button" class="btn primary" id="cl-order-submit" disabled>Weiter →</button>
   </div>
 </div>
 
@@ -418,6 +420,8 @@
 .cl-order-type-label{ font-size:11.5px; line-height:1.35; color:var(--ink-soft); text-align:center; padding:0 2px 4px; }
 .cl-order-type-card.selected .cl-order-type-label{ color:var(--ink); font-weight:600; }
 @media (max-width:420px){ .cl-order-type-label{ font-size:10.5px; } }
+#cl-order-step-upload{ padding-bottom:110px; }
+.cl-order-footer{ position:fixed; left:50%; bottom:0; transform:translateX(-50%); z-index:310; width:min(480px, calc(100vw - 40px)); background:var(--bg); padding:14px 32px calc(18px + env(safe-area-inset-bottom, 0px)); box-shadow:0 -10px 24px rgba(0,0,0,.12); border-radius:0 0 12px 12px; }
 #cl-order-submit{ width:100%; }
 .cl-order-error{ color:#C0392B !important; font-size:13.5px !important; margin:-6px 0 14px !important; }
 .cl-order-loading-text{ text-align:center; padding:0 0 28px; font-size:15px; }
@@ -446,6 +450,7 @@
   var stepUpload  = document.getElementById('cl-order-step-upload');
   var stepLoading = document.getElementById('cl-order-step-loading');
   var stepResult  = document.getElementById('cl-order-step-result');
+  var footer      = document.getElementById('cl-order-footer');
 
   var resultKategorie = document.getElementById('cl-order-result-kategorie');
   var resultPreis      = document.getElementById('cl-order-result-preis');
@@ -468,6 +473,7 @@
     stepUpload.hidden  = step !== 'upload';
     stepLoading.hidden = step !== 'loading';
     stepResult.hidden  = step !== 'result';
+    footer.hidden      = step !== 'upload';
   }
 
   var modalScrollY = 0;
