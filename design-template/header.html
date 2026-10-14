@@ -499,11 +499,8 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
     <div class="nav-utils">
       <div class="lang-switcher" id="lang-switcher-desktop">
         <button type="button" class="lang-btn is-active" data-lang="de" title="Deutsch">DE</button>
-        <button type="button" class="lang-btn" data-lang="en" title="English">EN</button>
-        <button type="button" class="lang-btn" data-lang="it" title="Italiano">IT</button>
-        <button type="button" class="lang-btn" data-lang="fr" title="Français">FR</button>
         <button type="button" class="lang-btn" data-lang="tr" title="Türkçe">TR</button>
-        <button type="button" class="lang-btn" data-lang="ar" title="العربية">AR</button>
+        <button type="button" class="lang-btn" data-lang="en" title="English">EN</button>
       </div>
       <a class="icon-btn" href="tel:+491728293606" title="Anrufen">☎</a>
       <a class="icon-btn" href="mailto:info@teppichlabor.de" title="E-Mail">✉</a>
@@ -532,11 +529,8 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
     <a class="cta-small" href="/impressum-kontakt/">Angebot anfragen</a>
     <div class="lang-switcher" id="lang-switcher-mobile">
       <button type="button" class="lang-btn is-active" data-lang="de" title="Deutsch">DE</button>
-      <button type="button" class="lang-btn" data-lang="en" title="English">EN</button>
-      <button type="button" class="lang-btn" data-lang="it" title="Italiano">IT</button>
-      <button type="button" class="lang-btn" data-lang="fr" title="Français">FR</button>
       <button type="button" class="lang-btn" data-lang="tr" title="Türkçe">TR</button>
-      <button type="button" class="lang-btn" data-lang="ar" title="العربية">AR</button>
+      <button type="button" class="lang-btn" data-lang="en" title="English">EN</button>
     </div>
   </div>
 </div>
@@ -587,6 +581,7 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
     b.addEventListener('click', function(){
       var lang = b.getAttribute('data-lang');
       if (lang === 'de') {
+        try { localStorage.removeItem('__GT_TRANSLATE_LANGS'); } catch (e) {}
         window.location.reload();
         return;
       }
