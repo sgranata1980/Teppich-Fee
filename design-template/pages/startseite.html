@@ -216,117 +216,6 @@
     </div>
   </div>
 </section>
-<div class="cl-chat" id="cl-chat">
-  <button class="cl-chat-toggle" id="cl-chat-toggle" aria-label="Chat öffnen">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="cl-chat-icon-open"><rect x="5" y="8" width="14" height="11" rx="4"/><line x1="12" y1="8" x2="12" y2="4"/><circle cx="12" cy="3" r="1" fill="currentColor" stroke="none"/><circle cx="9" cy="13.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="13.5" r="1.1" fill="currentColor" stroke="none"/></svg>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="cl-chat-icon-close"><path d="M18 6L6 18M6 6l12 12"/></svg>
-  </button>
-  <div class="cl-chat-panel" id="cl-chat-panel">
-    <div class="cl-chat-head">
-      <span>Care Lab Assistent</span>
-      <p>Fragen zu Preisen, Ablauf oder Leistungen, ich helfe unverbindlich weiter.</p>
-    </div>
-    <div class="cl-chat-body" id="cl-chat-body">
-      <div class="cl-msg cl-msg-bot">Hallo, wie kann ich dir helfen? Frag mich zu Preisen, Abholung, Hygienereinigung oder Teppichbodenreinigung.</div>
-    </div>
-    <form class="cl-chat-form" id="cl-chat-form">
-      <input type="text" id="cl-chat-input" placeholder="Deine Frage..." autocomplete="off" maxlength="500" />
-      <button type="submit" aria-label="Senden">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </button>
-    </form>
-  </div>
-</div>
-
-<style>
-.cl-chat{ position:fixed; right:20px; bottom:20px; z-index:200; font-family:'Inter',Helvetica,Arial,sans-serif; }
-.cl-chat-toggle{ width:60px; height:60px; border-radius:50%; background:var(--bg); color:var(--ink); border:1px solid var(--line); cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 24px rgba(0,0,0,.2); transition:opacity .15s ease, transform .15s ease; }
-.cl-chat-toggle:hover{ opacity:.85; transform:scale(1.04); }
-.cl-chat-toggle svg{ width:24px; height:24px; }
-.cl-chat-icon-close{ display:none; }
-.cl-chat.open .cl-chat-icon-open{ display:none; }
-.cl-chat.open .cl-chat-icon-close{ display:block; }
-.cl-chat.open .cl-chat-toggle{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
-.cl-chat-panel{ position:absolute; right:0; bottom:72px; width:min(360px, calc(100vw - 40px)); height:min(520px, calc(100vh - 140px)); background:var(--bg); border:1px solid var(--line); border-radius:12px; box-shadow:0 20px 48px rgba(0,0,0,.18); display:none; flex-direction:column; overflow:hidden; }
-.cl-chat.open .cl-chat-panel{ display:flex; }
-.cl-chat-head{ padding:18px 20px; border-bottom:1px solid var(--line); }
-.cl-chat-head span{ font-weight:600; font-size:15px; color:var(--ink); display:block; margin-bottom:4px; }
-.cl-chat-head p{ font-size:12.5px; color:var(--ink-soft); margin:0; line-height:1.5; }
-.cl-chat-body{ flex:1; overflow-y:auto; padding:16px 20px; display:flex; flex-direction:column; gap:12px; }
-.cl-msg{ font-size:14px; line-height:1.55; padding:10px 14px; border-radius:8px; max-width:85%; }
-.cl-msg-bot{ background:var(--surface-2); color:var(--ink); align-self:flex-start; }
-.cl-msg-user{ background:var(--ink); color:var(--bg); align-self:flex-end; }
-.cl-msg-typing{ background:var(--surface-2); color:var(--ink-soft); align-self:flex-start; font-style:italic; }
-.cl-chat-form{ display:flex; gap:8px; padding:14px; border-top:1px solid var(--line); }
-.cl-chat-form input{ flex:1; border:1px solid var(--line); border-radius:6px; padding:10px 14px; font-size:14px; font-family:inherit; color:var(--ink); background:var(--bg); }
-.cl-chat-form input:focus{ outline:none; border-color:var(--ink); }
-.cl-chat-form button{ width:40px; height:40px; border-radius:6px; background:var(--ink); color:var(--bg); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.cl-chat-form button svg{ width:18px; height:18px; }
-@media (max-width:480px){ .cl-chat{ right:12px; bottom:12px; } .cl-chat-panel{ right:-4px; } }
-</style>
-
-<script>
-(function(){
-  var CHAT_ENDPOINT = "__CHAT_WORKER_URL__";
-  var root = document.getElementById('cl-chat');
-  var toggle = document.getElementById('cl-chat-toggle');
-  var body = document.getElementById('cl-chat-body');
-  var form = document.getElementById('cl-chat-form');
-  var input = document.getElementById('cl-chat-input');
-  var history = [];
-  var busy = false;
-
-  toggle.addEventListener('click', function(){
-    root.classList.toggle('open');
-    if (root.classList.contains('open')) input.focus();
-  });
-
-  function addMsg(text, cls){
-    var el = document.createElement('div');
-    el.className = 'cl-msg ' + cls;
-    el.textContent = text;
-    body.appendChild(el);
-    body.scrollTop = body.scrollHeight;
-    return el;
-  }
-
-  form.addEventListener('submit', function(e){
-    e.preventDefault();
-    if (busy) return;
-    var text = input.value.trim();
-    if (!text) return;
-    if (!CHAT_ENDPOINT || CHAT_ENDPOINT.indexOf('__') === 0) {
-      addMsg('Der Chat ist noch nicht vollständig eingerichtet. Bitte nutze bis dahin das Kontaktformular oder ruf uns an.', 'cl-msg-bot');
-      return;
-    }
-    addMsg(text, 'cl-msg-user');
-    history.push({ role: 'user', content: text });
-    input.value = '';
-    busy = true;
-    var typingEl = addMsg('...', 'cl-msg-typing');
-
-    fetch(CHAT_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: history })
-    }).then(function(r){ return r.json(); }).then(function(data){
-      typingEl.remove();
-      busy = false;
-      if (data.reply) {
-        addMsg(data.reply, 'cl-msg-bot');
-        history.push({ role: 'assistant', content: data.reply });
-      } else {
-        addMsg('Entschuldige, da ist etwas schiefgelaufen. Bitte nutze das Kontaktformular oder ruf uns an: 0172 8293606.', 'cl-msg-bot');
-      }
-    }).catch(function(){
-      typingEl.remove();
-      busy = false;
-      addMsg('Entschuldige, da ist etwas schiefgelaufen. Bitte nutze das Kontaktformular oder ruf uns an: 0172 8293606.', 'cl-msg-bot');
-    });
-  });
-})();
-</script>
-
 <div class="cl-order-modal" id="cl-order-modal" aria-hidden="true">
   <div class="cl-order-backdrop" id="cl-order-backdrop"></div>
   <div class="cl-order-dialog" role="dialog" aria-modal="true" aria-labelledby="cl-order-title">
@@ -392,7 +281,7 @@
 .cl-order-modal{ display:none; position:fixed; inset:0; z-index:300; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; }
 .cl-order-modal.open{ display:block; }
 .cl-order-backdrop{ position:fixed; inset:0; z-index:0; background:rgba(10,12,16,.55); opacity:0; animation:clFadeIn .2s ease forwards; }
-.cl-order-dialog{ position:relative; z-index:1; margin:4vh auto 4vh; width:min(480px, calc(100vw - 40px)); background:var(--bg); color:var(--ink); border-radius:12px; padding:28px 24px; box-shadow:0 24px 64px rgba(0,0,0,.28); font-family:'Inter',Helvetica,Arial,sans-serif; opacity:0; transform:scale(.96) translateY(8px); animation:clDialogIn .25s cubic-bezier(.2,.8,.2,1) forwards; }
+.cl-order-dialog{ position:relative; z-index:1; margin:4vh auto 0; width:min(560px, calc(100vw - 40px)); background:var(--bg); color:var(--ink); border-radius:12px 12px 0 0; padding:36px 32px; box-shadow:0 24px 64px rgba(0,0,0,.28); font-family:'Inter',Helvetica,Arial,sans-serif; opacity:0; transform:scale(.96) translateY(8px); animation:clDialogIn .25s cubic-bezier(.2,.8,.2,1) forwards; }
 @keyframes clFadeIn{ to{ opacity:1; } }
 @keyframes clDialogIn{ to{ opacity:1; transform:scale(1) translateY(0); } }
 @keyframes clStepIn{ from{ opacity:0; transform:translateY(5px); } to{ opacity:1; transform:translateY(0); } }
@@ -420,8 +309,11 @@
 .cl-order-type-label{ font-size:10.5px; line-height:1.3; color:var(--ink-soft); text-align:center; padding:0 2px 2px; }
 .cl-order-type-card.selected .cl-order-type-label{ color:var(--ink); font-weight:600; }
 @media (max-width:420px){ .cl-order-type-label{ font-size:9.5px; } }
-#cl-order-step-upload{ padding-bottom:80px; }
-.cl-order-footer{ position:fixed; left:50%; bottom:0; transform:translateX(-50%); z-index:310; width:min(480px, calc(100vw - 40px)); background:var(--bg); padding:10px 24px calc(12px + env(safe-area-inset-bottom, 0px)); box-shadow:0 -10px 24px rgba(0,0,0,.12); border-radius:0 0 12px 12px; }
+@media (max-width:780px){ #cl-order-step-upload{ padding-bottom:80px; } }
+.cl-order-footer{ position:relative; z-index:2; margin:0 auto 4vh; width:min(560px, calc(100vw - 40px)); background:var(--bg); padding:14px 32px 24px; box-shadow:0 24px 64px rgba(0,0,0,.28); border-radius:0 0 12px 12px; }
+@media (max-width:780px){
+  .cl-order-footer{ position:fixed; left:50%; bottom:0; margin:0; transform:translateX(-50%); z-index:310; padding:10px 24px calc(12px + env(safe-area-inset-bottom, 0px)); box-shadow:0 -10px 24px rgba(0,0,0,.12); }
+}
 #cl-order-submit{ width:100%; }
 .cl-order-error{ color:#C0392B !important; font-size:13.5px !important; margin:-6px 0 14px !important; }
 .cl-order-loading-text{ text-align:center; padding:0 0 28px; font-size:15px; }
