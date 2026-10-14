@@ -56,7 +56,7 @@ html, body{ overflow-x:hidden; max-width:100%; }
 .lang-btn:hover{ color:var(--ink); }
 .lang-btn.is-active{ color:var(--accent); }
 @media (max-width:1480px){ .tl-header .nav-utils .lang-switcher{ display:none; } }
-.mobile-menu .lang-switcher{ gap:16px; margin-top:6px; }
+.mobile-menu .lang-switcher{ position:absolute; top:30px; left:28px; margin:0; gap:16px; z-index:2; }
 .mobile-menu .lang-btn{ font-size:13px; }
 .gtranslate_wrapper{ display:none !important; }
 .mobile-menu{ display:none; }
@@ -513,6 +513,11 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
 </header>
 <div class="mobile-menu" id="tl-mobile-menu">
   <button class="mobile-menu-close" id="tl-mobile-menu-close" aria-label="Menü schließen">&times;</button>
+  <div class="lang-switcher" id="lang-switcher-mobile">
+    <button type="button" class="lang-btn is-active" data-lang="de" title="Deutsch">DE</button>
+    <button type="button" class="lang-btn" data-lang="tr" title="Türkçe">TR</button>
+    <button type="button" class="lang-btn" data-lang="en" title="English">EN</button>
+  </div>
   <div class="mobile-menu-inner">
     <nav>
       <span class="mobile-nav-label">Teppichreinigung</span>
@@ -529,11 +534,6 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
       <a href="/impressum-kontakt/">Kontakt</a>
     </nav>
     <a class="cta-small" href="/impressum-kontakt/">Reinigung anfragen</a>
-    <div class="lang-switcher" id="lang-switcher-mobile">
-      <button type="button" class="lang-btn is-active" data-lang="de" title="Deutsch">DE</button>
-      <button type="button" class="lang-btn" data-lang="tr" title="Türkçe">TR</button>
-      <button type="button" class="lang-btn" data-lang="en" title="English">EN</button>
-    </div>
   </div>
 </div>
 <script>
