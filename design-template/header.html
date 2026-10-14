@@ -50,6 +50,14 @@ html, body{ overflow-x:hidden; max-width:100%; }
 .tl-header .menu-toggle{ display:none; font-family:'Inter',Helvetica,Arial,sans-serif; font-weight:600; font-size:14px; padding:9px 18px; border-radius:4px; background:var(--surface-2); border:none; color:var(--ink); cursor:pointer; }
 @media (max-width:1480px){ .tl-header .menu-toggle{ display:inline-block; } .tl-header .icon-btn{ display:none; } }
 @media (max-width:420px){ .tl-header .nav-utils .cta-small{ display:none; } }
+.lang-switcher{ display:flex; align-items:center; gap:4px; }
+.lang-btn{ width:26px; height:19px; padding:0; border:none; background:none; cursor:pointer; border-radius:3px; overflow:hidden; opacity:.6; transition:opacity .15s ease; display:flex; align-items:center; justify-content:center; }
+.lang-btn:hover{ opacity:1; }
+.lang-btn img{ display:block; width:100%; height:100%; object-fit:cover; border-radius:3px; }
+@media (max-width:1480px){ .tl-header .nav-utils .lang-switcher{ display:none; } }
+.mobile-menu .lang-switcher{ gap:10px; margin-top:6px; }
+.mobile-menu .lang-btn{ width:36px; height:26px; opacity:.85; }
+.gtranslate_wrapper{ display:none !important; }
 .mobile-menu{ display:none; }
 @media (max-width:1480px){
   .mobile-menu{
@@ -489,6 +497,13 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
       <a href="/impressum-kontakt/">Kontakt</a>
     </nav>
     <div class="nav-utils">
+      <div class="lang-switcher" id="lang-switcher-desktop">
+        <button type="button" class="lang-btn" data-lang="tr" title="Türkçe"><img src="https://cdn.gtranslate.net/flags/svg/tr.svg" alt="Türkçe" loading="lazy" /></button>
+        <button type="button" class="lang-btn" data-lang="it" title="Italiano"><img src="https://cdn.gtranslate.net/flags/svg/it.svg" alt="Italiano" loading="lazy" /></button>
+        <button type="button" class="lang-btn" data-lang="en" title="English"><img src="https://cdn.gtranslate.net/flags/svg/en.svg" alt="English" loading="lazy" /></button>
+        <button type="button" class="lang-btn" data-lang="ar" title="العربية"><img src="https://cdn.gtranslate.net/flags/svg/ar.svg" alt="العربية" loading="lazy" /></button>
+        <button type="button" class="lang-btn" data-lang="fr" title="Français"><img src="https://cdn.gtranslate.net/flags/svg/fr.svg" alt="Français" loading="lazy" /></button>
+      </div>
       <a class="icon-btn" href="tel:+491728293606" title="Anrufen">☎</a>
       <a class="icon-btn" href="mailto:info@teppichlabor.de" title="E-Mail">✉</a>
       <a class="cta-small" href="/impressum-kontakt/">Angebot anfragen</a>
@@ -514,6 +529,13 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
       <a href="/impressum-kontakt/">Kontakt</a>
     </nav>
     <a class="cta-small" href="/impressum-kontakt/">Angebot anfragen</a>
+    <div class="lang-switcher" id="lang-switcher-mobile">
+      <button type="button" class="lang-btn" data-lang="tr" title="Türkçe"><img src="https://cdn.gtranslate.net/flags/svg/tr.svg" alt="Türkçe" loading="lazy" /></button>
+      <button type="button" class="lang-btn" data-lang="it" title="Italiano"><img src="https://cdn.gtranslate.net/flags/svg/it.svg" alt="Italiano" loading="lazy" /></button>
+      <button type="button" class="lang-btn" data-lang="en" title="English"><img src="https://cdn.gtranslate.net/flags/svg/en.svg" alt="English" loading="lazy" /></button>
+      <button type="button" class="lang-btn" data-lang="ar" title="العربية"><img src="https://cdn.gtranslate.net/flags/svg/ar.svg" alt="العربية" loading="lazy" /></button>
+      <button type="button" class="lang-btn" data-lang="fr" title="Français"><img src="https://cdn.gtranslate.net/flags/svg/fr.svg" alt="Français" loading="lazy" /></button>
+    </div>
   </div>
 </div>
 <script>
@@ -557,5 +579,13 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
     a.addEventListener('click', closeMenu);
   });
   if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+
+  document.querySelectorAll('.lang-switcher .lang-btn').forEach(function(b){
+    b.addEventListener('click', function(){
+      var lang = b.getAttribute('data-lang');
+      if (window.doGTranslate && lang) window.doGTranslate('de|' + lang);
+      if (menu.classList.contains('is-open')) closeMenu();
+    });
+  });
 })();
 </script>
