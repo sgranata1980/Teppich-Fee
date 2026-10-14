@@ -561,17 +561,31 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
     window.scrollTo(0, scrollY);
     if (window.__lenis) window.__lenis.start();
   }
+  function openMenu(){
+    menu.classList.add('is-open');
+    btn.textContent = 'Schließen';
+    btn.setAttribute('aria-expanded', 'true');
+    lockScroll();
+    // iOS Safari laesst ein Element mit transform nicht per Touch scrollen -
+    // Transform nach Abschluss der Slide-in-Animation entfernen, damit das
+    // Menue selbst scrollbar wird.
+    var onEnd = function(e){
+      if (e.target === menu && e.propertyName === 'transform') {
+        menu.style.transform = 'none';
+        menu.removeEventListener('transitionend', onEnd);
+      }
+    };
+    menu.addEventListener('transitionend', onEnd);
+  }
   function closeMenu(){
+    menu.style.transform = '';
     menu.classList.remove('is-open');
     btn.textContent = 'Menü';
     btn.setAttribute('aria-expanded', 'false');
     unlockScroll();
   }
   btn.addEventListener('click', function(){
-    var open = menu.classList.toggle('is-open');
-    btn.textContent = open ? 'Schließen' : 'Menü';
-    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (open) lockScroll(); else unlockScroll();
+    if (menu.classList.contains('is-open')) closeMenu(); else openMenu();
   });
   menu.querySelectorAll('a').forEach(function(a){
     a.addEventListener('click', closeMenu);
