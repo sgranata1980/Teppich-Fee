@@ -47,6 +47,13 @@ function cl_chat_prices_block() {
 	foreach ( cl_get_prices_zusatz() as $row ) {
 		$lines[] = '- ' . $row['titel'] . ': ' . $row['preis'] . ( ! empty( $row['beschreibung'] ) ? ' (' . $row['beschreibung'] . ')' : '' );
 	}
+	if ( function_exists( 'cl_get_prices_polster' ) ) {
+		$lines[] = '';
+		$lines[] = 'POLSTERREINIGUNG (Preise pro Stück)';
+		foreach ( cl_get_prices_polster() as $row ) {
+			$lines[] = '- ' . $row['stueck'] . ': ' . $row['preis'];
+		}
+	}
 	$lines[] = '';
 	$lines[] = 'ANTIK-REPARATUR & TEPPICHREPARATUR';
 	foreach ( cl_get_prices_repair() as $row ) {

@@ -6,13 +6,15 @@
  * Preise), über die Cem/Stefano die Preise auf /leistungen-pakete/
  * selbst pflegen können, ohne Code/Git anfassen zu müssen.
  *
- * Die drei Preistabellen der Seite werden als WordPress-Optionen
- * gespeichert (cl_prices_material, cl_prices_repair, cl_prices_zusatz
- * plus je eine Notiz) und per Shortcode ins Seiten-HTML eingeblendet:
+ * Die Preistabellen der Seite werden als WordPress-Optionen
+ * gespeichert (cl_prices_material, cl_prices_repair, cl_prices_zusatz,
+ * cl_prices_polster, plus je eine Notiz) und per Shortcode ins
+ * Seiten-HTML eingeblendet:
  *
  *   [cl_preise_material]   → Tabelle "Grundreinigung nach Material"
  *   [cl_preise_reparatur]  → Tabelle "Antik-Reparatur & Teppichreparatur"
  *   [cl_preise_zusatz]     → Karten für "Einzelleistungen" (ohne Grid-Wrapper)
+ *   [cl_preise_polster]    → Tabelle "Polsterreinigung"
  *
  * Neue Teppicharten/Leistungen werden einfach als neue Zeile im
  * Formular hinzugefügt (ein paar Leerzeilen stehen immer am Ende
@@ -62,6 +64,24 @@ function cl_prices_zusatz_default() {
 	);
 }
 
+function cl_prices_polster_default() {
+	return array(
+		array( 'stueck' => 'Sessel', 'preis' => '70,00 €' ),
+		array( 'stueck' => 'Sofa 2-Sitzer', 'preis' => '100,00 €' ),
+		array( 'stueck' => 'Sofa 3-Sitzer', 'preis' => '125,00 €' ),
+		array( 'stueck' => 'Sofa 4-Sitzer', 'preis' => '160,00 €' ),
+		array( 'stueck' => 'Sofa 5-Sitzer', 'preis' => '190,00 €' ),
+		array( 'stueck' => 'Eckcouch klein', 'preis' => '175,00 €' ),
+		array( 'stueck' => 'Eckcouch groß', 'preis' => '225,00 €' ),
+		array( 'stueck' => 'Stuhl', 'preis' => '12,00 €' ),
+		array( 'stueck' => 'Bürostuhl', 'preis' => '10,00 €' ),
+	);
+}
+
+function cl_prices_polster_note_default() {
+	return 'Preise pro Stück, inkl. MwSt. Richtwerte, final bestätigt nach Prüfung von Material und Zustand vor Ort.';
+}
+
 function cl_prices_material_note_default() {
 	return 'Preise inkl. MwSt. Mindestauftragswert: 89 €. Ab einem definierten Auftragswert ist die Abholung im Nahbereich kostenlos.';
 }
@@ -89,6 +109,16 @@ function cl_get_prices_zusatz() {
 	return is_array( $rows ) && ! empty( $rows ) ? $rows : cl_prices_zusatz_default();
 }
 
+function cl_get_prices_polster() {
+	$rows = get_option( 'cl_prices_polster', null );
+	return is_array( $rows ) && ! empty( $rows ) ? $rows : cl_prices_polster_default();
+}
+
+function cl_get_prices_polster_note() {
+	$note = get_option( 'cl_prices_polster_note', '' );
+	return '' !== $note ? $note : cl_prices_polster_note_default();
+}
+
 function cl_get_prices_material_note() {
 	$note = get_option( 'cl_prices_material_note', '' );
 	return '' !== $note ? $note : cl_prices_material_note_default();
@@ -114,6 +144,7 @@ add_action( 'rest_api_init', function () {
 				return array(
 					'material' => cl_get_prices_material(),
 					'zusatz'   => cl_get_prices_zusatz(),
+					'polster'  => cl_get_prices_polster(),
 				);
 			},
 			'permission_callback' => '__return_true',
@@ -167,6 +198,28 @@ add_shortcode( 'cl_preise_reparatur', function () {
 	</table>
 	</div>
 	<p class="basetable-note"><?php echo esc_html( cl_get_prices_repair_note() ); ?></p>
+	<?php
+	return ob_get_clean();
+} );
+
+add_shortcode( 'cl_preise_polster', function () {
+	$rows = cl_get_prices_polster();
+	ob_start();
+	?>
+	<div class="table-scroll">
+	<table>
+		<thead><tr><th>Stück</th><th>Preis</th></tr></thead>
+		<tbody>
+			<?php foreach ( $rows as $row ) : ?>
+			<tr>
+				<td><?php echo esc_html( $row['stueck'] ?? '' ); ?></td>
+				<td class="price"><?php echo esc_html( $row['preis'] ?? '' ); ?></td>
+			</tr>
+			<?php endforeach; ?>
+		</tbody>
+	</table>
+	</div>
+	<p class="basetable-note"><?php echo esc_html( cl_get_prices_polster_note() ); ?></p>
 	<?php
 	return ob_get_clean();
 } );
@@ -244,20 +297,24 @@ function cl_preise_page() {
 		update_option( 'cl_prices_material', cl_collect_price_rows( 'material', array( 'art', 'verfahren', 'preis' ) ) );
 		update_option( 'cl_prices_repair', cl_collect_price_rows( 'repair', array( 'leistung', 'preis' ) ) );
 		update_option( 'cl_prices_zusatz', cl_collect_price_rows( 'zusatz', array( 'titel', 'beschreibung', 'preis' ) ) );
+		update_option( 'cl_prices_polster', cl_collect_price_rows( 'polster', array( 'stueck', 'preis' ) ) );
 		update_option( 'cl_prices_material_note', sanitize_text_field( wp_unslash( $_POST['material_note'] ?? '' ) ) );
 		update_option( 'cl_prices_repair_note', sanitize_text_field( wp_unslash( $_POST['repair_note'] ?? '' ) ) );
+		update_option( 'cl_prices_polster_note', sanitize_text_field( wp_unslash( $_POST['polster_note'] ?? '' ) ) );
 		echo '<div class="notice notice-success is-dismissible"><p>Preise gespeichert. Änderungen sind sofort auf der Seite „Leistungen & Preise“ sichtbar.</p></div>';
 	}
 
 	$material = cl_get_prices_material();
 	$repair   = cl_get_prices_repair();
 	$zusatz   = cl_get_prices_zusatz();
+	$polster  = cl_get_prices_polster();
 
 	// Ein paar Leerzeilen am Ende zum Hinzufügen neuer Teppicharten/Leistungen.
 	for ( $i = 0; $i < 3; $i++ ) {
 		$material[] = array( 'art' => '', 'verfahren' => '', 'preis' => '' );
 		$repair[]   = array( 'leistung' => '', 'preis' => '' );
 		$zusatz[]   = array( 'titel' => '', 'beschreibung' => '', 'preis' => '' );
+		$polster[]  = array( 'stueck' => '', 'preis' => '' );
 	}
 	?>
 	<div class="wrap">
@@ -317,6 +374,24 @@ function cl_preise_page() {
 					<?php endforeach; ?>
 				</tbody>
 			</table>
+
+			<h2 style="margin-top:36px;">Polsterreinigung</h2>
+			<table class="widefat striped" style="max-width:700px;">
+				<thead><tr><th>Stück</th><th>Preis</th><th>Löschen</th></tr></thead>
+				<tbody>
+					<?php foreach ( $polster as $i => $row ) : ?>
+					<tr>
+						<td><input type="text" name="polster[<?php echo $i; ?>][stueck]" value="<?php echo esc_attr( $row['stueck'] ); ?>" style="width:100%;"></td>
+						<td><input type="text" name="polster[<?php echo $i; ?>][preis]" value="<?php echo esc_attr( $row['preis'] ); ?>" style="width:100%;"></td>
+						<td><input type="checkbox" name="polster[<?php echo $i; ?>][delete]" value="1"></td>
+					</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+			<p>
+				<label>Hinweistext unter der Tabelle:<br>
+				<input type="text" name="polster_note" value="<?php echo esc_attr( cl_get_prices_polster_note() ); ?>" style="width:100%;max-width:700px;"></label>
+			</p>
 
 			<?php submit_button( 'Preise speichern' ); ?>
 		</form>
