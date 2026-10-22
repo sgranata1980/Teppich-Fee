@@ -429,7 +429,10 @@
       data.tel = document.getElementById('w-tel').value.trim();
       data.email = document.getElementById('w-email').value.trim();
       data.msg = document.getElementById('w-msg').value.trim();
-      return !!data.name && !!data.tel && !!data.email;
+      if (!data.name) return false;
+      if (!data.tel) return false;
+      if (!data.email) return false;
+      return true;
     }
     if (current === 4) {
       return document.getElementById('w-consent').checked;
