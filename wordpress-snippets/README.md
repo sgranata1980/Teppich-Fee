@@ -10,8 +10,9 @@ entspricht der Snippet-ID auf der Live-Seite.
 | 6 | Care Lab Zweit-Domain (care-lab.app) | `domain-care-lab-app.php` | Verhindert den WordPress-Redirect von care-lab.app auf teppichlabor.de |
 | 7 | Care Lab Login-Design (Apple-Look) | `login-design.php` | Stylt wp-login.php: weiß, blaue Buttons, eigenes Logo statt WordPress-Logo |
 | 8 | Care Lab SEO-Basics (Meta-Description + LocalBusiness-Schema) | `seo-basics.php` | Meta-Description pro Seite + LocalBusiness-JSON-LD, ohne SEO-Plugin |
-| 9 | Care Lab Backend — API-Key-Verwaltung | `api-keys-backend.php` | Eigenes Admin-Menü "Care Lab" → "API-Keys": speichert Anthropic/OpenAI-Keys als WP-Optionen statt im Code. Muss aktiv sein, sonst bleibt der Chat-Assistent (Snippet 5) auf `503 not_configured` |
+| 9 | Care Lab Backend — API-Key-Verwaltung | `api-keys-backend.php` | Eigenes Admin-Menü "Care Lab" → "API-Keys": speichert Anthropic/OpenAI-Keys als WP-Optionen statt im Code. Muss aktiv sein, sonst bleibt der Chat-Assistent (Snippet 5) auf `503 not_configured`. Seit 22.10.2026 zusätzlich Link zur neuen Preise-Seite im Dashboard |
 | 10 | Care Lab Teppich-Erkennung | `../chat-worker/carpet-identify-snippet.php` | REST-Endpoint `/wp-json/care-lab/v1/identify-carpet`: nimmt ein Teppich-Foto entgegen, lässt Claude (Vision) die Material-Kategorie einschätzen, Preistext kommt fest aus PHP (nie von der KI erfunden). Für die "Jetzt Teppich bestellen"-Box auf der Startseite |
+| 17 | Care Lab Backend — Preiseditor | `price-editor-backend.php` | Admin-Menü "Care Lab" → "Preise": Teppichreinigungs-Preise (Grundreinigung nach Material, Reparatur, Einzelleistungen) als WP-Optionen statt im Seiten-HTML. Seite `/leistungen-pakete/` zieht sie per Shortcode (`[cl_preise_material]`, `[cl_preise_reparatur]`, `[cl_preise_zusatz]`) — Preisänderungen im Backend sind sofort live, kein Code/Git nötig |
 
 ## Warum als Backup im Repo
 

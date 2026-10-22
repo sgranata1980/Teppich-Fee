@@ -50,6 +50,7 @@ function cl_backend_dashboard_page() {
 		<p>Zentrale Stelle für Backend-Werkzeuge, die nicht ins normale WordPress-Menü passen.</p>
 		<ul>
 			<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=care-lab-api-keys' ) ); ?>">API-Keys verwalten</a> (Claude/Anthropic, OpenAI)</li>
+			<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=care-lab-preise' ) ); ?>">Preise verwalten</a> (Grundreinigung, Reparatur, Einzelleistungen — erscheint live auf /leistungen-pakete/)</li>
 		</ul>
 	</div>
 	<?php
