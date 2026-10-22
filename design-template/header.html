@@ -32,10 +32,10 @@ html, body{ overflow-x:hidden; max-width:100%; }
 .tl-header .logo img{ display:block; height:20px; width:auto; flex-shrink:0; }
 @media (max-width:520px){ .tl-header .logo img{ height:16px; } }
 .tl-header nav.main{ display:flex; gap:0; align-items:center; flex-shrink:1; min-width:0; }
-.tl-header nav.main a{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:14.5px; font-weight:500; letter-spacing:0; text-transform:none; text-decoration:none; color:var(--ink); padding:8px clamp(10px,1.1vw,18px); border-left:none; transition:color .12s ease; white-space:nowrap; }
+.tl-header nav.main a{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:13.5px; font-weight:500; letter-spacing:0; text-transform:none; text-decoration:none; color:var(--ink); padding:8px clamp(7px,0.85vw,14px); border-left:none; transition:color .12s ease; white-space:nowrap; }
 .tl-header nav.main a:hover{ color:var(--ink); }
 .tl-header .nav-dropdown{ position:relative; flex-shrink:0; }
-.tl-header .nav-dropdown > button{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:14.5px; font-weight:500; color:var(--ink); background:none; border:none; cursor:pointer; padding:8px clamp(10px,1.1vw,18px); display:inline-flex; align-items:center; gap:5px; white-space:nowrap; }
+.tl-header .nav-dropdown > button{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:13.5px; font-weight:500; color:var(--ink); background:none; border:none; cursor:pointer; padding:8px clamp(7px,0.85vw,14px); display:inline-flex; align-items:center; gap:5px; white-space:nowrap; }
 .tl-header .nav-dropdown .chevron{ width:9px; height:9px; margin-top:1px; }
 .tl-header .nav-dropdown-menu{ position:absolute; top:100%; left:18px; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px; min-width:200px; box-shadow:0 16px 36px rgba(0,0,0,.14); opacity:0; visibility:hidden; transform:translateY(-6px); transition:opacity .15s ease, transform .15s ease, visibility .15s; z-index:60; }
 .tl-header .nav-dropdown:hover .nav-dropdown-menu, .tl-header .nav-dropdown:focus-within .nav-dropdown-menu{ opacity:1; visibility:visible; transform:translateY(0); }
@@ -45,7 +45,7 @@ html, body{ overflow-x:hidden; max-width:100%; }
 .tl-header .icon-btn{ width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:12px; text-decoration:none; color:var(--ink-soft); transition:color .15s ease; }
 .tl-header .icon-btn:hover{ color:var(--ink); }
 .tl-header .icon-btn[href^="mailto"]{ font-size:18px; }
-.tl-header nav.main a.nav-cta{ font-weight:600; background:var(--ink); color:var(--bg); padding:8px 20px; border-radius:4px; margin-left:6px; }
+.tl-header nav.main a.nav-cta{ font-weight:600; background:var(--ink); color:var(--bg); padding:8px 16px; border-radius:4px; margin-left:4px; flex-shrink:0; }
 .tl-header nav.main a.nav-cta:hover{ color:var(--bg); opacity:.85; }
 @media (max-width:1480px){ .tl-header nav.main{ display:none; } }
 .tl-header .menu-toggle{ display:none; font-family:'Inter',Helvetica,Arial,sans-serif; font-weight:600; font-size:14px; padding:9px 18px; border-radius:4px; background:var(--surface-2); border:none; color:var(--ink); cursor:pointer; }
@@ -527,7 +527,7 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
       <a href="/fleckenlexikon/">Fleckenlexikon</a>
       <a href="/journal/">Journal</a>
       <a href="/wer-wir-sind/">Wer wir sind</a>
-      <a href="/impressum-kontakt/" class="nav-cta">Reinigung buchen</a>
+      <a href="/impressum-kontakt/" class="nav-cta">Buchen</a>
     </nav>
     <div class="nav-utils">
       <div class="lang-switcher" id="lang-switcher-desktop">
