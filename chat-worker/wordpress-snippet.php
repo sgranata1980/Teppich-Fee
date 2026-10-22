@@ -100,7 +100,7 @@ TEPPICHBODENREINIGUNG (neues Angebot)
 Fest verlegter Teppichboden wird direkt vor Ort gereinigt (nicht abgeholt). Preise stehen noch nicht final fest ("folgen in Kürze"), auf Anfrage wird unverbindlich eine Einschätzung gegeben.
 
 ABHOLUNG
-Gilt nur für lose Teppiche (nicht für fest verlegten Teppichboden), im gesamten Rhein-Main-Gebiet. Wir holen grundsätzlich beim Kunden ab, kein Vorbeibringen. Preis: siehe "Abholung & Lieferung" oben unter Einzelleistungen (Fahrtkostenpauschale pro Auftrag).
+Gilt nur für lose Teppiche (nicht für fest verlegten Teppichboden), im gesamten Rhein-Main-Gebiet. Wir holen grundsätzlich beim Kunden ab, kein Vorbeibringen. Aktuell kostenlos (könnte künftig an einen Mindestbestellwert geknüpft werden, aktuell nicht).
 
 UNTERNEHMEN / B2B
 Zielgruppen: Hotels, Kitas & Büros, Hausverwaltungen, Gastronomie. Eigenes Angebotsformular unter /profi-kontakt/. Logo-Teppiche für Gastronomie & Einzelhandel (bedruckt mit Kundenlogo) ab 71,34 € (Format 60x40 cm, Einzelhandel), größere Formate und Gastronomie-Varianten auf Anfrage, siehe /logo-teppiche/.

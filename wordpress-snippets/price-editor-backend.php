@@ -58,7 +58,7 @@ function cl_prices_zusatz_default() {
 		array( 'titel' => 'Stark verschmutzte Teppiche', 'beschreibung' => 'Hoher Sand-/Staubeintrag, mehrere Waschgänge.', 'preis' => '+30 % *' ),
 		array( 'titel' => 'Express-Service', 'beschreibung' => 'Priorisierte Trocknung, verbindlicher Termin.', 'preis' => '+30–40 %' ),
 		array( 'titel' => 'Teppicheinlagerung', 'beschreibung' => 'Gereinigt, verpackt, dokumentiert.', 'preis' => 'ab 15–30 €/Monat' ),
-		array( 'titel' => 'Abholung & Lieferung', 'beschreibung' => 'Fahrtkostenpauschale pro Auftrag.', 'preis' => '5,00 €' ),
+		array( 'titel' => 'Abholung & Lieferung', 'beschreibung' => 'Aktuell kostenlos, ggf. künftig ab einem Mindestbestellwert.', 'preis' => 'Kostenlos' ),
 	);
 }
 
