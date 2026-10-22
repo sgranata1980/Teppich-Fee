@@ -100,6 +100,28 @@ function cl_get_prices_repair_note() {
 }
 
 // ---------------------------------------------------------------------
+// REST-Endpoint, damit das Buchungs-Tool (impressum-kontakt.html) die
+// Preise live abfragen kann, statt sie im JS hart zu verdrahten.
+// ---------------------------------------------------------------------
+
+add_action( 'rest_api_init', function () {
+	register_rest_route(
+		'care-lab/v1',
+		'/preise',
+		array(
+			'methods'             => 'GET',
+			'callback'            => function () {
+				return array(
+					'material' => cl_get_prices_material(),
+					'zusatz'   => cl_get_prices_zusatz(),
+				);
+			},
+			'permission_callback' => '__return_true',
+		)
+	);
+} );
+
+// ---------------------------------------------------------------------
 // Shortcodes fürs Frontend
 // ---------------------------------------------------------------------
 
