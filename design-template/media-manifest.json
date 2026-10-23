@@ -28,16 +28,20 @@
     "https://teppichlabor.de/wp-content/uploads/2026/09/stefano-redo-v7-anzug.png"
   ],
   "tile_privatkunden": [
-    249,
-    "https://teppichlabor.de/wp-content/uploads/2026/09/privat-frame1.jpg"
+    488,
+    "https://teppichlabor.de/wp-content/uploads/2026/10/showcase-privat-perser-poster.jpg"
   ],
   "tile_unternehmen": [
-    252,
-    "https://teppichlabor.de/wp-content/uploads/2026/09/unt-frame1.jpg"
+    489,
+    "https://teppichlabor.de/wp-content/uploads/2026/10/showcase-unternehmen-bold-poster.jpg"
   ],
   "tile_hygiene": [
-    243,
-    "https://teppichlabor.de/wp-content/uploads/2026/09/vid-frame-mid.jpg"
+    490,
+    "https://teppichlabor.de/wp-content/uploads/2026/10/showcase-hygiene-dampf-poster.jpg"
+  ],
+  "podcast_placeholder": [
+    491,
+    "https://teppichlabor.de/wp-content/uploads/2026/10/podcast-stefano-placeholder-scaled.jpg"
   ],
   "logo_wordmark": [
     90,
@@ -136,16 +140,16 @@
     "https://teppichlabor.de/wp-content/uploads/2026/09/hero-kontakt-v2.png"
   ],
   "tile_hygiene_video": [
-    245,
-    "https://teppichlabor.de/wp-content/uploads/2026/09/tile-hygiene-loop-opt.mp4"
+    487,
+    "https://teppichlabor.de/wp-content/uploads/2026/10/showcase-hygiene-dampf.mp4"
   ],
   "tile_privat_video": [
-    248,
-    "https://teppichlabor.de/wp-content/uploads/2026/09/tile-privat-loop-opt.mp4"
+    485,
+    "https://teppichlabor.de/wp-content/uploads/2026/10/showcase-privat-perser.mp4"
   ],
   "tile_unternehmen_video": [
-    251,
-    "https://teppichlabor.de/wp-content/uploads/2026/09/tile-unternehmen-loop-opt.mp4"
+    486,
+    "https://teppichlabor.de/wp-content/uploads/2026/10/showcase-unternehmen-bold.mp4"
   ],
   "hero_slide_kamera": [
     409,
