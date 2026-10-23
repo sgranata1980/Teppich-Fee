@@ -603,13 +603,21 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
     // iOS Safari laesst ein Element mit transform nicht per Touch scrollen -
     // Transform nach Abschluss der Slide-in-Animation entfernen, damit das
     // Menue selbst scrollbar wird.
+    var cleared = false;
+    function clearTransform(){
+      if (cleared) return;
+      cleared = true;
+      menu.style.transform = 'none';
+      menu.removeEventListener('transitionend', onEnd);
+    }
     var onEnd = function(e){
-      if (e.target === menu && e.propertyName === 'transform') {
-        menu.style.transform = 'none';
-        menu.removeEventListener('transitionend', onEnd);
-      }
+      if (e.target === menu && e.propertyName === 'transform') clearTransform();
     };
     menu.addEventListener('transitionend', onEnd);
+    // Fallback: falls transitionend nicht feuert (reduced motion, unterbrochene
+    // Animation o.ae.), Transform trotzdem nach der Animationsdauer entfernen -
+    // sonst bleibt das Menue auf iOS dauerhaft unscrollbar.
+    setTimeout(clearTransform, 350);
   }
   function closeMenu(){
     menu.style.transform = '';
