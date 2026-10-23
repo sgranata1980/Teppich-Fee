@@ -180,6 +180,19 @@ Stand: laufend ergänzt. Nur Einträge hier sind bestätigt, alles andere in den
 
 - **Bugfix: "Wissen"-Sektion (Podcast & Erklärvideo) hatte leeren Platz rechts (23.10.2026):** Seit der Reduzierung von drei auf zwei Karten (Fleckenlexikon-Auslagerung) war noch ein `max-width:760px` auf dem Grid übrig, das die zwei Karten künstlich schmal hielt, obwohl der Container bis 1600px breit ist. Entfernt — die beiden Karten (Podcast, Erklärvideo) füllen jetzt die komplette Breite wie der Rest der Seite.
 
+- **Produktfotos (Düfte) und Wohnzimmer-Hero mit Artlist neu erstellt/bearbeitet, Apple-Produktfoto-Stil (23.10.2026, User-Wunsch "orientier dich an Apple ... benutze bitte Artlist"):** User fand die bisherigen Duft-Flakon-Fotos (neutraler grauer Studiohintergrund) nicht überzeugend und wollte eine Darstellung näher an Apples Produktfotografie. Umgesetzt per Artlist Bild-zu-Bild-Bearbeitung (echte Flasche/Etikett aus dem Originalfoto beibehalten, nur Hintergrund/Beleuchtung geändert, keine KI-erfundene Flasche):
+  - Capri (Amalfi-Zitrone): warmer Zitrus-Gelb-Verlauf.
+  - Orient: tiefes Bernstein/Terrakotta.
+  - Saigon (Sandelholz & Gewürznote): warmes Sandelholz-Braun.
+  - Leder: tiefes Cognac-Braun.
+  - Toscana (Zypresse & Lavendel): sanftes Lavendel/Salbeigrün.
+  - Jeder Duft bekommt dadurch eine eigene Farbidentität, ähnlich wie Apple seinen Produkten jeweils eigene Hintergrundfarben gibt.
+  - Zusätzlich das Wohnzimmer-Hero-Foto (Sektion "Teppichduft" auf der Startseite) hochskaliert/geschärft (ebenfalls per Artlist-Bildbearbeitung, Motiv/Personen/Einrichtung unverändert).
+  - **Nachbesserung:** User meldete, dass beim Capri-Bild der "CARE LAB"-Schriftzug auf dem Etikett zu weit rechts/unrealistisch wirkte. Mit einer gezielten zweiten Bearbeitung (nur die Etikett-Position korrigiert, alles andere identisch gelassen) behoben und das alte Bild ersetzt.
+  - Alle neuen Bilder in die WordPress-Mediathek hochgeladen, `media-manifest.json` aktualisiert (spray_capri, spray_orient, spray_saigon, spray_leder, spray_toscana, office_hero), sowie die hartcodierten Bild-URLs auf `/shop/` direkt ersetzt (dort nicht über Platzhalter-Tokens, sondern feste URLs im HTML). Alte, nicht mehr verwendete Medien-ID (467, erste fehlerhafte Capri-Version) aus der Mediathek gelöscht.
+  - **Zusätzlich (ursprüngliche, separate Anfrage vom selben Gespräch):** Die Capri-spezifische Überschrift "Probieren Sie unseren Duft Capri." samt Button "Capri entdecken" in der "Teppichduft"-Sektion der Startseite durch einen allgemeineren Text ersetzt, da Düfte für verschiedene Umgebungen (Zuhause, Büro, Wohlbefinden) relevant sind, nicht nur Capri. **Unbestätigte, direkt vom User diktierte Aussage, nicht selbst verifiziert:** "Einige unserer Kunden, etwa Arztpraxen, bestellen gezielt Düfte, die beruhigend wirken sollen" — wörtlich vom User so vorgegeben (er sprach von Praxen, die Düfte bestellen, "die ein bisschen die Angst nehmen"), bewusst zurückhaltend als Kundenbeispiel formuliert, nicht als medizinische Wirkungsaussage, um keine Gesundheitsversprechen zu machen (gleiche Vorsicht wie bei der Hygienereinigung).
+  - **Kosten:** 6 Bildbearbeitungen + 1 Korrektur = 910 Artlist-Credits verbraucht (von 20.680 verfügbaren).
+
 ## Noch offen (nicht erfinden, bei Bedarf nachfragen)
 - Anzahl Mitarbeiter, konkrete Rollen (Fahrer, Reinigungsteam, …), Namen fürs Team.
 - Cem Zerens vorherige Branche/Beruf vor dem Quereinstieg.
