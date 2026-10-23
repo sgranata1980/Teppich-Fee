@@ -178,6 +178,8 @@ Stand: laufend ergänzt. Nur Einträge hier sind bestätigt, alles andere in den
   - **Verifiziert:** Vorher/Nachher-Screenshots (Desktop 1600px + Mobile 390px) von Startseite, Buchungs-Tool (Schritt 1+2) und Preisseite erstellt und visuell geprüft — keine Regressionen, Buttons/Karten/Links wirken durchgängig weicher und ruhiger, Blau-Akzent liest sich gut auch auf dem dunklen Hero-Foto.
   - **Nicht umgesetzt (bewusst, zu groß für diese Runde):** Keine Schriftgrößen-/Tracking-Änderungen (bereits nah an Apples Werten), keine Layout-Struktur-Änderungen (Apples "Highlights-Karussell"/"Editorial-Block"-Muster), kein sitewide Sweep aller einzelnen Journal-/Legacy-Seiten für Detail-Feinschliff — die zentralen Tokens in header.html wirken aber automatisch überall.
 
+- **Bugfix: "Wissen"-Sektion (Podcast & Erklärvideo) hatte leeren Platz rechts (23.10.2026):** Seit der Reduzierung von drei auf zwei Karten (Fleckenlexikon-Auslagerung) war noch ein `max-width:760px` auf dem Grid übrig, das die zwei Karten künstlich schmal hielt, obwohl der Container bis 1600px breit ist. Entfernt — die beiden Karten (Podcast, Erklärvideo) füllen jetzt die komplette Breite wie der Rest der Seite.
+
 ## Noch offen (nicht erfinden, bei Bedarf nachfragen)
 - Anzahl Mitarbeiter, konkrete Rollen (Fahrer, Reinigungsteam, …), Namen fürs Team.
 - Cem Zerens vorherige Branche/Beruf vor dem Quereinstieg.
