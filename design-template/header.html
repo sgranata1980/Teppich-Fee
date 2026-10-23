@@ -172,16 +172,18 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
 .trust-row span{ display:block; padding:14px 20px; text-align:center; font-size:11px; font-weight:500; letter-spacing:.02em; color:rgba(245,245,243,.75); border-right:1px solid rgba(245,245,243,.16); }
 @media (max-width:780px){ .trust-row span:nth-child(2n){ border-right:none; } }
 
-.tl-process{ padding:0; border-bottom:1px solid var(--line-strong); }
+.tl-process{ padding:clamp(56px,8vw,96px) 0; background:var(--surface-2); border-bottom:1px solid var(--line-strong); }
+.tl-process .section-head{ padding:0 0 40px; }
 .section-head{ padding:52px 0 36px; display:flex; justify-content:space-between; align-items:flex-end; gap:24px; flex-wrap:wrap; }
 .section-head h2{ font-size:clamp(24px,4vw,40px); line-height:1.2; }
-.steps{ display:grid; grid-template-columns:repeat(4,1fr); gap:40px; }
-@media (max-width:800px){ .steps{ grid-template-columns:1fr 1fr; gap:36px; } }
-@media (max-width:520px){ .steps{ grid-template-columns:1fr; gap:32px; } }
-.step{ padding:40px 0 0; border-top:2px solid var(--ink); }
-.step .icon{ width:26px; height:26px; color:var(--ink); display:block; margin-bottom:20px; }
-.step .n{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:11px; color:var(--accent); }
-.step h3{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:23px; font-weight:700; margin:16px 0 10px; text-transform:uppercase; }
+.steps{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+@media (max-width:800px){ .steps{ grid-template-columns:1fr 1fr; gap:16px; } }
+@media (max-width:520px){ .steps{ grid-template-columns:1fr; gap:16px; } }
+.step{ background:var(--surface); border:1px solid var(--line); border-radius:24px; padding:36px 32px; transition:border-color .2s ease; }
+.step:hover{ border-color:var(--line-strong); }
+.step .icon{ width:26px; height:26px; color:var(--ink); display:block; margin-bottom:24px; }
+.step .n{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:11px; font-weight:600; letter-spacing:.06em; color:var(--accent); text-transform:uppercase; }
+.step h3{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:21px; font-weight:600; letter-spacing:-0.01em; margin:14px 0 10px; text-transform:none; }
 .step p{ font-size:14.5px; color:var(--ink-soft); margin:0; line-height:1.55; }
 
 .showcase-section{ border-bottom:1px solid var(--line-strong); }
