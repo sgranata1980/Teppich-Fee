@@ -415,9 +415,10 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
 .team-head p{ color:var(--ink-soft); font-size:15px; line-height:1.65; }
 .stats{ display:flex; flex-wrap:wrap; gap:0; border-top:1px solid var(--line-strong); margin-top:36px; }
 .stat{ flex:1; min-width:180px; padding:22px 26px 20px 0; border-right:1px solid var(--line); }
+.stat:not(:first-child){ padding-left:26px; }
 .stat:last-child{ border-right:none; }
-.stat .v{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:38px; font-weight:700; line-height:1; }
-.stat .l{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft); margin-top:8px; display:block; }
+.stat .v{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:clamp(26px,6vw,38px); font-weight:700; line-height:1.1; }
+.stat .l{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft); margin-top:10px; display:block; }
 
 /* ---------- Impressum & Kontakt ---------- */
 .kontakt{ background:var(--surface-2); border-bottom:1px solid var(--line); }
