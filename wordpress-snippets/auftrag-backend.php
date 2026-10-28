@@ -104,6 +104,7 @@ function cl_auftrag_details_box( $post ) {
 	$kleinkind     = get_post_meta( $post->ID, 'cl_kleinkindpaket', true );
 	$haustier      = get_post_meta( $post->ID, 'cl_haustierpaket', true );
 	$subtotal      = get_post_meta( $post->ID, 'cl_subtotal_text', true );
+	$subtotal_netto = get_post_meta( $post->ID, 'cl_subtotal_netto_text', true );
 	$vorher_fotos  = get_post_meta( $post->ID, 'cl_vorher_fotos', true );
 	$nachher_fotos = get_post_meta( $post->ID, 'cl_nachher_fotos', true );
 
@@ -127,7 +128,8 @@ function cl_auftrag_details_box( $post ) {
 		<tr><th>Nachricht</th><td><?php echo esc_html( $msg ); ?></td></tr>
 		<tr><th>Kleinkinderpaket</th><td><?php echo $kleinkind ? 'Ja' : 'Nein'; ?></td></tr>
 		<tr><th>Haustierpaket</th><td><?php echo $haustier ? 'Ja' : 'Nein'; ?></td></tr>
-		<tr><th>Zwischensumme (Richtwert)</th><td><?php echo esc_html( $subtotal ); ?></td></tr>
+		<tr><th>Zwischensumme brutto (Richtwert)</th><td><?php echo esc_html( $subtotal ); ?></td></tr>
+		<tr><th>davon Netto</th><td><?php echo esc_html( $subtotal_netto ); ?></td></tr>
 	</table>
 
 	<h3>Teppiche</h3>
@@ -234,12 +236,23 @@ function cl_handle_anfrage_request( WP_REST_Request $request ) {
 		return new WP_Error( 'rate_limited', 'Zu viele Anfragen. Bitte in einer Stunde erneut versuchen.', array( 'status' => 429 ) );
 	}
 
+	// Honeypot: ein für Menschen unsichtbares Feld. Füllt ein Bot es aus,
+	// tun wir so, als sei alles gutgegangen, speichern aber nichts und
+	// verschicken keine E-Mail — hält Spam-Bots ab, ohne sie zu warnen.
+	$honeypot = (string) $request->get_param( 'website' );
+	if ( '' !== trim( $honeypot ) ) {
+		return array( 'status' => 'ok', 'id' => 0 );
+	}
+
 	$kundentyp = sanitize_text_field( (string) $request->get_param( 'kundentyp' ) );
+	$vorname   = sanitize_text_field( (string) $request->get_param( 'vorname' ) );
+	$nachname  = sanitize_text_field( (string) $request->get_param( 'nachname' ) );
 	$name      = sanitize_text_field( (string) $request->get_param( 'name' ) );
 	$tel       = sanitize_text_field( (string) $request->get_param( 'tel' ) );
 	$email     = sanitize_email( (string) $request->get_param( 'email' ) );
 	$msg       = sanitize_textarea_field( (string) $request->get_param( 'msg' ) );
 	$subtotal  = sanitize_text_field( (string) $request->get_param( 'subtotal_text' ) );
+	$subtotal_netto = sanitize_text_field( (string) $request->get_param( 'subtotal_netto_text' ) );
 	$ausgleich = '1' === (string) $request->get_param( 'mindestausgleich' );
 
 	$carpets_raw = json_decode( (string) $request->get_param( 'carpets_json' ), true );
@@ -283,6 +296,8 @@ function cl_handle_anfrage_request( WP_REST_Request $request ) {
 	}
 
 	update_post_meta( $post_id, 'cl_kundentyp', $kundentyp );
+	update_post_meta( $post_id, 'cl_vorname', $vorname );
+	update_post_meta( $post_id, 'cl_nachname', $nachname );
 	update_post_meta( $post_id, 'cl_name', $name );
 	update_post_meta( $post_id, 'cl_tel', $tel );
 	update_post_meta( $post_id, 'cl_email', $email );
@@ -291,6 +306,7 @@ function cl_handle_anfrage_request( WP_REST_Request $request ) {
 	update_post_meta( $post_id, 'cl_haustierpaket', $haustier );
 	update_post_meta( $post_id, 'cl_mindestausgleich', $ausgleich );
 	update_post_meta( $post_id, 'cl_subtotal_text', $subtotal );
+	update_post_meta( $post_id, 'cl_subtotal_netto_text', $subtotal_netto );
 	update_post_meta( $post_id, 'cl_carpets', $carpets );
 
 	// Vorher-Fotos (eines pro Teppich, per Index zugeordnet) als Anhang speichern.
@@ -328,7 +344,10 @@ function cl_handle_anfrage_request( WP_REST_Request $request ) {
 		$lines[]     = 'Teppich ' . ( $i + 1 ) . ': ' . $c['art'] . ' — ' . $c['breite_cm'] . ' × ' . $c['laenge_cm'] . ' cm' . ( $paket_names ? ' (' . implode( ', ', $paket_names ) . ')' : '' );
 	}
 	$lines[] = '';
-	$lines[] = 'Zwischensumme (Richtwert): ' . $subtotal . ( $ausgleich ? ' (inkl. Mindestauftrag-Ausgleich)' : '' );
+	$lines[] = 'Zwischensumme brutto (Richtwert, inkl. 19% MwSt.): ' . $subtotal . ( $ausgleich ? ' (inkl. Mindestauftrag-Ausgleich)' : '' );
+	if ( $subtotal_netto ) {
+		$lines[] = 'davon Netto: ' . $subtotal_netto;
+	}
 	if ( $msg ) {
 		$lines[] = '';
 		$lines[] = 'Nachricht: ' . $msg;
@@ -336,7 +355,38 @@ function cl_handle_anfrage_request( WP_REST_Request $request ) {
 	$lines[] = '';
 	$lines[] = 'Im Backend ansehen: ' . admin_url( 'post.php?post=' . $post_id . '&action=edit' );
 
-	wp_mail( 'info@teppichlabor.de', 'Neue Buchungsanfrage: ' . $name, implode( "\n", $lines ) );
+	wp_mail( 'zerenmobil@googlemail.com', 'Neue Buchungsanfrage: ' . $name, implode( "\n", $lines ) );
+
+	// Bestätigungsmail an den Absender selbst, damit er weiß, dass seine
+	// Anfrage angekommen ist (bis es ein echtes Buchungssystem gibt, ist
+	// das hier noch eine unverbindliche Anfrage, kein verbindlicher Auftrag).
+	$customer_lines = array(
+		'Hallo ' . $vorname . ',',
+		'',
+		'danke für deine Anfrage bei Care Lab. Sie ist bei uns eingegangen, wir melden uns in der Regel innerhalb eines Werktags mit einer verbindlichen Bestätigung bei dir.',
+		'',
+		'Deine Angaben:',
+	);
+	foreach ( $carpets as $i => $c ) {
+		$paket_names        = array_map( function ( $p ) use ( $paket_labels ) { return $paket_labels[ $p ] ?? $p; }, $c['pakete'] );
+		$customer_lines[]   = 'Teppich ' . ( $i + 1 ) . ': ' . $c['art'] . ' — ' . $c['breite_cm'] . ' × ' . $c['laenge_cm'] . ' cm' . ( $paket_names ? ' (' . implode( ', ', $paket_names ) . ')' : '' );
+	}
+	$customer_lines[] = '';
+	$customer_lines[] = 'Zwischensumme brutto (Richtwert, unter Vorbehalt, inkl. 19% MwSt.): ' . $subtotal;
+	if ( $subtotal_netto ) {
+		$customer_lines[] = 'davon Netto: ' . $subtotal_netto;
+	}
+	$customer_lines[] = '';
+	$customer_lines[] = 'Der Betrag ist ein Richtwert auf Basis deiner Angaben, final bestätigt nach Prüfung vor Ort. Abholung ist aktuell kostenlos.';
+	$customer_lines[] = '';
+	$customer_lines[] = 'Fragen? Ruf uns an: 0172 8293606, oder antworte einfach auf diese E-Mail.';
+	$customer_lines[] = '';
+	$customer_lines[] = 'Viele Grüße';
+	$customer_lines[] = 'Care Lab';
+
+	if ( is_email( $email ) ) {
+		wp_mail( $email, 'Deine Anfrage bei Care Lab ist eingegangen', implode( "\n", $customer_lines ) );
+	}
 
 	return array( 'status' => 'ok', 'id' => $post_id );
 }
