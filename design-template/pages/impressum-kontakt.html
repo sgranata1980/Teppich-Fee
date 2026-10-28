@@ -733,7 +733,27 @@
     }
   });
 
-  goTo(1);
+  function initFromB2bHandoff(){
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('b2b') !== '1') { goTo(1); return; }
+    data.kundentyp = 'Geschäftskunde';
+    var geschaeftOpt = wizard.querySelector('.wizard-option[data-value="Geschäftskunde"]');
+    if (geschaeftOpt) {
+      wizard.querySelectorAll('.wizard-options[data-group="kundentyp"] .wizard-option').forEach(function(o){ o.classList.remove('selected'); });
+      geschaeftOpt.classList.add('selected');
+    }
+    var vornameEl = document.getElementById('w-vorname');
+    var nachnameEl = document.getElementById('w-nachname');
+    var emailEl = document.getElementById('w-email');
+    var telEl = document.getElementById('w-tel');
+    if (vornameEl && params.get('vorname')) vornameEl.value = params.get('vorname');
+    if (nachnameEl && params.get('nachname')) nachnameEl.value = params.get('nachname');
+    if (emailEl && params.get('email')) emailEl.value = params.get('email');
+    if (telEl && params.get('tel')) telEl.value = params.get('tel');
+    goTo(2);
+  }
+
+  initFromB2bHandoff();
 })();
 </script>
 </div>

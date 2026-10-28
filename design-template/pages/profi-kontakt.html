@@ -237,12 +237,12 @@
     s.innerHTML =
       row('Anliegen', data.anliegen) +
       row('Firma', data.firma) +
-      row('Objekttyp', data.objekttyp) +
-      row('Fläche / Anzahl', data.flaeche) +
-      row('Rhythmus', data.rhythmus) +
-      row('Ansprechperson', data.name) +
-      row('Telefon', data.tel) +
+      row('Ansprechpartner', data.name) +
       row('E-Mail', data.email) +
+      row('Telefon', data.tel) +
+      row('Objekttyp', data.objekttyp) +
+      row('Menge', data.flaeche ? (data.flaeche + ' ' + data.flaeche_einheit) : '') +
+      row('Rhythmus', data.rhythmus) +
       row('Adresse', data.adresse) +
       (data.msg ? row('Nachricht', data.msg) : '');
   }
@@ -275,21 +275,41 @@
     wrap.innerHTML = '<div class="honest-box" style="' + (kind === 'error' ? 'border-color:#c0392b;' : '') + '">' + msg + '</div>';
   }
 
+  function redirectToBuchung(){
+    var nameParts = (data.name || '').trim().split(/\s+/);
+    var vorname = nameParts.shift() || '';
+    var nachname = nameParts.join(' ');
+    var params = new URLSearchParams();
+    params.set('b2b', '1');
+    if (vorname) params.set('vorname', vorname);
+    if (nachname) params.set('nachname', nachname);
+    if (data.email) params.set('email', data.email);
+    if (data.tel) params.set('tel', data.tel);
+    window.location.href = '/impressum-kontakt/?' + params.toString();
+  }
+
   nextBtn.addEventListener('click', function(){
     if (!currentStepValid()) return;
+    if (current === 3 && /^Einmalig/.test(data.rhythmus)) {
+      redirectToBuchung();
+      return;
+    }
     if (current < total) {
       goTo(current + 1);
     } else {
-      var subjectText = 'Gewerbeanfrage: ' + data.anliegen + ' - ' + data.firma;
+      var subjectText = 'Gewerbeanfrage (' + data.rhythmus + '): ' + (data.firma || data.name || data.email || data.tel);
       var bodyLines = [
         'Anliegen: ' + data.anliegen,
-        'Firma: ' + data.firma,
-        'Objekttyp: ' + data.objekttyp,
-        'Fläche / Anzahl: ' + data.flaeche,
         'Rhythmus: ' + data.rhythmus,
         '',
-        'Telefon: ' + data.tel,
-        'Adresse des Objekts: ' + data.adresse,
+        'Firma: ' + (data.firma || '-'),
+        'Ansprechpartner: ' + (data.name || '-'),
+        'E-Mail: ' + (data.email || '-'),
+        'Telefon: ' + (data.tel || '-'),
+        '',
+        'Objekttyp: ' + (data.objekttyp || '-'),
+        'Menge: ' + (data.flaeche ? (data.flaeche + ' ' + data.flaeche_einheit) : '-'),
+        'Adresse des Objekts: ' + (data.adresse || '-'),
         '',
         'Nachricht: ' + (data.msg || '-')
       ];
