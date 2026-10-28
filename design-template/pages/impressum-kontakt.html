@@ -47,7 +47,6 @@
           <h2>Deine Teppiche</h2>
           <p class="step-sub">Teppichart wählen, Maße in Zentimetern angeben, optional ein Foto hinzufügen. Wir rechnen live mit — der Betrag ist ein Richtwert, final bestätigt nach Prüfung vor Ort.</p>
           <div id="w-carpets"></div>
-          <button type="button" class="btn secondary" id="w-add-carpet" style="margin:4px 0 28px;">+ Weiteren Teppich hinzufügen</button>
 
           <div style="margin-bottom:24px;">
             <span style="font-family:Inter,sans-serif; font-size:11px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft); display:block; margin-bottom:10px;">Zusatzpakete (optional)</span>
@@ -66,6 +65,8 @@
               </div>
             </div>
           </div>
+
+          <button type="button" class="btn secondary" id="w-add-carpet" style="margin:0 0 28px;">+ Weiteren Teppich hinzufügen</button>
 
           <div class="wizard-summary" style="margin-bottom:0;">
             <div class="row"><span>Zwischensumme (Richtwert)</span><span id="w-subtotal">89,00 €</span></div>
@@ -328,7 +329,7 @@
           '<b style="font-size:14px;">Teppich ' + (idx+1) + '</b>' + removeBtn +
         '</div>' +
         '<div class="wizard-field" style="margin-bottom:16px;"><label>Teppichart</label><select data-carpet="' + c.id + '" data-field="art">' + materialOptions(c) + '</select></div>' +
-        '<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:4px;">' +
+        '<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:22px;">' +
           '<div class="wizard-field" style="margin-bottom:0;"><label>Breite (cm)</label><input type="text" inputmode="decimal" placeholder="z. B. 180" data-carpet="' + c.id + '" data-field="breite" value="' + c.breite + '" /></div>' +
           '<div class="wizard-field" style="margin-bottom:0;"><label>Länge (cm)</label><input type="text" inputmode="decimal" placeholder="z. B. 250" data-carpet="' + c.id + '" data-field="laenge" value="' + c.laenge + '" /></div>' +
         '</div>' +
