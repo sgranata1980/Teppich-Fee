@@ -60,9 +60,8 @@ function cl_chat_prices_block() {
 		$lines[] = '- ' . $row['leistung'] . ': ' . $row['preis'];
 	}
 	$lines[] = '';
-	$lines[] = 'ZUSATZPAKETE IM BUCHUNGS-TOOL (/impressum-kontakt/)';
-	$lines[] = '- Kleinkinderpaket: Details werden noch mit dem Kunden abgestimmt, kein fester Preis/Umfang bekannt — nenne hierzu nichts Konkretes.';
-	$lines[] = '- Haustierpaket: Enzymreiniger gegen Tierhaare/Tiergeruch, Preis wie "Urin- & Haustier-Sonderbehandlung" oben.';
+	$lines[] = 'ZUSATZPAKETE IM BUCHUNGS-TOOL (/impressum-kontakt/, pro Teppich einzeln wählbar)';
+	$lines[] = '- Kleinkinderpaket und Haustierpaket: Preis jeweils wie der gleichnamige bzw. ähnlich benannte Eintrag oben unter EINZELLEISTUNGEN (derselbe Wert wie im Backend-Preiseditor gepflegt). Steht dort "auf Anfrage", nenne auch hierzu keinen Preis.';
 
 	return implode( "\n", $lines );
 }
