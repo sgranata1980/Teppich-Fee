@@ -101,6 +101,13 @@ html, body{ overflow-x:hidden; max-width:100%; }
 .tl-page .btn.secondary{ border:1px solid var(--line-strong); color:var(--ink); background:transparent; padding:14px 33px; border-radius:9999px; }
 .tl-page .btn.secondary:hover{ background:var(--surface-2); }
 .tl-page .btn.btn-large{ padding:20px 46px; font-size:17px; border-radius:9999px; }
+.hero-ctas .btn.primary{ background:var(--cta); color:var(--cta-ink); animation:heroCtaGlow 2.6s ease-in-out infinite; }
+.hero-ctas .btn.primary:hover{ opacity:1; background:var(--cta-hover); }
+@keyframes heroCtaGlow{
+  0%,100%{ box-shadow:0 0 0 0 rgba(62,106,225,.45), 0 4px 22px rgba(62,106,225,.35); }
+  50%{ box-shadow:0 0 0 9px rgba(62,106,225,0), 0 4px 34px rgba(62,106,225,.6); }
+}
+@media (prefers-reduced-motion: reduce){ .hero-ctas .btn.primary{ animation:none; box-shadow:0 4px 26px rgba(62,106,225,.4); } }
 .tl-page .btnrow{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
 .tl-page .cta-band{ text-align:center; padding:64px 0; }
 .tl-page .cta-band h2{ font-size:clamp(28px,4.2vw,48px); margin-bottom:20px; }
