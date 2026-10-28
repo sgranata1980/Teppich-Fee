@@ -583,7 +583,7 @@
     bars.forEach(function(b){ b.classList.toggle('active', parseInt(b.dataset.bar,10) <= n); });
     stepLabel.textContent = 'Schritt ' + n + ' von ' + total;
     backBtn.style.visibility = n === 1 ? 'hidden' : 'visible';
-    nextBtn.textContent = n === total ? 'Anfrage senden →' : 'Weiter →';
+    nextBtn.textContent = n === total ? 'Buchen →' : 'Weiter →';
     if (n === total) renderSummary();
     current = n;
     updateNextState();
@@ -684,7 +684,7 @@
         }
       }).catch(function(){
         nextBtn.disabled = false;
-        nextBtn.textContent = 'Anfrage senden →';
+        nextBtn.textContent = 'Buchen →';
         showSendState('error', 'Das Senden hat gerade nicht geklappt. <a href="#" id="wizard-mailto-fallback">Stattdessen per E-Mail-Programm senden →</a>');
         var link = document.getElementById('wizard-mailto-fallback');
         if (link) link.addEventListener('click', function(e){
