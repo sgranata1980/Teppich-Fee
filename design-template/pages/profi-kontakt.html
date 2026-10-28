@@ -28,9 +28,13 @@
               <h4>Teppichreinigung</h4>
               <p>Lose Teppiche, Abholung, Reinigung im Labor, Rückgabe.</p>
             </div>
-            <div class="wizard-option" data-value="Teppichbodenreinigung (vor Ort)">
-              <h4>Teppichbodenreinigung</h4>
-              <p>Fest verlegter Teppichboden, Reinigung direkt vor Ort im Objekt.</p>
+            <div class="wizard-option disabled" aria-disabled="true">
+              <h4>Teppichbodenreinigung <span class="soon">Bald verfügbar</span></h4>
+              <p>Fest verlegter Teppichboden, Reinigung direkt vor Ort im Objekt. Noch nicht online anfragbar — bitte in der Zwischenzeit direkt per Telefon oder E-Mail melden.</p>
+            </div>
+            <div class="wizard-option disabled" aria-disabled="true">
+              <h4>Polsterreinigung <span class="soon">Bald verfügbar</span></h4>
+              <p>Polsterreinigung direkt vor Ort im Objekt. Noch nicht online anfragbar — bitte in der Zwischenzeit direkt per Telefon oder E-Mail melden.</p>
             </div>
             <div class="wizard-option" data-value="Beides">
               <h4>Beides</h4>
@@ -146,6 +150,12 @@
   </div>
 </section>
 
+<style>
+.wizard-option.disabled{ cursor:not-allowed; opacity:.55; }
+.wizard-option.disabled:hover{ border-color:var(--line); }
+.wizard-option.disabled .soon{ display:inline-block; font-family:Inter,Helvetica,Arial,sans-serif; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:#4D78FF; border:1px solid #4D78FF; border-radius:9999px; padding:3px 9px; margin-left:8px; vertical-align:middle; }
+</style>
+
 <script>
 (function(){
   var wizard = document.getElementById('tl-wizard-profi');
@@ -164,7 +174,7 @@
   wizard.querySelectorAll('.wizard-options').forEach(function(group){
     group.addEventListener('click', function(e){
       var opt = e.target.closest('.wizard-option');
-      if (!opt) return;
+      if (!opt || opt.classList.contains('disabled')) return;
       group.querySelectorAll('.wizard-option').forEach(function(o){ o.classList.remove('selected'); });
       opt.classList.add('selected');
       data[group.dataset.group] = opt.dataset.value;
