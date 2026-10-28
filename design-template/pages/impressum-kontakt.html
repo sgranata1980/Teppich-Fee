@@ -66,8 +66,10 @@
 
           <div class="wizard-summary" style="margin-bottom:0;">
             <div class="row"><span>Zwischensumme (Richtwert)</span><span id="w-subtotal">89,00 €</span></div>
+            <div class="row" id="w-ausgleich-row" style="display:none;"><span>Mindestauftrag-Ausgleich</span><span id="w-ausgleich-amount">+0,00 €</span></div>
           </div>
-          <p class="basetable-note" style="margin-top:12px;">Mindestauftragswert 89 €, inkl. MwSt. Wir holen Ihren Teppich grundsätzlich bei Ihnen ab — aktuell kostenlos.</p>
+          <p class="basetable-note" id="w-min-note" style="margin-top:12px;">Mindestauftragswert 89 €, inkl. MwSt. Wir holen Ihren Teppich grundsätzlich bei Ihnen ab — aktuell kostenlos.</p>
+          <button type="button" class="btn secondary" id="w-ausgleich-btn" style="display:none; margin-top:4px;"></button>
         </div>
 
         <div class="wizard-step" data-step="3">
@@ -159,7 +161,7 @@
   var steps = Array.prototype.slice.call(wizard.querySelectorAll('.wizard-step'));
   var total = steps.length;
   var current = 1;
-  var data = { kundentyp:'', name:'', tel:'', email:'', msg:'', pakete:[] };
+  var data = { kundentyp:'', name:'', tel:'', email:'', msg:'', pakete:[], mindestAusgleich:false };
 
   var MINDESTAUFTRAG = 89.00;
   var MAX_BREITE_CM = 320;
@@ -236,13 +238,52 @@
     return carpets.reduce(function(sum, c){ return sum + carpetArea(c); }, 0);
   }
 
-  function calcSubtotal(){
+  function rawSubtotal(){
     var sum = 0;
     carpets.forEach(function(c){ sum += carpetPrice(c); });
     if (data.pakete.indexOf('haustierpaket') > -1) {
       sum += totalArea() * HAUSTIER_RATE;
     }
-    return Math.max(sum, MINDESTAUFTRAG);
+    return sum;
+  }
+
+  function calcSubtotal(){
+    return Math.max(rawSubtotal(), MINDESTAUFTRAG);
+  }
+
+  function updateSubtotalDisplay(){
+    var raw = rawSubtotal();
+    var gap = Math.round((MINDESTAUFTRAG - raw) * 100) / 100;
+    var ausgleichRow = document.getElementById('w-ausgleich-row');
+    var ausgleichAmountEl = document.getElementById('w-ausgleich-amount');
+    var ausgleichBtn = document.getElementById('w-ausgleich-btn');
+    var minNote = document.getElementById('w-min-note');
+    var defaultNote = 'Mindestauftragswert ' + fmt(MINDESTAUFTRAG) + ', inkl. MwSt. Wir holen Ihren Teppich grundsätzlich bei Ihnen ab — aktuell kostenlos.';
+
+    if (gap <= 0.004) {
+      data.mindestAusgleich = false;
+      subtotalEl.textContent = fmt(raw);
+      ausgleichRow.style.display = 'none';
+      ausgleichBtn.style.display = 'none';
+      minNote.textContent = defaultNote;
+    } else if (raw <= 0) {
+      subtotalEl.textContent = '–';
+      ausgleichRow.style.display = 'none';
+      ausgleichBtn.style.display = 'none';
+      minNote.textContent = defaultNote;
+    } else if (data.mindestAusgleich) {
+      subtotalEl.textContent = fmt(MINDESTAUFTRAG);
+      ausgleichRow.style.display = 'flex';
+      ausgleichAmountEl.textContent = '+' + fmt(gap);
+      ausgleichBtn.style.display = 'none';
+      minNote.textContent = 'Mindestauftragswert ' + fmt(MINDESTAUFTRAG) + ' durch Ausgleich erreicht, inkl. MwSt. Wir holen Ihren Teppich grundsätzlich bei Ihnen ab — aktuell kostenlos.';
+    } else {
+      subtotalEl.textContent = fmt(raw);
+      ausgleichRow.style.display = 'none';
+      ausgleichBtn.style.display = 'inline-block';
+      ausgleichBtn.textContent = 'Mindestbestellwert ausgleichen (+' + fmt(gap) + ')';
+      minNote.textContent = 'Mindestauftragswert ' + fmt(MINDESTAUFTRAG) + ' noch nicht erreicht — es fehlen noch ' + fmt(gap) + '.';
+    }
   }
 
   function compressImage(file, onDone, onError){
@@ -302,19 +343,18 @@
     }).join('');
   }
 
+  function priceLineFor(c){
+    var area = carpetArea(c);
+    var price = carpetPrice(c);
+    var mat = carpetMaterial(c);
+    if (!area) return 'Maße eingeben für Preisschätzung';
+    if (mat && parsePrice(mat.preis) === null) return area.toFixed(2).replace('.', ',') + ' m² · Preis auf Anfrage';
+    return area.toFixed(2).replace('.', ',') + ' m² · ' + fmt(price);
+  }
+
   function renderCarpets(){
     carpetsWrap.innerHTML = carpets.map(function(c, idx){
-      var area = carpetArea(c);
-      var price = carpetPrice(c);
-      var mat = carpetMaterial(c);
-      var priceLine;
-      if (!area) {
-        priceLine = 'Maße eingeben für Preisschätzung';
-      } else if (mat && parsePrice(mat.preis) === null) {
-        priceLine = area.toFixed(2).replace('.', ',') + ' m² · Preis auf Anfrage';
-      } else {
-        priceLine = area.toFixed(2).replace('.', ',') + ' m² · ' + fmt(price);
-      }
+      var priceLine = priceLineFor(c);
       var removeBtn = carpets.length > 1 ? '<button type="button" class="btn-back" data-remove="' + c.id + '" style="padding:8px 16px; font-size:13px;">Entfernen</button>' : '';
       var breiteWarn = (parseFloat((c.breite + '').replace(',', '.')) > MAX_BREITE_CM) ? '<p style="color:#c0392b; font-size:12.5px; margin:-10px 0 14px;">Maximale Breite: ' + MAX_BREITE_CM + ' cm.</p>' : '';
       var dz = c.previewUrl
@@ -335,7 +375,7 @@
         '<div style="font-size:13.5px; color:var(--ink-soft);" id="carpet-line-' + c.id + '">' + priceLine + '</div>' +
       '</div>';
     }).join('');
-    subtotalEl.textContent = fmt(calcSubtotal());
+    updateSubtotalDisplay();
 
     carpets.forEach(function(c){
       var dzEl = carpetsWrap.querySelector('.w-dropzone[data-carpet="' + c.id + '"]');
@@ -368,7 +408,9 @@
     var c = carpets.filter(function(x){ return x.id === id; })[0];
     if (!c) return;
     c[t.dataset.field] = t.value;
-    subtotalEl.textContent = fmt(calcSubtotal());
+    var lineEl = document.getElementById('carpet-line-' + c.id);
+    if (lineEl) lineEl.textContent = priceLineFor(c);
+    updateSubtotalDisplay();
     updateNextState();
   });
 
@@ -399,6 +441,12 @@
     updateNextState();
   });
 
+  document.getElementById('w-ausgleich-btn').addEventListener('click', function(){
+    data.mindestAusgleich = true;
+    updateSubtotalDisplay();
+    updateNextState();
+  });
+
   renderCarpets();
 
   wizard.querySelectorAll('.wizard-options').forEach(function(group){
@@ -412,7 +460,7 @@
         var idx = data.pakete.indexOf(val);
         if (opt.classList.contains('selected') && idx === -1) data.pakete.push(val);
         if (!opt.classList.contains('selected') && idx > -1) data.pakete.splice(idx, 1);
-        subtotalEl.textContent = fmt(calcSubtotal());
+        updateSubtotalDisplay();
         updateNextState();
         return;
       }
@@ -432,10 +480,13 @@
   function currentStepValid(){
     if (current === 1) return data.kundentyp === 'Privatkunde';
     if (current === 2) {
-      return carpets.every(function(c){
+      var measuredOk = carpets.every(function(c){
         var b = parseFloat((c.breite + '').replace(',', '.'));
         return c.art && carpetArea(c) > 0 && b <= MAX_BREITE_CM;
       });
+      if (!measuredOk) return false;
+      var gap = MINDESTAUFTRAG - rawSubtotal();
+      return gap <= 0.004 || data.mindestAusgleich;
     }
     if (current === 3) {
       data.name = document.getElementById('w-name').value.trim();
@@ -481,6 +532,7 @@
       row('Kundentyp', data.kundentyp) +
       carpetLines +
       (paketeLabel ? row('Zusatzpakete', paketeLabel) : '') +
+      (data.mindestAusgleich ? row('Mindestauftrag-Ausgleich', '+' + fmt(MINDESTAUFTRAG - rawSubtotal())) : '') +
       row('Zwischensumme (Richtwert, unter Vorbehalt)', fmt(calcSubtotal())) +
       row('Name', data.name) +
       row('Telefon', data.tel) +
@@ -534,7 +586,7 @@
         '',
         'Zusatzpakete: ' + (data.pakete.map(paketLabel).join(', ') || '-'),
         '',
-        'Zwischensumme (Richtwert, unter Vorbehalt): ' + fmt(calcSubtotal()),
+        'Zwischensumme (Richtwert, unter Vorbehalt): ' + fmt(calcSubtotal()) + (data.mindestAusgleich ? ' (inkl. Mindestauftrag-Ausgleich)' : ''),
         '',
         'Telefon: ' + data.tel,
         '',
@@ -553,6 +605,7 @@
       fd.append('msg', data.msg || '');
       fd.append('kleinkindpaket', data.pakete.indexOf('kleinkindpaket') > -1 ? '1' : '0');
       fd.append('haustierpaket', data.pakete.indexOf('haustierpaket') > -1 ? '1' : '0');
+      fd.append('mindestausgleich', data.mindestAusgleich ? '1' : '0');
       fd.append('subtotal_text', fmt(calcSubtotal()));
       fd.append('carpets_json', JSON.stringify(carpets.map(function(c){
         return { art: c.art, breite_cm: c.breite, laenge_cm: c.laenge };
