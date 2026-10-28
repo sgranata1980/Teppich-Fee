@@ -1,10 +1,18 @@
 <div class="tl-page alignfull">
 <div class="tl-contact-photo" style="background-image:url('https://teppichlabor.de/wp-content/uploads/2026/10/hero-kontakt-teppich.webp');"></div>
 <div class="tl-contact-band">
-  <div class="container">
-    <p class="mono">Jetzt buchen</p>
-    <h1>Ihre Teppichreinigung in wenigen Schritten.</h1>
-    <p>Teppich(e) auswählen, Maße angeben, fertig. Wir melden uns mit einer Preisschätzung und holen bei Ihnen ab. Auch für Unternehmen, Hotels, Kitas und Büros — einfach bei der Kundenart "Geschäftskunde" wählen.</p>
+  <div class="container tl-contact-band-inner">
+    <div class="tl-contact-band-text">
+      <p class="mono">Jetzt buchen</p>
+      <h1>Ihre Teppichreinigung in wenigen Schritten.</h1>
+      <p>Teppich(e) auswählen, Maße angeben, fertig. Wir melden uns mit einer Preisschätzung und holen bei Ihnen ab. Auch für Unternehmen, Hotels, Kitas und Büros — einfach bei der Kundenart "Geschäftskunde" wählen.</p>
+    </div>
+    <div class="tl-contact-band-steps">
+      <div class="tl-contact-step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4V5z"/></svg><span>Anfrage</span></div>
+      <div class="tl-contact-step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h12v8H2z"/><path d="M14 11h4l3 3v2h-7z"/><circle cx="6" cy="18" r="1.6"/><circle cx="17.5" cy="18" r="1.6"/></svg><span>Abholung</span></div>
+      <div class="tl-contact-step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4 5 6.5 8.3 6.5 11.2A6.5 6.5 0 1 1 5.5 14.2C5.5 11.3 8 8 12 3z"/></svg><span>Reinigung</span></div>
+      <div class="tl-contact-step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v9l9 5 9-5V8"/><path d="M12 13v9"/></svg><span>Rückgabe</span></div>
+    </div>
   </div>
 </div>
 
@@ -26,11 +34,11 @@
           <div class="wizard-options" data-group="kundentyp">
             <div class="wizard-option" data-value="Privatkunde">
               <h4>Privatkunde</h4>
-              <p>Teppich(e) zu Hause reinigen lassen.</p>
+              <p>Wir holen Ihre Teppiche ab, reinigen im Labor und bringen sie zurück.</p>
             </div>
             <div class="wizard-option" data-value="Geschäftskunde">
               <h4>Geschäftskunde</h4>
-              <p>Hotel, Kita, Büro, Gastronomie oder Handel.</p>
+              <p>Für jedes Unternehmen mit Teppichen — von Hotel bis Handel.</p>
             </div>
           </div>
         </div>
@@ -321,7 +329,7 @@
         '</div>' +
         '<div class="wizard-field" style="margin-bottom:16px;"><label>Teppichart</label><select data-carpet="' + c.id + '" data-field="art">' + materialOptions(c) + '</select></div>' +
         '<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:4px;">' +
-          '<div class="wizard-field" style="margin-bottom:0;"><label>Breite (cm, max. ' + MAX_BREITE_CM + ')</label><input type="text" inputmode="decimal" placeholder="z. B. 180" data-carpet="' + c.id + '" data-field="breite" value="' + c.breite + '" /></div>' +
+          '<div class="wizard-field" style="margin-bottom:0;"><label>Breite (cm)</label><input type="text" inputmode="decimal" placeholder="z. B. 180" data-carpet="' + c.id + '" data-field="breite" value="' + c.breite + '" /></div>' +
           '<div class="wizard-field" style="margin-bottom:0;"><label>Länge (cm)</label><input type="text" inputmode="decimal" placeholder="z. B. 250" data-carpet="' + c.id + '" data-field="laenge" value="' + c.laenge + '" /></div>' +
         '</div>' +
         breiteWarn +
