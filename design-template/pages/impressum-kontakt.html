@@ -180,11 +180,22 @@
   var MATERIAL = FALLBACK_MATERIAL;
 
   fetch('/wp-json/care-lab/v1/preise').then(function(r){ return r.json(); }).then(function(json){
+    var changed = false;
     if (json && Array.isArray(json.material) && json.material.length) {
       MATERIAL = json.material;
-      renderCarpets();
+      changed = true;
     }
-  }).catch(function(){ /* Fallback-Liste bleibt aktiv */ });
+    if (json && Array.isArray(json.zusatz)) {
+      var haustierRow = json.zusatz.filter(function(z){ return /haustier/i.test(z.titel || ''); })[0];
+      if (haustierRow) {
+        var rate = parsePrice(haustierRow.preis);
+        if (rate !== null) { HAUSTIER_RATE = rate; changed = true; }
+        var desc = document.querySelector('.wizard-option[data-value="haustierpaket"] p');
+        if (desc && haustierRow.beschreibung) { desc.textContent = haustierRow.beschreibung; }
+      }
+    }
+    if (changed) renderCarpets();
+  }).catch(function(){ /* Fallback-Werte bleiben aktiv */ });
 
   function parsePrice(str){
     var m = /([\d]+,[\d]+)\s*€\s*\/\s*m²/.exec(str || '');
