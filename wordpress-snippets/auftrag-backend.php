@@ -26,13 +26,13 @@ define( 'CL_ANFRAGE_RATE_LIMIT', 10 ); // Anfragen pro Stunde pro IP
 
 add_action( 'init', function () {
 	register_post_type( 'cl_auftrag', array(
-		'label'        => 'Anfragen',
+		'label'        => 'Buchungen',
 		'labels'       => array(
-			'name'          => 'Anfragen',
-			'singular_name' => 'Anfrage',
-			'all_items'     => 'Alle Anfragen',
-			'edit_item'     => 'Anfrage ansehen/bearbeiten',
-			'view_item'     => 'Anfrage ansehen',
+			'name'          => 'Buchungen',
+			'singular_name' => 'Buchung',
+			'all_items'     => 'Alle Buchungen',
+			'edit_item'     => 'Buchung ansehen/bearbeiten',
+			'view_item'     => 'Buchung ansehen',
 		),
 		'public'       => false,
 		'show_ui'      => true,
@@ -77,7 +77,7 @@ add_action( 'manage_cl_auftrag_posts_custom_column', function ( $column, $post_i
 // ---------------------------------------------------------------------
 
 add_action( 'add_meta_boxes', function () {
-	add_meta_box( 'cl_auftrag_details', 'Anfrage-Details', 'cl_auftrag_details_box', 'cl_auftrag', 'normal', 'high' );
+	add_meta_box( 'cl_auftrag_details', 'Buchungsdetails', 'cl_auftrag_details_box', 'cl_auftrag', 'normal', 'high' );
 } );
 
 function cl_auftrag_thumb( $attachment_id, $label ) {

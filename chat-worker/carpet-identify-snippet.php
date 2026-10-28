@@ -2,13 +2,15 @@
 /**
  * Care Lab Teppich-Erkennung — REST-Endpoint
  *
- * Nimmt ein Foto entgegen (Base64) und lässt Claude (Vision) grob
- * einschätzen, in welche der drei bestehenden Preiskategorien der
- * Teppich fällt (Maschinenwäsche / Handwäsche / Materialprüfung
- * nötig). Die KI liefert NUR die Kategorie + eine kurze Begründung,
- * der eigentliche Preistext kommt serverseitig aus einer festen
- * Zuordnung (siehe cl_identify_category_info) — die KI erfindet also
- * nie selbst einen Preis.
+ * Nimmt ein Foto entgegen (Base64) und lässt Claude (Vision) einschätzen,
+ * welcher der im Preiseditor hinterlegten Teppicharten (wp-admin → Care
+ * Lab → Preise, Tabelle "Grundreinigung nach Material") am ehesten
+ * passt. Die KI bekommt die EXAKTE, aktuell gültige Liste als Prompt
+ * mitgegeben und muss eine davon per Nummer wählen (oder 0, wenn sie
+ * unsicher ist) — sie erfindet also nie eine Teppichart oder einen
+ * Preis, die es nicht gibt. Wird vom Buchungs-Tool (impressum-kontakt.html)
+ * aufgerufen: Foto in den Dropzonen hochladen → Teppichart-Dropdown wird
+ * automatisch vorausgefüllt, falls noch leer, als reiner Richtwert.
  *
  * Nutzt denselben gespeicherten API-Key wie der Chat-Assistent
  * (Snippet "Care Lab Backend — API-Key-Verwaltung" muss aktiv sein).
@@ -31,29 +33,6 @@ add_action( 'rest_api_init', function () {
 	);
 } );
 
-/**
- * Feste Zuordnung Kategorie -> Label + Preis-Hinweis, bewusst NICHT
- * von der KI generiert. Werte stammen aus brand/fakten.md.
- */
-function cl_identify_category_info( $kategorie ) {
-	$map = array(
-		'maschinenwaesche' => array(
-			'label' => 'Maschinengefertigter Teppich',
-			'preis' => 'Richtwert: Maschinenwäsche ab 8,00 €/m² (Mindestauftragswert 89 €).',
-		),
-		'handwaesche'      => array(
-			'label' => 'Naturfaser- oder handgeknüpfter Teppich (Wolle, Orient, Berber, Nepal, Designerteppich)',
-			'preis' => 'Richtwert: Handwäsche ab 16,00 €/m² (Mindestauftragswert 89 €).',
-		),
-		'pruefung'         => array(
-			'label' => 'Material nicht eindeutig erkennbar oder empfindlich (z. B. Seide)',
-			'preis' => 'Kein Festpreis möglich, braucht eine Materialprüfung per Foto durch unser Team.',
-		),
-	);
-
-	return $map[ $kategorie ] ?? $map['pruefung'];
-}
-
 function cl_identify_rate_limited( $ip ) {
 	$key   = 'cl_identify_rl_' . md5( $ip );
 	$count = (int) get_transient( $key );
@@ -65,50 +44,33 @@ function cl_identify_rate_limited( $ip ) {
 }
 
 /**
- * Extrahiert aus der Claude-Antwort das kategorie-Feld, auch wenn
- * die Antwort in ```json ... ``` eingepackt ist oder zusätzlichen
- * Text enthält.
+ * Extrahiert aus der Claude-Antwort die gewählte Nummer + Begründung,
+ * auch wenn die Antwort in ```json ... ``` eingepackt ist oder
+ * zusätzlichen Text enthält.
  */
-function cl_identify_parse_category( $text ) {
+function cl_identify_parse_result( $text ) {
 	$text = trim( (string) $text );
-	// Code-Fences entfernen, falls vorhanden.
 	$text = preg_replace( '/^```(json)?|```$/m', '', $text );
 
 	if ( preg_match( '/\{.*\}/s', $text, $matches ) ) {
 		$data = json_decode( $matches[0], true );
-		if ( is_array( $data ) && isset( $data['kategorie'] ) ) {
-			$kategorie = strtolower( trim( (string) $data['kategorie'] ) );
-			if ( in_array( $kategorie, array( 'maschinenwaesche', 'handwaesche', 'pruefung' ), true ) ) {
-				return array( $kategorie, isset( $data['begruendung'] ) ? (string) $data['begruendung'] : '' );
-			}
+		if ( is_array( $data ) ) {
+			$nummer      = isset( $data['nummer'] ) ? (int) $data['nummer'] : 0;
+			$begruendung = isset( $data['begruendung'] ) ? (string) $data['begruendung'] : '';
+			return array( $nummer, $begruendung );
 		}
 	}
 
-	return array( 'pruefung', '' );
+	return array( 0, '' );
 }
 
 function cl_handle_identify_request( WP_REST_Request $request ) {
-	$body      = $request->get_json_params();
-	$kategorie = isset( $body['kategorie'] ) ? strtolower( trim( (string) $body['kategorie'] ) ) : '';
-
-	// Manuelle Auswahl ohne Foto: braucht weder API-Key noch KI-Aufruf,
-	// die Kategorie steht ja schon fest.
-	if ( '' !== $kategorie ) {
-		if ( ! in_array( $kategorie, array( 'maschinenwaesche', 'handwaesche', 'pruefung' ), true ) ) {
-			return new WP_Error( 'invalid_kategorie', 'Ungültige Teppichart.', array( 'status' => 400 ) );
-		}
-		$info = cl_identify_category_info( $kategorie );
-		return array(
-			'kategorie'       => $kategorie,
-			'kategorie_label' => $info['label'],
-			'preis_hinweis'   => $info['preis'],
-			'begruendung'     => '',
-		);
-	}
-
 	$claude_key = function_exists( 'cl_get_api_key' ) ? cl_get_api_key( 'claude' ) : '';
 	if ( ! $claude_key ) {
 		return new WP_Error( 'not_configured', 'Teppich-Erkennung ist noch nicht eingerichtet.', array( 'status' => 503 ) );
+	}
+	if ( ! function_exists( 'cl_get_prices_material' ) ) {
+		return new WP_Error( 'not_configured', 'Preisliste gerade nicht verfügbar.', array( 'status' => 503 ) );
 	}
 
 	$ip = $_SERVER['HTTP_CF_CONNECTING_IP'] ?? $_SERVER['REMOTE_ADDR'] ?? 'unknown';
@@ -116,6 +78,7 @@ function cl_handle_identify_request( WP_REST_Request $request ) {
 		return new WP_Error( 'rate_limited', 'Zu viele Anfragen. Bitte in einer Stunde erneut versuchen.', array( 'status' => 429 ) );
 	}
 
+	$body      = $request->get_json_params();
 	$image_b64 = isset( $body['image_base64'] ) ? (string) $body['image_base64'] : '';
 	$mime_type = isset( $body['mime_type'] ) ? (string) $body['mime_type'] : '';
 	$allowed   = array( 'image/jpeg', 'image/png', 'image/webp' );
@@ -127,6 +90,21 @@ function cl_handle_identify_request( WP_REST_Request $request ) {
 	// Grobe Größenprüfung über die Base64-Länge (Base64 ist ca. 4/3 der Rohgröße).
 	if ( strlen( $image_b64 ) > CL_IDENTIFY_MAX_IMAGE_BYTES * 4 / 3 ) {
 		return new WP_Error( 'image_too_large', 'Das Foto ist zu groß. Bitte ein kleineres Foto hochladen (max. 6 MB).', array( 'status' => 400 ) );
+	}
+
+	$material_list = array();
+	foreach ( cl_get_prices_material() as $row ) {
+		if ( ! empty( $row['art'] ) ) {
+			$material_list[] = $row['art'];
+		}
+	}
+	if ( empty( $material_list ) ) {
+		return new WP_Error( 'not_configured', 'Keine Teppicharten konfiguriert.', array( 'status' => 503 ) );
+	}
+
+	$list_text = '';
+	foreach ( $material_list as $i => $art ) {
+		$list_text .= ( $i + 1 ) . '. ' . $art . "\n";
 	}
 
 	$response = wp_remote_post(
@@ -156,13 +134,10 @@ function cl_handle_identify_request( WP_REST_Request $request ) {
 								),
 								array(
 									'type' => 'text',
-									'text' => "Du siehst das Foto eines Teppichs. Ordne ihn EINER der drei Kategorien zu:\n" .
-										"- \"maschinenwaesche\": maschinell gefertigter Teppich (z. B. glatte, gleichmäßige Webstruktur, typischer Kurzflor-/Webteppich aus dem Möbelhaus)\n" .
-										"- \"handwaesche\": Woll-, Orient-, Berber-, Nepal-, Naturfaser- oder erkennbar handgeknüpfter/hochwertiger Designerteppich\n" .
-										"- \"pruefung\": Material ist auf dem Foto nicht sicher erkennbar, wirkt sehr empfindlich, oder könnte Seide sein\n" .
+									'text' => "Du siehst das Foto eines Teppichs. Ordne ihn GENAU EINER dieser Teppicharten zu (exakt wie in der Liste, nicht umformulieren):\n" . $list_text .
+										"Wenn keine der Optionen wirklich passt oder du unsicher bist, wähle 0.\n" .
 										"Antworte AUSSCHLIESSLICH mit kompaktem JSON, kein Fließtext davor oder danach: " .
-										'{"kategorie":"maschinenwaesche|handwaesche|pruefung","begruendung":"<ein kurzer Satz auf Deutsch, warum>"}' .
-										"\nWenn du dir nicht sicher bist, wähle \"pruefung\".",
+										'{"nummer":<Zahl aus der Liste oder 0>,"begruendung":"<ein kurzer Satz auf Deutsch, woran du das erkennst>"}',
 								),
 							),
 						),
@@ -183,13 +158,11 @@ function cl_handle_identify_request( WP_REST_Request $request ) {
 		return new WP_Error( 'upstream_error', 'Gerade nicht erreichbar, bitte später erneut versuchen.', array( 'status' => 502 ) );
 	}
 
-	list( $kategorie, $begruendung ) = cl_identify_parse_category( $data['content'][0]['text'] );
-	$info                            = cl_identify_category_info( $kategorie );
+	list( $nummer, $begruendung ) = cl_identify_parse_result( $data['content'][0]['text'] );
+	$art = ( $nummer >= 1 && $nummer <= count( $material_list ) ) ? $material_list[ $nummer - 1 ] : '';
 
 	return array(
-		'kategorie'       => $kategorie,
-		'kategorie_label' => $info['label'],
-		'preis_hinweis'   => $info['preis'],
-		'begruendung'     => $begruendung,
+		'art'         => $art,
+		'begruendung' => $begruendung,
 	);
 }

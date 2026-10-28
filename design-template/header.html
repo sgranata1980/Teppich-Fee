@@ -280,7 +280,7 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
 .wissen-card .card-media{ width:100%; aspect-ratio:16/10; border:1px solid var(--line); border-radius:20px; overflow:hidden; background:var(--surface-2); display:flex; align-items:center; justify-content:center; }
 .wissen-card .card-media video{ width:100%; height:100%; object-fit:cover; display:block; }
 .wissen-card .icon{ width:30px; height:30px; color:var(--ink); }
-.wissen-card .soon{ display:inline-block; align-self:flex-start; font-family:'Inter',Helvetica,Arial,sans-serif; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); border:1px solid var(--line-strong); padding:4px 10px; }
+.wissen-card .soon{ display:inline-block; align-self:flex-start; font-family:'Inter',Helvetica,Arial,sans-serif; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:#4D78FF; border:1px solid #4D78FF; padding:4px 10px; }
 .wissen-card h3{ font-size:22px; }
 .wissen-card p{ font-size:15px; color:var(--ink-soft); line-height:1.65; margin:0; font-weight:500; }
 
@@ -321,7 +321,7 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
 .scent-hero-copy h2{ font-size:clamp(28px,4.5vw,44px); color:#fff; margin:10px 0 14px; }
 .scent-hero-copy p.lede{ font-size:16px; line-height:1.6; color:rgba(255,255,255,.85); margin:0 0 24px; max-width:44ch; font-weight:500; }
 .scent-hero-copy .btn.primary{ background:#fff; color:#0B0F14; }
-.tl-footer .foot-grid .soon-tag{ display:inline-block; font-family:'Inter',Helvetica,Arial,sans-serif; font-size:9px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); border:1px solid var(--line); padding:2px 6px; margin-left:6px; vertical-align:middle; }
+.tl-footer .foot-grid .soon-tag{ display:inline-block; font-family:'Inter',Helvetica,Arial,sans-serif; font-size:9px; letter-spacing:.06em; text-transform:uppercase; color:#4D78FF; border:1px solid #4D78FF; padding:2px 6px; margin-left:6px; vertical-align:middle; }
 .tl-footer .foot-grid span.soon-item{ font-size:13.5px; color:var(--ink-soft); font-weight:600; }
 
 /* ---------- Leistungen & Pakete ---------- */
@@ -455,13 +455,18 @@ header.tl-intro.tl-intro-hero.tl-intro-split > div > p{ color:rgba(255,255,255,.
 .stat .l{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft); margin-top:10px; display:block; }
 
 /* ---------- Impressum & Kontakt ---------- */
-.kontakt{ background:var(--surface-2); border-bottom:1px solid var(--line); }
-.kontakt-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:48px 40px; }
-@media (max-width:760px){ .kontakt-grid{ grid-template-columns:1fr; gap:36px; } }
-.kcard{ border-top:2px solid var(--ink); padding:22px 0 0; }
-.kcard .l{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft); display:block; margin-bottom:12px; }
+.kontakt{ background:var(--surface-2); border-bottom:1px solid var(--line); padding-top:64px; }
+.kontakt .section-head{ padding-bottom:48px; }
+.kontakt-map{ border-radius:24px; overflow:hidden; border:1px solid var(--line); margin-bottom:32px; height:280px; }
+.kontakt-map iframe{ width:100%; height:100%; border:0; display:block; }
+.kontakt-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+@media (max-width:760px){ .kontakt-grid{ grid-template-columns:1fr; gap:16px; } }
+.kcard{ background:var(--surface); border:1px solid var(--line); border-radius:24px; padding:32px; transition:border-color .2s ease; }
+.kcard:hover{ border-color:var(--line-strong); }
+.kcard .icon{ width:26px; height:26px; color:#4D78FF; display:block; margin-bottom:20px; }
+.kcard .l{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft); display:block; margin-bottom:10px; }
 .kcard a, .kcard p{ font-size:17px; font-weight:700; color:var(--ink); text-decoration:none; margin:0; line-height:1.5; }
-.kcard a:hover{ color:var(--accent); }
+.kcard a:hover{ color:#4D78FF; }
 .impressum{ padding-top:80px; }
 .imp-head{ margin-bottom:32px; }
 .imp-head h2{ font-size:clamp(26px,3.6vw,40px); }

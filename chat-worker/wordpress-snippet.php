@@ -59,6 +59,15 @@ function cl_chat_prices_block() {
 	foreach ( cl_get_prices_repair() as $row ) {
 		$lines[] = '- ' . $row['leistung'] . ': ' . $row['preis'];
 	}
+	if ( function_exists( 'cl_get_prices_pflegepakete' ) ) {
+		$lines[] = '';
+		$lines[] = 'PFLEGEPAKETE auf /leistungen-pakete/ (jeweils zusätzlich zur Grundreinigung, unabhängig von den Zusatzpaketen im Buchungs-Tool)';
+		foreach ( cl_get_prices_pflegepakete() as $row ) {
+			$leistungen = preg_replace( '/\r\n|\r|\n/', ', ', trim( (string) ( $row['leistungen'] ?? '' ) ) );
+			$tag        = ! empty( $row['tag'] ) ? ', ' . $row['tag'] : '';
+			$lines[]    = '- ' . $row['titel'] . ' (' . $row['preis'] . $tag . '): ' . $leistungen . '. Für: ' . ( $row['fuer'] ?? '' );
+		}
+	}
 	$lines[] = '';
 	$lines[] = 'ZUSATZPAKETE IM BUCHUNGS-TOOL (/impressum-kontakt/, pro Teppich einzeln wählbar)';
 	$lines[] = '- Kleinkinderpaket und Haustierpaket: Preis jeweils wie der gleichnamige bzw. ähnlich benannte Eintrag oben unter EINZELLEISTUNGEN (derselbe Wert wie im Backend-Preiseditor gepflegt). Steht dort "auf Anfrage", nenne auch hierzu keinen Preis.';
@@ -92,12 +101,6 @@ Angebot/Anfrage Privatkunden: teppichlabor.de/impressum-kontakt/ (Buchungs-Tool)
 Angebot/Anfrage Unternehmen: teppichlabor.de/profi-kontakt/
 
 {$preise_block}
-
-PFLEGEPAKETE auf /leistungen-pakete/ (jeweils zusätzlich zur Grundreinigung, unabhängig von den Zusatzpaketen im Buchungs-Tool)
-- Schutz-Paket (+5,90 €/m²): Fleckenschutz/Imprägnierung + Qualitätskontrolle. Für Haushalte mit Kindern/Haustieren/stark genutzten Räumen.
-- Naturfaser-Paket (+10,90 €/m², meistgewählt): materialgerechte Handwäsche, Wollpflege & Rückfettung, Mottenschutz, kontrollierte Trocknung. Für Woll-, Orient-, Berber-, Nepal- und andere Naturfaserteppiche.
-- Haustier-Paket (+12,90 €/m²): intensive Vorbehandlung, Geruchsbehandlung, zusätzlicher Spülgang. Für Hunde-/Katzenhaushalte.
-- Premium-Pflege (+14,90 €/m²): intensive Vorbehandlung, zusätzlicher Wasch-/Spülgang, Faserschutz, priorisierte Bearbeitung. Für besonders umfassende Behandlung.
 
 HYGIENEREINIGUNG (Aufpreis-Leistung, kein Ersatz für Grundreinigung)
 Heißdampf/Heißwasser bei 60-80 °C statt Standardmethode. Ab etwa 55-60 °C sterben Hausstaubmilben zuverlässig ab. WICHTIG: Das ist KEIN zertifiziertes Desinfektionsverfahren und KEINE Garantie auf vollständige Allergenfreiheit, kein Ersatz für ärztliche/allergologische Behandlung. Sinnvoll vor allem für Allergiker, Haustierhaushalte, Familien mit Kleinkindern.

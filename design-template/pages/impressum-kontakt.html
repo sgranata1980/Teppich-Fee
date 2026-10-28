@@ -116,22 +116,26 @@
 
 <section class="kontakt">
   <div class="container">
-    <div class="container section-head" style="padding-top:0;">
+    <div class="section-head" style="padding-top:0;">
       <div>
         <p class="mono eyebrow">Direkt erreichbar</p>
         <h2>Lieber gleich anrufen oder schreiben?</h2>
       </div>
     </div>
+    <div class="kontakt-map"><iframe src="https://www.google.com/maps?q=Gro%C3%9Fer+Haingraben+9%2C+65779+Kelkheim&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Care Lab auf der Karte"></iframe></div>
     <div class="kontakt-grid">
       <div class="kcard">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-11a7 7 0 1 0-14 0c0 4.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.3"/></svg>
         <span class="l">Adresse</span>
         <p>Großer Haingraben 9<br>65779 Kelkheim</p>
       </div>
       <div class="kcard">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2C9.5 21 3 14.5 3 6a2 2 0 0 1 2-2z"/></svg>
         <span class="l">Telefon</span>
         <a href="tel:+491728293606">0172 8293606</a>
       </div>
       <div class="kcard">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
         <span class="l">E-Mail</span>
         <a href="mailto:info@teppichlabor.de">E-Mail schreiben</a>
       </div>
@@ -142,11 +146,13 @@
 <style>
 .wizard-option.disabled{ cursor:not-allowed; opacity:.55; }
 .wizard-option.disabled:hover{ border-color:var(--line); }
-.wizard-option.disabled .soon{ display:inline-block; font-family:Inter,Helvetica,Arial,sans-serif; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); border:1px solid var(--line-strong); border-radius:9999px; padding:3px 9px; margin-left:8px; vertical-align:middle; }
+.wizard-option.disabled .soon{ display:inline-block; font-family:Inter,Helvetica,Arial,sans-serif; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:#4D78FF; border:1px solid #4D78FF; border-radius:9999px; padding:3px 9px; margin-left:8px; vertical-align:middle; }
 .w-dropzone{ display:flex; align-items:center; justify-content:center; flex-direction:column; min-height:70px; border:1.5px dashed var(--line-strong); border-radius:8px; cursor:pointer; margin-bottom:14px; padding:10px; text-align:center; transition:border-color .15s ease, background .15s ease; }
 .w-dropzone:hover, .w-dropzone.dragover{ border-color:var(--ink); background:var(--surface-2); }
 .w-dropzone span{ font-size:12.5px; color:var(--ink-soft); font-weight:500; }
 .w-dropzone img{ max-width:100%; max-height:110px; border-radius:6px; object-fit:contain; }
+.ai-spinner{ width:13px; height:13px; border:2px solid var(--line-strong); border-top-color:#4D78FF; border-radius:50%; display:inline-block; animation:aiSpin .7s linear infinite; flex-shrink:0; }
+@keyframes aiSpin{ to{ transform:rotate(360deg); } }
 </style>
 
 <script>
@@ -212,7 +218,7 @@
 
   function newCarpet(){
     carpetSeq++;
-    return { id: carpetSeq, art:'', breite:'', laenge:'', file:null, previewUrl:'', pakete:[] };
+    return { id: carpetSeq, art:'', breite:'', laenge:'', file:null, previewUrl:'', pakete:[], aiStatus:'', aiHint:'' };
   }
   carpets.push(newCarpet());
 
@@ -332,10 +338,13 @@
 
     function finish(f){
       c.file = f;
+      c.aiStatus = 'loading';
+      c.aiHint = '';
       var reader = new FileReader();
       reader.onload = function(e){
         c.previewUrl = e.target.result;
         renderCarpets();
+        identifyCarpetArt(c);
       };
       reader.readAsDataURL(f);
     }
@@ -345,6 +354,32 @@
     } else {
       finish(file);
     }
+  }
+
+  function identifyCarpetArt(c){
+    var match = /^data:([^;]+);base64,(.*)$/.exec(c.previewUrl || '');
+    if (!match) { c.aiStatus = ''; return; }
+    fetch('/wp-json/care-lab/v1/identify-carpet', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image_base64: match[2], mime_type: match[1] })
+    }).then(function(r){ return r.json(); }).then(function(data){
+      c.aiStatus = '';
+      var art = data ? data.art : '';
+      var artKnown = !!art && MATERIAL.some(function(m){ return m.art === art; });
+      if (!artKnown) { renderCarpets(); return; }
+      if (!c.art) {
+        c.art = art;
+        c.aiHint = '✓ KI-geprüft: Teppichart automatisch erkannt. Falsch ausgewählt? Oben einfach ändern — Preis ohne Gewähr.';
+      } else {
+        c.aiHint = '✓ KI-geprüft, Vorschlag: ' + art + '. Falsch ausgewählt? Oben einfach ändern — Preis ohne Gewähr.';
+      }
+      renderCarpets();
+      updateNextState();
+    }).catch(function(){
+      c.aiStatus = '';
+      renderCarpets();
+    });
   }
 
   function materialOptions(c){
@@ -400,6 +435,9 @@
         paketeChips(c) +
         '<input type="file" accept="image/jpeg,image/png,image/webp" hidden data-carpet="' + c.id + '" data-file="1" />' +
         dz +
+        (c.aiStatus === 'loading'
+          ? '<div style="display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--ink-soft); margin:-8px 0 14px;" id="carpet-ai-hint-' + c.id + '"><span class="ai-spinner"></span>KI prüft das Foto …</div>'
+          : (c.aiHint ? '<div style="font-size:12.5px; color:var(--ink-soft); margin:-8px 0 14px;" id="carpet-ai-hint-' + c.id + '">' + c.aiHint + '</div>' : '')) +
         '<div style="font-size:13.5px; color:var(--ink-soft);" id="carpet-line-' + c.id + '">' + priceLine + '</div>' +
       '</div>';
     }).join('');

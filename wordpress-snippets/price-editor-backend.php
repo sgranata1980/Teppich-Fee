@@ -22,10 +22,11 @@
  * cl_prices_polster, plus je eine Notiz) und per Shortcode ins
  * Seiten-HTML eingeblendet:
  *
- *   [cl_preise_material]   → Tabelle "Grundreinigung nach Material"
- *   [cl_preise_reparatur]  → Tabelle "Antik-Reparatur & Teppichreparatur"
- *   [cl_preise_zusatz]     → Karten für "Einzelleistungen" (ohne Grid-Wrapper)
- *   [cl_preise_polster]    → Tabelle "Polsterreinigung"
+ *   [cl_preise_material]      → Tabelle "Grundreinigung nach Material"
+ *   [cl_preise_reparatur]     → Tabelle "Antik-Reparatur & Teppichreparatur"
+ *   [cl_preise_zusatz]        → Karten für "Einzelleistungen" (ohne Grid-Wrapper)
+ *   [cl_preise_polster]       → Tabelle "Polsterreinigung"
+ *   [cl_preise_pflegepakete]  → Kästen für "Pflegepakete" (inkl. .paket-grid-Wrapper)
  *
  * Neue Teppicharten/Leistungen werden einfach als neue Zeile im
  * Formular hinzugefügt (ein paar Leerzeilen stehen immer am Ende
@@ -196,6 +197,39 @@ function cl_prices_polster_default() {
 	);
 }
 
+function cl_prices_pflegepakete_default() {
+	return array(
+		array(
+			'titel'      => 'Schutz-Paket',
+			'tag'        => '',
+			'leistungen' => "Grundreinigung nach Materialprüfung\nFleckenschutz / Imprägnierung\nAbschließende Qualitätskontrolle",
+			'fuer'       => 'Haushalte mit Kindern, Haustieren oder stark genutzten Räumen.',
+			'praefix'    => '', 'betrag' => '5,90', 'betrag_bis' => '', 'einheit' => 'm2', 'hinweis' => false,
+		),
+		array(
+			'titel'      => 'Naturfaser-Paket',
+			'tag'        => 'Beliebt',
+			'leistungen' => "Materialgerechte Handwäsche\nWollpflege & Rückfettung\nMottenschutz\nKontrollierte Trocknung",
+			'fuer'       => 'Woll-, Orient-, Berber-, Nepal- und andere Naturfaserteppiche.',
+			'praefix'    => '', 'betrag' => '10,90', 'betrag_bis' => '', 'einheit' => 'm2', 'hinweis' => false,
+		),
+		array(
+			'titel'      => 'Haustier-Paket',
+			'tag'        => '',
+			'leistungen' => "Intensive Vorbehandlung\nGeruchsbehandlung\nZusätzlicher Spülgang\nVerlängerte Qualitätskontrolle",
+			'fuer'       => 'Hunde- und Katzenhaushalte, Tiergeruch, organische Rückstände.',
+			'praefix'    => '', 'betrag' => '12,90', 'betrag_bis' => '', 'einheit' => 'm2', 'hinweis' => false,
+		),
+		array(
+			'titel'      => 'Premium-Pflege',
+			'tag'        => '',
+			'leistungen' => "Intensive Vorbehandlung\nZusätzlicher Wasch- oder Spülgang\nFaserschutz, ggf. Wollpflege\nPriorisierte Bearbeitung",
+			'fuer'       => 'Alles, was die vollständige Behandlung verdient, Umfang je nach Material.',
+			'praefix'    => '', 'betrag' => '14,90', 'betrag_bis' => '', 'einheit' => 'm2', 'hinweis' => false,
+		),
+	);
+}
+
 function cl_prices_polster_note_default() {
 	return 'Preise pro Stück, inkl. MwSt. Richtwerte, final bestätigt nach Prüfung von Material und Zustand vor Ort.';
 }
@@ -259,6 +293,16 @@ function cl_get_prices_polster() {
 	return array_map( 'cl_hydrate_price_row', $rows );
 }
 
+function cl_get_prices_pflegepakete() {
+	$rows = get_option( 'cl_prices_pflegepakete', null );
+	$rows = is_array( $rows ) && ! empty( $rows ) ? $rows : cl_prices_pflegepakete_default();
+	return array_map( function ( $row ) {
+		$row          = cl_hydrate_price_row( $row );
+		$row['preis'] = 'Grundreinigung + ' . $row['preis'];
+		return $row;
+	}, $rows );
+}
+
 function cl_get_prices_polster_note() {
 	$note = get_option( 'cl_prices_polster_note', '' );
 	return '' !== $note ? $note : cl_prices_polster_note_default();
@@ -301,9 +345,10 @@ add_action( 'rest_api_init', function () {
 			'methods'             => 'GET',
 			'callback'            => function () {
 				return array(
-					'material' => cl_public_rows( cl_get_prices_material(), array( 'art', 'verfahren' ) ),
-					'zusatz'   => cl_public_rows( cl_get_prices_zusatz(), array( 'titel', 'beschreibung' ) ),
-					'polster'  => cl_public_rows( cl_get_prices_polster(), array( 'stueck' ) ),
+					'material'      => cl_public_rows( cl_get_prices_material(), array( 'art', 'verfahren' ) ),
+					'zusatz'        => cl_public_rows( cl_get_prices_zusatz(), array( 'titel', 'beschreibung' ) ),
+					'polster'       => cl_public_rows( cl_get_prices_polster(), array( 'stueck' ) ),
+					'pflegepakete'  => cl_public_rows( cl_get_prices_pflegepakete(), array( 'titel', 'tag', 'leistungen', 'fuer' ) ),
 				);
 			},
 			'permission_callback' => '__return_true',
@@ -383,6 +428,35 @@ add_shortcode( 'cl_preise_polster', function () {
 	return ob_get_clean();
 } );
 
+add_shortcode( 'cl_preise_pflegepakete', function () {
+	$rows = cl_get_prices_pflegepakete();
+	ob_start();
+	?>
+	<div class="paket-grid">
+		<?php foreach ( $rows as $row ) : ?>
+			<div class="paket">
+				<?php if ( ! empty( $row['tag'] ) ) : ?>
+					<span class="tag"><?php echo esc_html( $row['tag'] ); ?></span>
+				<?php endif; ?>
+				<h3><?php echo esc_html( $row['titel'] ?? '' ); ?></h3>
+				<div class="price"><?php echo esc_html( $row['preis'] ?? '' ); ?></div>
+				<ul>
+					<?php foreach ( preg_split( '/\r\n|\r|\n/', (string) ( $row['leistungen'] ?? '' ) ) as $leistung ) : ?>
+						<?php if ( '' !== trim( $leistung ) ) : ?>
+							<li><?php echo esc_html( trim( $leistung ) ); ?></li>
+						<?php endif; ?>
+					<?php endforeach; ?>
+				</ul>
+				<?php if ( ! empty( $row['fuer'] ) ) : ?>
+					<div class="fit"><b>Für:</b> <?php echo esc_html( $row['fuer'] ); ?></div>
+				<?php endif; ?>
+			</div>
+		<?php endforeach; ?>
+	</div>
+	<?php
+	return ob_get_clean();
+} );
+
 add_shortcode( 'cl_preise_zusatz', function () {
 	$rows = cl_get_prices_zusatz();
 	ob_start();
@@ -442,7 +516,8 @@ function cl_collect_price_rows( $post_key, $text_fields ) {
 		$entry       = array();
 		$has_content = false;
 		foreach ( $text_fields as $field ) {
-			$value           = isset( $row[ $field ] ) ? sanitize_text_field( $row[ $field ] ) : '';
+			$raw             = isset( $row[ $field ] ) ? $row[ $field ] : '';
+			$value           = 'leistungen' === $field ? sanitize_textarea_field( $raw ) : sanitize_text_field( $raw );
 			$entry[ $field ] = $value;
 			if ( '' !== $value ) {
 				$has_content = true;
@@ -511,23 +586,26 @@ function cl_preise_page() {
 		update_option( 'cl_prices_repair', cl_collect_price_rows( 'repair', array( 'leistung' ) ) );
 		update_option( 'cl_prices_zusatz', cl_collect_price_rows( 'zusatz', array( 'titel', 'beschreibung' ) ) );
 		update_option( 'cl_prices_polster', cl_collect_price_rows( 'polster', array( 'stueck' ) ) );
+		update_option( 'cl_prices_pflegepakete', cl_collect_price_rows( 'pflegepakete', array( 'titel', 'tag', 'leistungen', 'fuer' ) ) );
 		update_option( 'cl_prices_material_note', sanitize_text_field( wp_unslash( $_POST['material_note'] ?? '' ) ) );
 		update_option( 'cl_prices_repair_note', sanitize_text_field( wp_unslash( $_POST['repair_note'] ?? '' ) ) );
 		update_option( 'cl_prices_polster_note', sanitize_text_field( wp_unslash( $_POST['polster_note'] ?? '' ) ) );
 		echo '<div class="notice notice-success is-dismissible"><p>Preise gespeichert. Änderungen sind sofort auf der Seite „Leistungen & Preise" und im Buchungs-Tool sichtbar.</p></div>';
 	}
 
-	$material = cl_get_prices_material();
-	$repair   = cl_get_prices_repair();
-	$zusatz   = cl_get_prices_zusatz();
-	$polster  = cl_get_prices_polster();
+	$material     = cl_get_prices_material();
+	$repair       = cl_get_prices_repair();
+	$zusatz       = cl_get_prices_zusatz();
+	$polster      = cl_get_prices_polster();
+	$pflegepakete = cl_get_prices_pflegepakete();
 
 	// Ein paar Leerzeilen am Ende zum Hinzufügen neuer Teppicharten/Leistungen.
 	for ( $i = 0; $i < 3; $i++ ) {
-		$material[] = array( 'art' => '', 'verfahren' => '' );
-		$repair[]   = array( 'leistung' => '' );
-		$zusatz[]   = array( 'titel' => '', 'beschreibung' => '' );
-		$polster[]  = array( 'stueck' => '' );
+		$material[]     = array( 'art' => '', 'verfahren' => '' );
+		$repair[]       = array( 'leistung' => '' );
+		$zusatz[]       = array( 'titel' => '', 'beschreibung' => '' );
+		$polster[]      = array( 'stueck' => '' );
+		$pflegepakete[] = array( 'titel' => '', 'tag' => '', 'leistungen' => '', 'fuer' => '' );
 	}
 	?>
 	<div class="wrap">
@@ -605,6 +683,24 @@ function cl_preise_page() {
 				<label>Hinweistext unter der Tabelle:<br>
 				<input type="text" name="polster_note" value="<?php echo esc_attr( cl_get_prices_polster_note() ); ?>" style="width:100%;max-width:700px;"></label>
 			</p>
+
+			<h2 style="margin-top:36px;">Pflegepakete</h2>
+			<p class="description">Erscheinen als Kästen auf /leistungen-pakete/ (unter "Pflegepakete"). Betrag/Einheit wie überall, der Preis wird automatisch mit "Grundreinigung + " davor angezeigt. "Leistungen" ist eine Liste, eine Zeile pro Punkt.</p>
+			<table class="widefat striped" style="max-width:1500px;">
+				<thead><tr><th>Titel</th><th>Badge (optional, z. B. "Beliebt")</th><th>Leistungen (eine pro Zeile)</th><th>Für (Zielgruppe)</th><th style="min-width:380px;">Aufpreis</th><th>Löschen</th></tr></thead>
+				<tbody>
+					<?php foreach ( $pflegepakete as $i => $row ) : ?>
+					<tr>
+						<td><input type="text" name="pflegepakete[<?php echo $i; ?>][titel]" value="<?php echo esc_attr( $row['titel'] ); ?>" style="width:100%;"></td>
+						<td><input type="text" name="pflegepakete[<?php echo $i; ?>][tag]" value="<?php echo esc_attr( $row['tag'] ?? '' ); ?>" style="width:100%;"></td>
+						<td><textarea name="pflegepakete[<?php echo $i; ?>][leistungen]" rows="4" style="width:100%;"><?php echo esc_textarea( $row['leistungen'] ?? '' ); ?></textarea></td>
+						<td><input type="text" name="pflegepakete[<?php echo $i; ?>][fuer]" value="<?php echo esc_attr( $row['fuer'] ?? '' ); ?>" style="width:100%;"></td>
+						<td><?php echo cl_price_fields_html( "pflegepakete[$i]", $row ); ?></td>
+						<td><input type="checkbox" name="pflegepakete[<?php echo $i; ?>][delete]" value="1"></td>
+					</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
 
 			<?php submit_button( 'Preise speichern' ); ?>
 		</form>
