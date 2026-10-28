@@ -48,20 +48,6 @@
           <p class="step-sub">Teppichart wählen, Maße in Zentimetern angeben, optional ein Foto hinzufügen. Wir rechnen live mit — der Betrag ist ein Richtwert, final bestätigt nach Prüfung vor Ort.</p>
           <div id="w-carpets"></div>
 
-          <div style="margin-bottom:24px;">
-            <span style="font-family:Inter,sans-serif; font-size:11px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft); display:block; margin-bottom:10px;">Zusatzpakete (optional)</span>
-            <div class="wizard-options" data-group="pakete" data-multi="1" style="margin-bottom:0;">
-              <div class="wizard-option" data-value="kleinkindpaket">
-                <h4>Kleinkinderpaket</h4>
-                <p>Zusatzleistungen für Haushalte mit kleinen Kindern. Details werden vor Auftragsbestätigung mit Ihnen abgestimmt.</p>
-              </div>
-              <div class="wizard-option" data-value="haustierpaket">
-                <h4>Haustierpaket</h4>
-                <p>Enzymreiniger gegen Hunde-/Katzenhaare und Tiergeruch.</p>
-              </div>
-            </div>
-          </div>
-
           <button type="button" class="btn secondary" id="w-add-carpet" style="margin:0 0 28px;">+ Weiteren Teppich hinzufügen</button>
 
           <div class="wizard-summary" style="margin-bottom:0;">
@@ -151,7 +137,6 @@
 .w-dropzone:hover, .w-dropzone.dragover{ border-color:var(--ink); background:var(--surface-2); }
 .w-dropzone span{ font-size:12.5px; color:var(--ink-soft); font-weight:500; }
 .w-dropzone img{ max-width:100%; max-height:110px; border-radius:6px; object-fit:contain; }
-.wizard-options[data-multi="1"] .wizard-option.selected{ border-color:var(--ink); background:var(--surface-2); }
 </style>
 
 <script>
@@ -161,11 +146,14 @@
   var steps = Array.prototype.slice.call(wizard.querySelectorAll('.wizard-step'));
   var total = steps.length;
   var current = 1;
-  var data = { kundentyp:'', name:'', tel:'', email:'', msg:'', pakete:[], mindestAusgleich:false };
+  var data = { kundentyp:'', name:'', tel:'', email:'', msg:'', mindestAusgleich:false };
 
   var MINDESTAUFTRAG = 89.00;
   var MAX_BREITE_CM = 320;
   var HAUSTIER_RATE = 11.90;
+  var HAUSTIER_DESC = 'Enzymreiniger gegen Hunde-/Katzenhaare und Tiergeruch.';
+  var KLEINKIND_RATE = null;
+  var KLEINKIND_DESC = 'Zusatzleistungen für Haushalte mit kleinen Kindern. Details werden vor Auftragsbestätigung mit Ihnen abgestimmt.';
 
   var FALLBACK_MATERIAL = [
     { art:'Maschinenteppiche, Acryl- & Polyesterteppiche (inkl. Shaggy)', preis:'7,99 €/m²' },
@@ -188,10 +176,15 @@
     if (json && Array.isArray(json.zusatz)) {
       var haustierRow = json.zusatz.filter(function(z){ return /haustier/i.test(z.titel || ''); })[0];
       if (haustierRow) {
-        var rate = parsePrice(haustierRow.preis);
-        if (rate !== null) { HAUSTIER_RATE = rate; changed = true; }
-        var desc = document.querySelector('.wizard-option[data-value="haustierpaket"] p');
-        if (desc && haustierRow.beschreibung) { desc.textContent = haustierRow.beschreibung; }
+        var hRate = parsePrice(haustierRow.preis);
+        if (hRate !== null) { HAUSTIER_RATE = hRate; changed = true; }
+        if (haustierRow.beschreibung) { HAUSTIER_DESC = haustierRow.beschreibung; }
+      }
+      var kleinkindRow = json.zusatz.filter(function(z){ return /kleinkind/i.test(z.titel || ''); })[0];
+      if (kleinkindRow) {
+        var kRate = parsePrice(kleinkindRow.preis);
+        if (kRate !== null) { KLEINKIND_RATE = kRate; changed = true; }
+        if (kleinkindRow.beschreibung) { KLEINKIND_DESC = kleinkindRow.beschreibung; }
       }
     }
     if (changed) renderCarpets();
@@ -208,7 +201,7 @@
 
   function newCarpet(){
     carpetSeq++;
-    return { id: carpetSeq, art:'', breite:'', laenge:'', file:null, previewUrl:'' };
+    return { id: carpetSeq, art:'', breite:'', laenge:'', file:null, previewUrl:'', pakete:[] };
   }
   carpets.push(newCarpet());
 
@@ -242,19 +235,15 @@
     var mat = carpetMaterial(c);
     var rate = mat ? parsePrice(mat.preis) : null;
     if (rate === null) return 0;
-    return area * rate;
-  }
-
-  function totalArea(){
-    return carpets.reduce(function(sum, c){ return sum + carpetArea(c); }, 0);
+    var price = area * rate;
+    if (c.pakete.indexOf('haustierpaket') > -1) price += area * HAUSTIER_RATE;
+    if (c.pakete.indexOf('kleinkindpaket') > -1 && KLEINKIND_RATE !== null) price += area * KLEINKIND_RATE;
+    return price;
   }
 
   function rawSubtotal(){
     var sum = 0;
     carpets.forEach(function(c){ sum += carpetPrice(c); });
-    if (data.pakete.indexOf('haustierpaket') > -1) {
-      sum += totalArea() * HAUSTIER_RATE;
-    }
     return sum;
   }
 
@@ -354,6 +343,22 @@
     }).join('');
   }
 
+  function paketeChips(c){
+    var defs = [
+      { key:'kleinkindpaket', label:'Kleinkinderpaket' + (KLEINKIND_RATE !== null ? ' (+' + fmt(KLEINKIND_RATE) + '/m²)' : ''), title: KLEINKIND_DESC },
+      { key:'haustierpaket', label:'Haustierpaket (+' + fmt(HAUSTIER_RATE) + '/m²)', title: HAUSTIER_DESC }
+    ];
+    return '<div class="wizard-field" style="margin-bottom:22px;">' +
+      '<label>Zusatzpakete (optional)</label>' +
+      '<div class="carpet-pakete">' +
+      defs.map(function(d){
+        var sel = c.pakete.indexOf(d.key) > -1 ? ' selected' : '';
+        return '<span class="paket-chip' + sel + '" data-carpet="' + c.id + '" data-paket="' + d.key + '" title="' + d.title.replace(/"/g, '&quot;') + '">' + d.label + '</span>';
+      }).join('') +
+      '</div>' +
+    '</div>';
+  }
+
   function priceLineFor(c){
     var area = carpetArea(c);
     var price = carpetPrice(c);
@@ -381,6 +386,7 @@
           '<div class="wizard-field" style="margin-bottom:0;"><label>Länge (cm)</label><input type="text" inputmode="decimal" placeholder="z. B. 250" data-carpet="' + c.id + '" data-field="laenge" value="' + c.laenge + '" /></div>' +
         '</div>' +
         breiteWarn +
+        paketeChips(c) +
         '<input type="file" accept="image/jpeg,image/png,image/webp" hidden data-carpet="' + c.id + '" data-file="1" />' +
         dz +
         '<div style="font-size:13.5px; color:var(--ink-soft);" id="carpet-line-' + c.id + '">' + priceLine + '</div>' +
@@ -438,6 +444,22 @@
   });
 
   carpetsWrap.addEventListener('click', function(e){
+    var chip = e.target.closest('.paket-chip');
+    if (chip) {
+      var cid = parseInt(chip.dataset.carpet, 10);
+      var carpet = carpets.filter(function(x){ return x.id === cid; })[0];
+      if (!carpet) return;
+      var key = chip.dataset.paket;
+      var idx = carpet.pakete.indexOf(key);
+      if (idx > -1) carpet.pakete.splice(idx, 1);
+      else carpet.pakete.push(key);
+      chip.classList.toggle('selected');
+      var lineEl = document.getElementById('carpet-line-' + carpet.id);
+      if (lineEl) lineEl.textContent = priceLineFor(carpet);
+      updateSubtotalDisplay();
+      updateNextState();
+      return;
+    }
     var btn = e.target.closest('[data-remove]');
     if (!btn) return;
     var id = parseInt(btn.dataset.remove, 10);
@@ -464,17 +486,6 @@
     group.addEventListener('click', function(e){
       var opt = e.target.closest('.wizard-option');
       if (!opt || opt.classList.contains('disabled')) return;
-
-      if (group.dataset.multi === '1') {
-        opt.classList.toggle('selected');
-        var val = opt.dataset.value;
-        var idx = data.pakete.indexOf(val);
-        if (opt.classList.contains('selected') && idx === -1) data.pakete.push(val);
-        if (!opt.classList.contains('selected') && idx > -1) data.pakete.splice(idx, 1);
-        updateSubtotalDisplay();
-        updateNextState();
-        return;
-      }
 
       group.querySelectorAll('.wizard-option').forEach(function(o){ o.classList.remove('selected'); });
       opt.classList.add('selected');
@@ -536,13 +547,12 @@
     var carpetLines = carpets.map(function(c, idx){
       var area = carpetArea(c);
       if (!area) return '';
-      return row('Teppich ' + (idx+1), c.art + ', ' + c.breite + '×' + c.laenge + ' cm');
+      var paketeLabel = c.pakete.map(paketLabel).join(', ');
+      return row('Teppich ' + (idx+1), c.art + ', ' + c.breite + '×' + c.laenge + ' cm' + (paketeLabel ? ' — ' + paketeLabel : ''));
     }).join('');
-    var paketeLabel = data.pakete.map(paketLabel).join(', ');
     s.innerHTML =
       row('Kundentyp', data.kundentyp) +
       carpetLines +
-      (paketeLabel ? row('Zusatzpakete', paketeLabel) : '') +
       (data.mindestAusgleich ? row('Mindestauftrag-Ausgleich', '+' + fmt(MINDESTAUFTRAG - rawSubtotal())) : '') +
       row('Zwischensumme (Richtwert, unter Vorbehalt)', fmt(calcSubtotal())) +
       row('Name', data.name) +
@@ -588,14 +598,13 @@
       var carpetBodyLines = carpets.map(function(c, idx){
         var area = carpetArea(c);
         if (!area) return null;
-        return 'Teppich ' + (idx+1) + ': ' + c.art + ', ' + c.breite + '×' + c.laenge + ' cm - ' + fmt(carpetPrice(c));
+        var paketeLabel = c.pakete.map(paketLabel).join(', ');
+        return 'Teppich ' + (idx+1) + ': ' + c.art + ', ' + c.breite + '×' + c.laenge + ' cm - ' + fmt(carpetPrice(c)) + (paketeLabel ? ' (' + paketeLabel + ')' : '');
       }).filter(function(l){ return l; });
       var bodyLines = [
         'Kundentyp: ' + data.kundentyp,
         ''
       ].concat(carpetBodyLines).concat([
-        '',
-        'Zusatzpakete: ' + (data.pakete.map(paketLabel).join(', ') || '-'),
         '',
         'Zwischensumme (Richtwert, unter Vorbehalt): ' + fmt(calcSubtotal()) + (data.mindestAusgleich ? ' (inkl. Mindestauftrag-Ausgleich)' : ''),
         '',
@@ -614,12 +623,10 @@
       fd.append('tel', data.tel || '');
       fd.append('email', data.email || '');
       fd.append('msg', data.msg || '');
-      fd.append('kleinkindpaket', data.pakete.indexOf('kleinkindpaket') > -1 ? '1' : '0');
-      fd.append('haustierpaket', data.pakete.indexOf('haustierpaket') > -1 ? '1' : '0');
       fd.append('mindestausgleich', data.mindestAusgleich ? '1' : '0');
       fd.append('subtotal_text', fmt(calcSubtotal()));
       fd.append('carpets_json', JSON.stringify(carpets.map(function(c){
-        return { art: c.art, breite_cm: c.breite, laenge_cm: c.laenge };
+        return { art: c.art, breite_cm: c.breite, laenge_cm: c.laenge, pakete: c.pakete };
       })));
       carpets.forEach(function(c, idx){
         if (c.file) fd.append('carpet_photo_' + idx, c.file, 'teppich-' + (idx+1) + '.jpg');
@@ -629,7 +636,8 @@
         method: 'POST',
         body: fd
       }).then(function(res){ return res.json(); }).then(function(json){
-        if (json && json.status === 'ok') {
+        var ok = json ? json.status === 'ok' : false;
+        if (ok) {
           nextBtn.style.display = 'none';
           backBtn.style.display = 'none';
           showSendState('ok', '<b>Danke, deine Anfrage ist raus.</b> Wir melden uns zeitnah bei dir, meist innerhalb eines Werktags.');

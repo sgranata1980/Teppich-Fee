@@ -131,11 +131,19 @@ function cl_auftrag_details_box( $post ) {
 	</table>
 
 	<h3>Teppiche</h3>
-	<?php foreach ( $carpets as $i => $c ) : ?>
+	<?php
+	$paket_labels = array( 'kleinkindpaket' => 'Kleinkinderpaket', 'haustierpaket' => 'Haustierpaket' );
+	foreach ( $carpets as $i => $c ) :
+		$carpet_pakete = is_array( $c['pakete'] ?? null ) ? $c['pakete'] : array();
+		$paket_names   = array_map( function ( $p ) use ( $paket_labels ) { return $paket_labels[ $p ] ?? $p; }, $carpet_pakete );
+		?>
 		<div style="border:1px solid #ddd; border-radius:6px; padding:12px 16px; margin-bottom:12px;">
 			<b>Teppich <?php echo (int) $i + 1; ?>:</b>
 			<?php echo esc_html( $c['art'] ?? '' ); ?>
 			— <?php echo esc_html( $c['breite_cm'] ?? '?' ); ?> × <?php echo esc_html( $c['laenge_cm'] ?? '?' ); ?> cm
+			<?php if ( $paket_names ) : ?>
+				— <?php echo esc_html( implode( ', ', $paket_names ) ); ?>
+			<?php endif; ?>
 			<div style="margin-top:8px;">
 				<?php echo cl_auftrag_thumb( $vorher_fotos[ $i ] ?? 0, 'Vorher' ); ?>
 				<?php echo cl_auftrag_thumb( $nachher_fotos[ $i ] ?? 0, 'Nachher' ); ?>
@@ -231,9 +239,8 @@ function cl_handle_anfrage_request( WP_REST_Request $request ) {
 	$tel       = sanitize_text_field( (string) $request->get_param( 'tel' ) );
 	$email     = sanitize_email( (string) $request->get_param( 'email' ) );
 	$msg       = sanitize_textarea_field( (string) $request->get_param( 'msg' ) );
-	$kleinkind = '1' === (string) $request->get_param( 'kleinkindpaket' );
-	$haustier  = '1' === (string) $request->get_param( 'haustierpaket' );
 	$subtotal  = sanitize_text_field( (string) $request->get_param( 'subtotal_text' ) );
+	$ausgleich = '1' === (string) $request->get_param( 'mindestausgleich' );
 
 	$carpets_raw = json_decode( (string) $request->get_param( 'carpets_json' ), true );
 	if ( ! is_array( $carpets_raw ) || empty( $carpets_raw ) ) {
@@ -244,12 +251,24 @@ function cl_handle_anfrage_request( WP_REST_Request $request ) {
 		return new WP_Error( 'invalid_contact', 'Bitte Name, Telefon und eine gültige E-Mail-Adresse angeben.', array( 'status' => 400 ) );
 	}
 
-	$carpets = array();
+	$known_pakete = array( 'kleinkindpaket', 'haustierpaket' );
+	$carpets      = array();
+	$kleinkind    = false;
+	$haustier     = false;
 	foreach ( $carpets_raw as $c ) {
+		$pakete_raw = is_array( $c['pakete'] ?? null ) ? $c['pakete'] : array();
+		$pakete     = array_values( array_intersect( $known_pakete, array_map( 'sanitize_text_field', $pakete_raw ) ) );
+		if ( in_array( 'kleinkindpaket', $pakete, true ) ) {
+			$kleinkind = true;
+		}
+		if ( in_array( 'haustierpaket', $pakete, true ) ) {
+			$haustier = true;
+		}
 		$carpets[] = array(
 			'art'       => sanitize_text_field( (string) ( $c['art'] ?? '' ) ),
 			'breite_cm' => sanitize_text_field( (string) ( $c['breite_cm'] ?? '' ) ),
 			'laenge_cm' => sanitize_text_field( (string) ( $c['laenge_cm'] ?? '' ) ),
+			'pakete'    => $pakete,
 		);
 	}
 
@@ -270,6 +289,7 @@ function cl_handle_anfrage_request( WP_REST_Request $request ) {
 	update_post_meta( $post_id, 'cl_msg', $msg );
 	update_post_meta( $post_id, 'cl_kleinkindpaket', $kleinkind );
 	update_post_meta( $post_id, 'cl_haustierpaket', $haustier );
+	update_post_meta( $post_id, 'cl_mindestausgleich', $ausgleich );
 	update_post_meta( $post_id, 'cl_subtotal_text', $subtotal );
 	update_post_meta( $post_id, 'cl_carpets', $carpets );
 
@@ -301,14 +321,14 @@ function cl_handle_anfrage_request( WP_REST_Request $request ) {
 		'Telefon: ' . $tel,
 		'E-Mail: ' . $email,
 	);
+	$paket_labels = array( 'kleinkindpaket' => 'Kleinkinderpaket', 'haustierpaket' => 'Haustierpaket' );
 	foreach ( $carpets as $i => $c ) {
-		$lines[] = '';
-		$lines[] = 'Teppich ' . ( $i + 1 ) . ': ' . $c['art'] . ' — ' . $c['breite_cm'] . ' × ' . $c['laenge_cm'] . ' cm';
+		$paket_names = array_map( function ( $p ) use ( $paket_labels ) { return $paket_labels[ $p ] ?? $p; }, $c['pakete'] );
+		$lines[]     = '';
+		$lines[]     = 'Teppich ' . ( $i + 1 ) . ': ' . $c['art'] . ' — ' . $c['breite_cm'] . ' × ' . $c['laenge_cm'] . ' cm' . ( $paket_names ? ' (' . implode( ', ', $paket_names ) . ')' : '' );
 	}
 	$lines[] = '';
-	$lines[] = 'Kleinkinderpaket: ' . ( $kleinkind ? 'Ja' : 'Nein' );
-	$lines[] = 'Haustierpaket: ' . ( $haustier ? 'Ja' : 'Nein' );
-	$lines[] = 'Zwischensumme (Richtwert): ' . $subtotal;
+	$lines[] = 'Zwischensumme (Richtwert): ' . $subtotal . ( $ausgleich ? ' (inkl. Mindestauftrag-Ausgleich)' : '' );
 	if ( $msg ) {
 		$lines[] = '';
 		$lines[] = 'Nachricht: ' . $msg;
