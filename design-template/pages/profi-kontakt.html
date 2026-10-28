@@ -36,35 +36,62 @@
               <h4>Polsterreinigung <span class="soon">Bald verfügbar</span></h4>
               <p>Polsterreinigung direkt vor Ort im Objekt. Noch nicht online anfragbar — bitte in der Zwischenzeit direkt per Telefon oder E-Mail melden.</p>
             </div>
-            <div class="wizard-option" data-value="Beides">
-              <h4>Beides</h4>
-              <p>Lose Teppiche und fest verlegter Teppichboden im selben Objekt.</p>
+            <div class="wizard-option disabled" aria-disabled="true">
+              <h4>Beides <span class="soon">Bald verfügbar</span></h4>
+              <p>Lose Teppiche und fest verlegter Teppichboden im selben Objekt. Noch nicht online anfragbar — bitte in der Zwischenzeit direkt per Telefon oder E-Mail melden.</p>
             </div>
-            <div class="wizard-option" data-value="Noch unklar / Beratung gewünscht">
-              <h4>Noch unklar</h4>
-              <p>Erstmal Beratung, was für unser Objekt sinnvoll ist.</p>
+            <div class="wizard-option disabled" aria-disabled="true">
+              <h4>Noch unklar <span class="soon">Bald verfügbar</span></h4>
+              <p>Erstmal Beratung, was für unser Objekt sinnvoll ist. Noch nicht online anfragbar — bitte in der Zwischenzeit direkt per Telefon oder E-Mail melden.</p>
             </div>
           </div>
         </div>
 
         <div class="wizard-step" data-step="2">
           <h2>Unternehmen &amp; Objekt</h2>
-          <p class="step-sub">Damit wir wissen, mit wem und mit welcher Art Objekt wir es zu tun haben.</p>
+          <p class="step-sub">Ein paar Angaben, wenn vorhanden — Pflicht ist nur E-Mail oder Telefon, irgendeine von beiden.</p>
           <div class="wizard-field">
-            <label for="wp-firma">Firma / Einrichtung</label>
-            <input type="text" id="wp-firma" required />
-          </div>
-          <div class="wizard-options" data-group="objekttyp" style="margin-bottom:20px;">
-            <div class="wizard-option" data-value="Hotel"><h4>Hotel</h4></div>
-            <div class="wizard-option" data-value="Büro"><h4>Büro</h4></div>
-            <div class="wizard-option" data-value="Kita"><h4>Kita</h4></div>
-            <div class="wizard-option" data-value="Gastronomie"><h4>Gastronomie</h4></div>
-            <div class="wizard-option" data-value="Hausverwaltung"><h4>Hausverwaltung</h4></div>
-            <div class="wizard-option" data-value="Sonstiges"><h4>Sonstiges</h4></div>
+            <label for="wp-firma">Firma / Einrichtung (optional)</label>
+            <input type="text" id="wp-firma" />
           </div>
           <div class="wizard-field">
-            <label for="wp-flaeche">Ungefähre Fläche (m²) oder Anzahl Teppiche</label>
-            <input type="text" id="wp-flaeche" placeholder="z. B. 180 m² oder 6 Teppiche" required />
+            <label for="wp-name">Ansprechpartner (optional)</label>
+            <input type="text" id="wp-name" />
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="wizard-field" style="margin-bottom:0;">
+              <label for="wp-email">E-Mail</label>
+              <input type="email" id="wp-email" />
+            </div>
+            <div class="wizard-field" style="margin-bottom:0;">
+              <label for="wp-tel">Telefon</label>
+              <input type="tel" id="wp-tel" />
+            </div>
+          </div>
+          <p style="font-size:12.5px; color:var(--ink-soft); margin:-10px 0 24px;">Mindestens eins von beiden wird benötigt, damit wir uns melden können.</p>
+          <div class="wizard-field">
+            <label>Art des Objekts (optional)</label>
+            <div class="wizard-options" data-group="objekttyp" style="margin-bottom:0;">
+              <div class="wizard-option" data-value="Hotel"><h4>Hotel</h4></div>
+              <div class="wizard-option" data-value="Büro"><h4>Büro</h4></div>
+              <div class="wizard-option" data-value="Kita"><h4>Kita</h4></div>
+              <div class="wizard-option" data-value="Gastronomie"><h4>Gastronomie</h4></div>
+              <div class="wizard-option" data-value="Hausverwaltung"><h4>Hausverwaltung</h4></div>
+              <div class="wizard-option" data-value="Sonstiges"><h4>Sonstiges</h4></div>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px;">
+            <div class="wizard-field" style="margin-bottom:0;">
+              <label for="wp-flaeche">Ungefähre Menge (optional)</label>
+              <input type="text" inputmode="decimal" id="wp-flaeche" placeholder="z. B. 180" />
+            </div>
+            <div class="wizard-field" style="margin-bottom:0;">
+              <label for="wp-flaeche-einheit">Einheit</label>
+              <select id="wp-flaeche-einheit">
+                <option value="m²">Quadratmeter</option>
+                <option value="Teppiche">Anzahl Teppiche</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -78,23 +105,11 @@
         </div>
 
         <div class="wizard-step" data-step="4">
-          <h2>Ansprechperson</h2>
-          <p class="step-sub">Damit wir uns bei der richtigen Person melden können.</p>
+          <h2>Fast geschafft.</h2>
+          <p class="step-sub">Noch Adresse und was uns sonst weiterhilft, beides optional.</p>
           <div class="wizard-field">
-            <label for="wp-name">Name</label>
-            <input type="text" id="wp-name" required />
-          </div>
-          <div class="wizard-field">
-            <label for="wp-tel">Telefon</label>
-            <input type="tel" id="wp-tel" required />
-          </div>
-          <div class="wizard-field">
-            <label for="wp-email">E-Mail</label>
-            <input type="email" id="wp-email" required />
-          </div>
-          <div class="wizard-field">
-            <label for="wp-adresse">Adresse des Objekts</label>
-            <input type="text" id="wp-adresse" placeholder="Straße, PLZ, Ort" required />
+            <label for="wp-adresse">Adresse des Objekts (optional)</label>
+            <input type="text" id="wp-adresse" placeholder="Straße, PLZ, Ort" />
           </div>
           <div class="wizard-field">
             <label for="wp-msg">Nachricht (optional)</label>
@@ -163,7 +178,7 @@
   var steps = Array.prototype.slice.call(wizard.querySelectorAll('.wizard-step'));
   var total = steps.length;
   var current = 1;
-  var data = { anliegen:'', firma:'', objekttyp:'', flaeche:'', rhythmus:'', name:'', tel:'', email:'', adresse:'', msg:'' };
+  var data = { anliegen:'', firma:'', objekttyp:'', flaeche:'', flaeche_einheit:'m²', rhythmus:'', name:'', tel:'', email:'', adresse:'', msg:'' };
 
   var backBtn = document.getElementById('wizard-p-back');
   var nextBtn = document.getElementById('wizard-p-next');
@@ -186,17 +201,18 @@
     if (current === 1) return !!data.anliegen;
     if (current === 2) {
       data.firma = document.getElementById('wp-firma').value.trim();
+      data.name = document.getElementById('wp-name').value.trim();
+      data.email = document.getElementById('wp-email').value.trim();
+      data.tel = document.getElementById('wp-tel').value.trim();
       data.flaeche = document.getElementById('wp-flaeche').value.trim();
-      return !!data.firma && !!data.objekttyp && !!data.flaeche;
+      data.flaeche_einheit = document.getElementById('wp-flaeche-einheit').value;
+      return !!data.email || !!data.tel;
     }
     if (current === 3) return !!data.rhythmus;
     if (current === 4) {
-      data.name = document.getElementById('wp-name').value.trim();
-      data.tel = document.getElementById('wp-tel').value.trim();
-      data.email = document.getElementById('wp-email').value.trim();
       data.adresse = document.getElementById('wp-adresse').value.trim();
       data.msg = document.getElementById('wp-msg').value.trim();
-      return !!data.name && !!data.tel && !!data.email && !!data.adresse;
+      return true;
     }
     if (current === 5) {
       return document.getElementById('wp-consent').checked;
