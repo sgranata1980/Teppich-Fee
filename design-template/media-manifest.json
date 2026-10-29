@@ -222,5 +222,45 @@
   "hero_art_fachkraefte": [
     349,
     "https://teppichlabor.de/wp-content/uploads/2026/10/fachkraefte-scaled.jpg"
+  ],
+  "journal_img_hausmittel": [
+    347,
+    "https://teppichlabor.de/wp-content/uploads/2026/10/hausmittel-1024x572.jpg"
+  ],
+  "journal_img_milben": [
+    341,
+    "https://teppichlabor.de/wp-content/uploads/2026/10/milben-1024x572.jpg"
+  ],
+  "journal_img_motten": [
+    342,
+    "https://teppichlabor.de/wp-content/uploads/2026/10/motten-1024x572.jpg"
+  ],
+  "journal_img_haustier": [
+    345,
+    "https://teppichlabor.de/wp-content/uploads/2026/10/haustier-1024x572.jpg"
+  ],
+  "journal_img_orient": [
+    343,
+    "https://teppichlabor.de/wp-content/uploads/2026/10/orient-1024x572.jpg"
+  ],
+  "journal_img_akustik": [
+    344,
+    "https://teppichlabor.de/wp-content/uploads/2026/10/akustik-1024x572.jpg"
+  ],
+  "journal_img_pfas": [
+    340,
+    "https://teppichlabor.de/wp-content/uploads/2026/10/pfas-1024x572.jpg"
+  ],
+  "journal_img_wasser": [
+    346,
+    "https://teppichlabor.de/wp-content/uploads/2026/10/wasser-1024x572.jpg"
+  ],
+  "journal_img_ki": [
+    348,
+    "https://teppichlabor.de/wp-content/uploads/2026/10/ki-1024x572.jpg"
+  ],
+  "journal_img_fachkraefte": [
+    349,
+    "https://teppichlabor.de/wp-content/uploads/2026/10/fachkraefte-1024x572.jpg"
   ]
 }
