@@ -23,7 +23,13 @@
 .tl-page section{ padding:clamp(56px, 9vw, 168px) 0; }
 
 /* ---------- Shared header ---------- */
-.tl-header{ position:sticky; top:0; z-index:50; background:rgba(255,255,255,.92); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+/* Header bleibt beim Scrollen fix oben. position:sticky griff nicht (WordPress-Wrapper header.wp-block-template-part ist nur so hoch wie der Header, ausserdem macht overflow-x:hidden auf body den body zum Scroll-Container). Deshalb position:fixed plus Platzhalter (.tl-header-spacer) in exakter Header-Hoehe; die Hoehe misst ein kleines Skript (--tl-header-h), CSS-Wert ist nur Fallback. */
+:root{ --tl-header-h:calc(2 * clamp(16px,2vw,26px) + 36px); }
+html{ scroll-padding-top:var(--tl-header-h); }
+.tl-header{ position:fixed; top:0; left:0; right:0; width:100%; z-index:50; background:rgba(255,255,255,.92); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+body.admin-bar .tl-header{ top:var(--wp-admin--admin-bar--height,32px); }
+@media (max-width:600px){ body.admin-bar .tl-header{ top:0; } }
+.tl-header-spacer{ display:block; height:var(--tl-header-h); }
 .tl-header .nav-row{ display:flex; align-items:center; justify-content:space-between; padding-top:clamp(16px,2vw,26px); padding-bottom:clamp(16px,2vw,26px); max-width:1600px; margin:0 auto; padding-left:clamp(20px,5vw,96px); padding-right:clamp(20px,5vw,96px); }
 .tl-header .logo{ display:flex; align-items:center; text-decoration:none; flex-shrink:0; }
 .tl-header .logo img{ display:block; height:20px; width:auto; flex-shrink:0; }
