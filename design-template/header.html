@@ -58,6 +58,25 @@ html, body{ overflow-x:hidden; max-width:100%; }
 @media (max-width:1480px){ .tl-header nav.main{ display:none; } }
 .tl-header .menu-toggle{ display:none; font-family:'Inter',Helvetica,Arial,sans-serif; font-weight:600; font-size:14px; padding:9px 18px; border-radius:9999px; background:var(--surface-2); border:none; color:var(--ink); cursor:pointer; }
 @media (max-width:1480px){ .tl-header .menu-toggle{ display:inline-block; } .tl-header .icon-btn{ display:none; } }
+/* Buchen-Button neben "Menü": unter 1481px ist nav.main (inkl. .nav-cta) ausgeblendet, damit bleibt "Buchen" auf jeder Seite oben sichtbar. Darüber übernimmt .nav-cta in der Hauptnavigation. */
+.tl-header .nav-book{ display:none; }
+@media (max-width:1480px){
+  .tl-header .nav-book{
+    display:inline-flex; align-items:center; font-family:'Inter',Helvetica,Arial,sans-serif; font-weight:600; font-size:14px; line-height:normal;
+    padding:9px 18px; border-radius:9999px; text-decoration:none; color:#fff; flex-shrink:0;
+    background:rgba(77,120,255,.72); border:1px solid rgba(255,255,255,.55);
+    backdrop-filter:blur(18px) saturate(200%); -webkit-backdrop-filter:blur(18px) saturate(200%);
+    animation:heroCtaGlow 2.4s ease-in-out infinite;
+  }
+  .tl-header .nav-book:hover{ color:#fff; background:rgba(77,120,255,.85); }
+}
+@media (max-width:420px){
+  .tl-header .nav-utils{ gap:6px; }
+  .tl-header .nav-book, .tl-header .menu-toggle{ padding:8px 13px; font-size:13.5px; }
+  .tl-header .logo img{ height:clamp(11px, 3.8vw, 16px); }
+}
+@media (max-width:345px){ .tl-header .nav-book, .tl-header .menu-toggle{ padding:7px 10px; font-size:13px; } .tl-header .logo img{ height:11px; } }
+@media (prefers-reduced-motion: reduce){ .tl-header .nav-book{ animation:none; box-shadow:inset 0 1px 1px rgba(255,255,255,.5), 0 8px 38px rgba(90,135,255,.65); } }
 .lang-switcher{ display:flex; align-items:center; gap:13px; }
 .lang-btn{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:11px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; line-height:1; padding:0; border:none; background:none; cursor:pointer; color:var(--ink-soft); transition:color .15s ease; display:inline-flex; align-items:center; height:24px; }
 .lang-btn:hover{ color:var(--ink); }
@@ -225,13 +244,22 @@ header.tl-intro.tl-intro-hero.tl-intro-split{ --split-pad:clamp(20px, 5vw, 96px)
 .steps{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:20px; }
 @media (max-width:1180px){ .steps{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media (max-width:800px){ .steps{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; } }
-@media (max-width:600px){ .steps{ grid-template-columns:minmax(0,1fr); gap:16px; } }
 .step{ background:var(--surface); border:1px solid var(--line); border-radius:24px; padding:36px 32px; transition:border-color .2s ease; }
 .step:hover{ border-color:var(--line-strong); }
 .step .icon{ width:26px; height:26px; color:var(--ink); display:block; margin-bottom:24px; }
 .step .n{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:11px; font-weight:600; letter-spacing:.06em; color:var(--accent); text-transform:uppercase; }
 .step h3{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:21px; font-weight:600; letter-spacing:-0.01em; margin:14px 0 10px; text-transform:none; }
 .step p{ font-size:14.5px; color:var(--ink-soft); margin:0; line-height:1.55; }
+/* Mobile: Karten paarweise (2 Spalten, 4 Reihen) statt 8 untereinander, kompaktere Innenabstaende/Schrift; erst unter 360px wieder 1 Spalte. */
+@media (max-width:600px){
+  .steps{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+  .step{ padding:22px 16px 24px; border-radius:20px; }
+  .step .icon{ width:22px; height:22px; margin-bottom:16px; }
+  .step h3{ font-size:16px; line-height:1.25; margin:8px 0 6px; overflow-wrap:break-word; }
+  .step p{ font-size:13px; line-height:1.5; overflow-wrap:break-word; hyphens:auto; -webkit-hyphens:auto; }
+}
+@media (max-width:389px){ .step{ padding:20px 13px 22px; } .step h3{ font-size:15px; letter-spacing:-0.02em; } }
+@media (max-width:359px){ .steps{ grid-template-columns:minmax(0,1fr); } }
 
 .showcase-section{ border-bottom:1px solid var(--line-strong); }
 .showcase{ display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; padding:40px clamp(20px,5vw,96px) 8px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
@@ -357,9 +385,18 @@ header.tl-intro.tl-intro-hero.tl-intro-split{ --split-pad:clamp(20px, 5vw, 96px)
 .basetable td.price{ font-family:'Inter',Helvetica,Arial,sans-serif; font-weight:600; text-align:right; }
 .basetable-note{ margin-top:16px; font-size:12.5px; color:var(--ink-soft); }
 .basetable-swipe-hint{ display:none; font-size:11.5px; color:var(--ink-soft); margin-top:8px; }
+/* Preistabellen auf dem Handy: statt 520px breiter Tabelle mit Wisch-Scroll (Preisspalte lag rechts ausserhalb des Bildschirms) jede Zeile als Block, Bezeichnung links, Preis rechts, Verfahren darunter. Kopfzeile nur fuer Screenreader. */
 @media (max-width:620px){
-  .basetable .table-scroll::after{ content:''; position:absolute; top:0; right:0; bottom:0; width:28px; background:linear-gradient(90deg, rgba(255,255,255,0), var(--surface,#fff)); pointer-events:none; }
-  .basetable-swipe-hint{ display:block; }
+  .basetable .table-scroll{ overflow-x:visible; }
+  .basetable .table-scroll::after{ content:none; display:none; }
+  .basetable-swipe-hint{ display:none; }
+  .basetable table, .basetable tbody{ display:block; width:100%; min-width:0; }
+  .basetable thead{ position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+  .basetable tr{ display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:16px; row-gap:4px; align-items:baseline; padding:16px 0; border-bottom:1px solid var(--line); }
+  .basetable td{ display:block; padding:0; border:0; font-size:15px; line-height:1.45; overflow-wrap:break-word; }
+  .basetable td:first-child{ grid-column:1; grid-row:1; }
+  .basetable td.price{ grid-column:2; grid-row:1; text-align:right; white-space:nowrap; }
+  .basetable td:not(:first-child):not(.price){ grid-column:1 / -1; grid-row:2; font-size:13px; color:var(--ink-soft); }
 }
 .pakete{ background:var(--surface-2); }
 .pakete-head{ margin-bottom:44px; }
@@ -623,6 +660,7 @@ header.tl-intro.tl-intro-hero.tl-intro-split{ --split-pad:clamp(20px, 5vw, 96px)
       </div>
       <a class="icon-btn" href="tel:+491728293606" title="Anrufen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2C9.5 21 3 14.5 3 6a2 2 0 0 1 2-2z"/></svg></a>
       <a class="icon-btn" href="mailto:info@teppichlabor.de" title="E-Mail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a>
+      <a class="nav-book" href="/impressum-kontakt/">Buchen</a>
       <button class="menu-toggle" id="tl-menu-toggle" aria-expanded="false" aria-controls="tl-mobile-menu">Menü</button>
     </div>
   </div>
