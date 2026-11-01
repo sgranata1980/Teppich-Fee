@@ -364,9 +364,9 @@ add_shortcode( 'cl_preise_material', function () {
 	$rows = cl_get_prices_material();
 	ob_start();
 	?>
-	<div class="table-scroll">
+	<div class="table-scroll price-card">
 	<table>
-		<thead><tr><th>Teppichart</th><th>Verfahren</th><th>Preis</th></tr></thead>
+		<thead><tr><th scope="col">Teppichart</th><th scope="col">Verfahren</th><th scope="col">Preis</th></tr></thead>
 		<tbody>
 			<?php foreach ( $rows as $row ) : ?>
 			<tr>
@@ -388,9 +388,9 @@ add_shortcode( 'cl_preise_reparatur', function () {
 	$rows = cl_get_prices_repair();
 	ob_start();
 	?>
-	<div class="table-scroll">
+	<div class="table-scroll price-card">
 	<table>
-		<thead><tr><th>Leistung</th><th>Preis</th></tr></thead>
+		<thead><tr><th scope="col">Leistung</th><th scope="col">Preis</th></tr></thead>
 		<tbody>
 			<?php foreach ( $rows as $row ) : ?>
 			<tr>
@@ -410,9 +410,9 @@ add_shortcode( 'cl_preise_polster', function () {
 	$rows = cl_get_prices_polster();
 	ob_start();
 	?>
-	<div class="table-scroll">
+	<div class="table-scroll price-card">
 	<table>
-		<thead><tr><th>Stück</th><th>Preis</th></tr></thead>
+		<thead><tr><th scope="col">Stück</th><th scope="col">Preis</th></tr></thead>
 		<tbody>
 			<?php foreach ( $rows as $row ) : ?>
 			<tr>

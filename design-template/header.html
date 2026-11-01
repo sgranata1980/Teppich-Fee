@@ -385,21 +385,36 @@ header.tl-intro.tl-intro-hero.tl-intro-split{ --split-pad:clamp(20px, 5vw, 96px)
 /* ---------- Leistungen & Pakete ---------- */
 .basetable{ padding-top:56px; }
 .basetable .table-scroll{ width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; position:relative; }
+/* Preistabellen als umrandete, abgerundete Karte (Apple-"Modelle vergleichen"-Stil): eine zusammenhaengende Box pro Tabelle, dezente Trennlinien innen, grosszuegiges Padding. Radius 24px wie .kcard/.step/.value. overflow-x:auto der .table-scroll schneidet die Ecken mit ab. */
+.basetable .price-card{ background:var(--surface); border:1px solid var(--line); border-radius:24px; margin-top:8px; }
+/* Innere Trennlinien heller als der Kartenrahmen (wie bei Apple), Fallback ohne color-mix: --line. */
+.basetable .price-card, .zusatz-item{ --line-soft:var(--line); }
+@supports (color:color-mix(in srgb, red 50%, transparent)){ .basetable .price-card, .zusatz-item{ --line-soft:color-mix(in srgb, var(--line) 55%, transparent); } }
 .basetable table{ width:100%; min-width:520px; border-collapse:collapse; }
-.basetable th, .basetable td{ text-align:left; padding:16px 18px; border-bottom:1px solid var(--line); font-size:16px; }
-.basetable th{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); font-weight:500; }
-.basetable td.price{ font-family:'Inter',Helvetica,Arial,sans-serif; font-weight:600; text-align:right; }
+.basetable th, .basetable td{ text-align:left; padding:20px 28px; border-bottom:1px solid var(--line-soft, var(--line)); font-size:16px; line-height:1.45; vertical-align:baseline; }
+.basetable th:first-child, .basetable td:first-child{ padding-left:32px; }
+.basetable th:last-child, .basetable td:last-child{ padding-right:32px; }
+.basetable tbody tr:last-child td{ border-bottom:0; }
+.basetable th{ padding-top:22px; padding-bottom:16px; font-family:'Inter',Helvetica,Arial,sans-serif; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); font-weight:500; }
+.basetable th:last-child{ text-align:right; }
+.basetable td:first-child{ font-weight:500; color:var(--ink); }
+.basetable td:not(:first-child):not(.price){ font-size:15px; color:var(--ink-soft); }
+.basetable td.price{ font-family:'Inter',Helvetica,Arial,sans-serif; font-weight:600; text-align:right; white-space:nowrap; color:var(--ink); }
+.basetable tbody tr{ transition:background-color .15s ease; }
+@media (hover:hover){ .basetable tbody tr:hover{ background:var(--accent-soft); } }
 .basetable-note{ margin-top:16px; font-size:12.5px; color:var(--ink-soft); }
 .basetable-swipe-hint{ display:none; font-size:11.5px; color:var(--ink-soft); margin-top:8px; }
-/* Preistabellen auf dem Handy: statt 520px breiter Tabelle mit Wisch-Scroll (Preisspalte lag rechts ausserhalb des Bildschirms) jede Zeile als Block, Bezeichnung links, Preis rechts, Verfahren darunter. Kopfzeile nur fuer Screenreader. */
+/* Preistabellen auf dem Handy: statt 520px breiter Tabelle mit Wisch-Scroll (Preisspalte lag rechts ausserhalb des Bildschirms) jede Zeile als Block, Bezeichnung links, Preis rechts, Verfahren darunter. Kopfzeile nur fuer Screenreader. Karte (Rahmen/Radius) bleibt, Zeilen mit Innenabstand. */
 @media (max-width:620px){
-  .basetable .table-scroll{ overflow-x:visible; }
+  .basetable .table-scroll{ overflow:hidden; }
   .basetable .table-scroll::after{ content:none; display:none; }
   .basetable-swipe-hint{ display:none; }
+  .basetable .price-card{ border-radius:20px; }
   .basetable table, .basetable tbody{ display:block; width:100%; min-width:0; }
   .basetable thead{ position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
-  .basetable tr{ display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:16px; row-gap:4px; align-items:baseline; padding:16px 0; border-bottom:1px solid var(--line); }
-  .basetable td{ display:block; padding:0; border:0; font-size:15px; line-height:1.45; overflow-wrap:break-word; }
+  .basetable tr{ display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:16px; row-gap:4px; align-items:baseline; padding:16px 20px; border-bottom:1px solid var(--line-soft, var(--line)); }
+  .basetable tbody tr:last-child{ border-bottom:0; }
+  .basetable td, .basetable td:first-child, .basetable td:last-child{ display:block; padding:0; border:0; font-size:15px; line-height:1.45; overflow-wrap:break-word; }
   .basetable td:first-child{ grid-column:1; grid-row:1; }
   .basetable td.price{ grid-column:2; grid-row:1; text-align:right; white-space:nowrap; }
   .basetable td:not(:first-child):not(.price){ grid-column:1 / -1; grid-row:2; font-size:13px; color:var(--ink-soft); }
@@ -423,12 +438,16 @@ header.tl-intro.tl-intro-hero.tl-intro-split{ --split-pad:clamp(20px, 5vw, 96px)
 .zusatz{ padding-top:88px; }
 .zusatz-head{ margin-bottom:36px; }
 .zusatz-head h2{ font-size:clamp(28px,4vw,48px); }
-.zusatz-grid{ display:grid; grid-template-columns:1fr 1fr; gap:0 56px; border-top:1px solid var(--line-strong); }
-@media (max-width:720px){ .zusatz-grid{ grid-template-columns:1fr; } }
-.zusatz-item{ padding:26px 0; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; gap:20px; }
-.zusatz-item h4{ font-family:'Inter',Helvetica,Arial,sans-serif; font-weight:700; font-size:14.5px; margin:0 0 4px; }
-.zusatz-item p{ font-size:14px; color:var(--ink-soft); margin:0; line-height:1.55; max-width:38ch; }
-.zusatz-item .p{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:13px; font-weight:600; white-space:nowrap; }
+/* Einzelleistungen als Raster kleiner abgerundeter Karten (statt Liste mit Trennlinien), gleiche Kartensprache wie .kcard/.step: Rahmen --line, Radius 24px, Hover dunklerer Rahmen. Preis als Fusszeile der Karte. */
+.zusatz-grid{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+@media (max-width:960px){ .zusatz-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:620px){ .zusatz-grid{ grid-template-columns:minmax(0,1fr); gap:12px; } }
+.zusatz-item{ background:var(--surface); border:1px solid var(--line); border-radius:24px; padding:28px 28px 22px; display:flex; flex-direction:column; justify-content:space-between; gap:20px; min-width:0; transition:border-color .2s ease; }
+.zusatz-item:hover{ border-color:var(--line-strong); }
+.zusatz-item h4{ font-family:'Inter',Helvetica,Arial,sans-serif; font-weight:700; font-size:15.5px; line-height:1.35; margin:0 0 6px; color:var(--ink); }
+.zusatz-item p{ font-size:14px; color:var(--ink-soft); margin:0; line-height:1.55; }
+.zusatz-item .p{ display:block; font-family:'Inter',Helvetica,Arial,sans-serif; font-size:15px; font-weight:600; color:var(--ink); padding-top:16px; border-top:1px solid var(--line-soft, var(--line)); white-space:nowrap; }
+@media (max-width:620px){ .zusatz-item{ border-radius:20px; padding:22px 20px 18px; gap:16px; } .zusatz-item .p{ padding-top:14px; } }
 
 /* ---------- Unternehmen ---------- */
 .segments{ background:var(--surface-2); border-bottom:1px solid var(--line); }
