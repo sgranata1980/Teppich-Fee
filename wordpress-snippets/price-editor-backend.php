@@ -434,23 +434,62 @@ add_shortcode( 'cl_preise_pflegepakete', function () {
 	?>
 	<div class="paket-grid">
 		<?php foreach ( $rows as $row ) : ?>
-			<div class="paket">
+			<?php
+			// Textarme Karte (Apple-Card-Stil): nur die ersten 2 Leistungen
+			// sichtbar, der Rest steckt in einem <details>-Ausklapper (kein
+			// Datenverlust, nur progressive disclosure). Der Preis wird in
+			// Betrag (gross) + "zur Grundreinigung" (klein) aufgeteilt; der
+			// REST-Endpoint liefert weiterhin den kompletten Text.
+			$leistungen = array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', (string) ( $row['leistungen'] ?? '' ) ) ), 'strlen' ) );
+			$sichtbar   = array_slice( $leistungen, 0, 2 );
+			$weitere    = array_slice( $leistungen, 2 );
+			$preis      = (string) ( $row['preis'] ?? '' );
+			$basis      = '';
+			if ( 0 === strpos( $preis, 'Grundreinigung + ' ) ) {
+				$preis = trim( substr( $preis, strlen( 'Grundreinigung + ' ) ) );
+				$basis = 'zur Grundreinigung';
+				if ( '' !== $preis && preg_match( '/^(ab )?\d/', $preis ) ) {
+					$preis = '+ ' . $preis;
+				}
+			}
+			?>
+			<article class="paket">
 				<?php if ( ! empty( $row['tag'] ) ) : ?>
 					<span class="tag"><?php echo esc_html( $row['tag'] ); ?></span>
 				<?php endif; ?>
 				<h3><?php echo esc_html( $row['titel'] ?? '' ); ?></h3>
-				<div class="price"><?php echo esc_html( $row['preis'] ?? '' ); ?></div>
-				<ul>
-					<?php foreach ( preg_split( '/\r\n|\r|\n/', (string) ( $row['leistungen'] ?? '' ) ) as $leistung ) : ?>
-						<?php if ( '' !== trim( $leistung ) ) : ?>
-							<li><?php echo esc_html( trim( $leistung ) ); ?></li>
+				<?php if ( '' !== $preis ) : ?>
+					<p class="price">
+						<span class="price-amount"><?php echo esc_html( $preis ); ?></span>
+						<?php if ( '' !== $basis ) : ?>
+							<span class="price-base"><?php echo esc_html( $basis ); ?></span>
 						<?php endif; ?>
-					<?php endforeach; ?>
-				</ul>
-				<?php if ( ! empty( $row['fuer'] ) ) : ?>
-					<div class="fit"><b>Für:</b> <?php echo esc_html( $row['fuer'] ); ?></div>
+					</p>
 				<?php endif; ?>
-			</div>
+				<?php if ( $sichtbar ) : ?>
+					<ul class="paket-highlights">
+						<?php foreach ( $sichtbar as $leistung ) : ?>
+							<li><?php echo esc_html( $leistung ); ?></li>
+						<?php endforeach; ?>
+					</ul>
+				<?php endif; ?>
+				<?php if ( $weitere ) : ?>
+					<details class="paket-more">
+						<summary>
+							<span class="more-open"><?php echo esc_html( '+ ' . count( $weitere ) . ( 1 === count( $weitere ) ? ' weitere Leistung' : ' weitere Leistungen' ) ); ?></span>
+							<span class="more-close">Weniger anzeigen</span>
+						</summary>
+						<ul class="paket-highlights">
+							<?php foreach ( $weitere as $leistung ) : ?>
+								<li><?php echo esc_html( $leistung ); ?></li>
+							<?php endforeach; ?>
+						</ul>
+					</details>
+				<?php endif; ?>
+				<?php if ( ! empty( $row['fuer'] ) ) : ?>
+					<p class="fit"><b>Für:</b> <?php echo esc_html( $row['fuer'] ); ?></p>
+				<?php endif; ?>
+			</article>
 		<?php endforeach; ?>
 	</div>
 	<?php

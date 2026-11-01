@@ -388,8 +388,8 @@ header.tl-intro.tl-intro-hero.tl-intro-split{ --split-pad:clamp(20px, 5vw, 96px)
 /* Preistabellen als umrandete, abgerundete Karte (Apple-"Modelle vergleichen"-Stil): eine zusammenhaengende Box pro Tabelle, dezente Trennlinien innen, grosszuegiges Padding. Radius 24px wie .kcard/.step/.value. overflow-x:auto der .table-scroll schneidet die Ecken mit ab. */
 .basetable .price-card{ background:var(--surface); border:1px solid var(--line); border-radius:24px; margin-top:8px; }
 /* Innere Trennlinien heller als der Kartenrahmen (wie bei Apple), Fallback ohne color-mix: --line. */
-.basetable .price-card, .zusatz-item{ --line-soft:var(--line); }
-@supports (color:color-mix(in srgb, red 50%, transparent)){ .basetable .price-card, .zusatz-item{ --line-soft:color-mix(in srgb, var(--line) 55%, transparent); } }
+.basetable .price-card, .zusatz-item, .paket{ --line-soft:var(--line); }
+@supports (color:color-mix(in srgb, red 50%, transparent)){ .basetable .price-card, .zusatz-item, .paket{ --line-soft:color-mix(in srgb, var(--line) 55%, transparent); } }
 .basetable table{ width:100%; min-width:520px; border-collapse:collapse; }
 .basetable th, .basetable td{ text-align:left; padding:20px 28px; border-bottom:1px solid var(--line-soft, var(--line)); font-size:16px; line-height:1.45; vertical-align:baseline; }
 .basetable th:first-child, .basetable td:first-child{ padding-left:32px; }
@@ -423,18 +423,33 @@ header.tl-intro.tl-intro-hero.tl-intro-split{ --split-pad:clamp(20px, 5vw, 96px)
 .pakete-head{ margin-bottom:44px; }
 .pakete-head h2{ font-size:clamp(24px,4vw,40px); }
 .pakete-head p{ color:var(--ink-soft); font-size:15px; margin:12px 0 0; max-width:60ch; }
-.paket-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:48px 40px; }
-@media (max-width:960px){ .paket-grid{ grid-template-columns:1fr 1fr; gap:44px 32px; } }
-@media (max-width:560px){ .paket-grid{ grid-template-columns:1fr; gap:44px; } }
-.paket{ border-top:2px solid var(--ink); padding:24px 0 0; display:flex; flex-direction:column; position:relative; }
-.paket .tag{ position:absolute; top:-2px; right:0; background:var(--accent); color:var(--accent-ink); font-family:'Inter',Helvetica,Arial,sans-serif; font-size:10px; letter-spacing:.06em; text-transform:uppercase; padding:5px 10px; }
-.paket h3{ font-size:22px; margin-bottom:8px; }
-.paket .price{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:14px; color:var(--accent); font-weight:600; margin-bottom:16px; }
-.paket ul{ list-style:none; margin:0 0 18px; padding:0; flex:1; }
-.paket li{ font-size:14.5px; line-height:1.55; padding:9px 0; border-top:1px solid var(--line); color:var(--ink-soft); }
-.paket li:first-child{ border-top:none; }
-.paket .fit{ font-size:12px; color:var(--ink-soft); border-top:1px solid var(--line); padding-top:14px; }
-.paket .fit b{ color:var(--ink); font-weight:700; }
+/* Pflegepakete als textarme, weisse Apple-Produktkarten auf grauem Grund: Titel, grosser Preis, nur 2 Leistungen sichtbar, Rest per <details> ausklappbar, "Fuer:" als dezente Fusszeile. Radius 24px / Rahmen --line wie .price-card/.zusatz-item. */
+.paket-grid{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; align-items:start; }
+@media (max-width:1180px){ .paket-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:620px){ .paket-grid{ grid-template-columns:minmax(0,1fr); gap:12px; } }
+.paket{ background:var(--surface); border:1px solid var(--line); border-radius:24px; padding:42px 30px 28px; display:flex; flex-direction:column; position:relative; min-width:0; height:100%; box-sizing:border-box; transition:border-color .2s ease; }
+.paket:hover{ border-color:var(--line-strong); }
+.paket .tag{ position:absolute; top:14px; right:14px; background:var(--accent-soft); color:var(--ink); font-family:'Inter',Helvetica,Arial,sans-serif; font-size:11px; font-weight:600; letter-spacing:.02em; padding:5px 11px; border-radius:999px; }
+.paket h3{ font-size:24px; font-weight:600; line-height:1.2; margin:0 0 18px; overflow-wrap:break-word; }
+.paket .price{ font-family:'Inter',Helvetica,Arial,sans-serif; margin:0 0 26px; display:flex; flex-direction:column; gap:4px; }
+.paket .price-amount{ font-size:30px; font-weight:700; letter-spacing:-0.02em; line-height:1.1; color:var(--ink); white-space:nowrap; }
+.paket .price-base{ font-size:13px; color:var(--ink-soft); }
+.paket .paket-highlights{ list-style:none; margin:0; padding:0; }
+.paket .paket-highlights li{ position:relative; font-size:15px; line-height:1.45; color:var(--ink); padding:0 0 0 24px; margin:0 0 10px; }
+.paket .paket-highlights li::before{ content:""; position:absolute; left:3px; top:.32em; width:5px; height:10px; border:solid var(--ink-soft); border-width:0 2px 2px 0; transform:rotate(45deg); }
+.paket .paket-more{ display:flex; flex-direction:column; }
+.paket .paket-more summary{ order:2; list-style:none; cursor:pointer; align-self:flex-start; font-family:'Inter',Helvetica,Arial,sans-serif; font-size:13.5px; font-weight:600; color:var(--ink-soft); padding:4px 0; margin:2px 0 0; border-radius:4px; }
+.paket .paket-more summary::-webkit-details-marker{ display:none; }
+.paket .paket-more summary::after{ content:""; display:inline-block; width:6px; height:6px; margin-left:8px; border:solid currentColor; border-width:0 1.5px 1.5px 0; transform:translateY(-2px) rotate(45deg); transition:transform .2s ease; }
+.paket .paket-more[open] summary::after{ transform:translateY(1px) rotate(-135deg); }
+.paket .paket-more summary:hover{ color:var(--ink); }
+.paket .paket-more summary:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+.paket .paket-more .more-close, .paket .paket-more[open] .more-open{ display:none; }
+.paket .paket-more[open] .more-close{ display:inline; }
+.paket .fit{ font-size:12.5px; line-height:1.5; color:var(--ink-soft); margin:auto 0 0; padding-top:22px; }
+.paket .fit b{ color:var(--ink); font-weight:600; }
+.paket .fit::before{ content:""; display:block; border-top:1px solid var(--line-soft, var(--line)); margin-bottom:14px; }
+@media (max-width:620px){ .paket{ border-radius:20px; padding:36px 22px 22px; } .paket .tag{ top:12px; right:12px; } .paket h3{ font-size:22px; margin-bottom:14px; } .paket .price-amount{ font-size:28px; } .paket .price{ margin-bottom:22px; } }
 .zusatz{ padding-top:88px; }
 .zusatz-head{ margin-bottom:36px; }
 .zusatz-head h2{ font-size:clamp(28px,4vw,48px); }
