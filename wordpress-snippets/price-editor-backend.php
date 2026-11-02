@@ -31,6 +31,19 @@
  * Neue Teppicharten/Leistungen werden einfach als neue Zeile im
  * Formular hinzugefügt (ein paar Leerzeilen stehen immer am Ende
  * bereit), Löschen per Checkbox. Keine Mengenbegrenzung.
+ *
+ * Seit 02.11.2026:
+ * - Sichtbarkeit: Jede Zeile hat ein Feld 'aktiv' (bool). Ausgeblendete
+ *   Zeilen (aktiv = false) bleiben gespeichert und im Admin-Formular
+ *   sichtbar (ausgegraut), fehlen aber in allen Shortcodes, im
+ *   REST-Endpoint /wp-json/care-lab/v1/preise und damit auch im
+ *   Chat-Assistenten und in der Teppich-Erkennung (die rufen dieselben
+ *   cl_get_prices_*()-Getter auf, die standardmäßig nur aktive Zeilen
+ *   liefern). Alte Zeilen ohne 'aktiv'-Feld gelten als aktiv.
+ * - Reihenfolge: ▲/▼-Buttons pro Zeile verschieben die Zeile um eine
+ *   Position (serverseitig, Formular-Submit mit cl_move=tabelle:index:
+ *   up|down, speichert dabei auch alle anderen Änderungen mit). Die
+ *   gespeicherte Reihenfolge ist zugleich die Ausgabereihenfolge.
  */
 
 define( 'CL_MWST_SATZ', 0.19 );
@@ -136,7 +149,27 @@ function cl_format_price( $row ) {
 function cl_hydrate_price_row( $row ) {
 	$row          = cl_ensure_structured_price( $row );
 	$row['preis'] = cl_format_price( $row );
+	$row['aktiv'] = cl_row_is_active( $row );
 	return $row;
+}
+
+/**
+ * Ist die Zeile im Frontend sichtbar? Zeilen ohne 'aktiv'-Feld (alle
+ * vor dem 02.11.2026 gespeicherten) gelten als aktiv, damit bestehende
+ * Preise nicht plötzlich verschwinden.
+ */
+function cl_row_is_active( $row ) {
+	return ! is_array( $row ) || ! array_key_exists( 'aktiv', $row ) || ! empty( $row['aktiv'] );
+}
+
+/**
+ * Filtert ausgeblendete Zeilen heraus (außer fürs Admin-Formular).
+ */
+function cl_filter_active_rows( $rows, $include_inactive = false ) {
+	if ( $include_inactive ) {
+		return array_values( $rows );
+	}
+	return array_values( array_filter( $rows, 'cl_row_is_active' ) );
 }
 
 // ---------------------------------------------------------------------
@@ -243,22 +276,26 @@ function cl_prices_repair_note_default() {
 }
 
 // ---------------------------------------------------------------------
-// Getter (Option, Fallback auf Default, Preistext immer frisch berechnet)
+// Getter (Option, Fallback auf Default, Preistext immer frisch berechnet).
+// Standardmäßig NUR aktive Zeilen — so respektieren Shortcodes, REST,
+// Chat-Assistent und Teppich-Erkennung den Sichtbarkeits-Schalter
+// automatisch. Nur das Admin-Formular holt mit $include_inactive = true
+// auch die ausgeblendeten Zeilen.
 // ---------------------------------------------------------------------
 
-function cl_get_prices_material() {
+function cl_get_prices_material( $include_inactive = false ) {
 	$rows = get_option( 'cl_prices_material', null );
 	$rows = is_array( $rows ) && ! empty( $rows ) ? $rows : cl_prices_material_default();
-	return array_map( 'cl_hydrate_price_row', $rows );
+	return cl_filter_active_rows( array_map( 'cl_hydrate_price_row', $rows ), $include_inactive );
 }
 
-function cl_get_prices_repair() {
+function cl_get_prices_repair( $include_inactive = false ) {
 	$rows = get_option( 'cl_prices_repair', null );
 	$rows = is_array( $rows ) && ! empty( $rows ) ? $rows : cl_prices_repair_default();
-	return array_map( 'cl_hydrate_price_row', $rows );
+	return cl_filter_active_rows( array_map( 'cl_hydrate_price_row', $rows ), $include_inactive );
 }
 
-function cl_get_prices_zusatz() {
+function cl_get_prices_zusatz( $include_inactive = false ) {
 	$rows = get_option( 'cl_prices_zusatz', null );
 	if ( is_array( $rows ) && ! empty( $rows ) ) {
 		$has_kleinkind = false;
@@ -284,23 +321,23 @@ function cl_get_prices_zusatz() {
 	} else {
 		$rows = cl_prices_zusatz_default();
 	}
-	return array_map( 'cl_hydrate_price_row', $rows );
+	return cl_filter_active_rows( array_map( 'cl_hydrate_price_row', $rows ), $include_inactive );
 }
 
-function cl_get_prices_polster() {
+function cl_get_prices_polster( $include_inactive = false ) {
 	$rows = get_option( 'cl_prices_polster', null );
 	$rows = is_array( $rows ) && ! empty( $rows ) ? $rows : cl_prices_polster_default();
-	return array_map( 'cl_hydrate_price_row', $rows );
+	return cl_filter_active_rows( array_map( 'cl_hydrate_price_row', $rows ), $include_inactive );
 }
 
-function cl_get_prices_pflegepakete() {
+function cl_get_prices_pflegepakete( $include_inactive = false ) {
 	$rows = get_option( 'cl_prices_pflegepakete', null );
 	$rows = is_array( $rows ) && ! empty( $rows ) ? $rows : cl_prices_pflegepakete_default();
-	return array_map( function ( $row ) {
+	return cl_filter_active_rows( array_map( function ( $row ) {
 		$row          = cl_hydrate_price_row( $row );
 		$row['preis'] = 'Grundreinigung + ' . $row['preis'];
 		return $row;
-	}, $rows );
+	}, $rows ), $include_inactive );
 }
 
 function cl_get_prices_polster_note() {
@@ -535,10 +572,20 @@ add_action( 'admin_menu', function () {
  * einheit/hinweis) werden immer zusätzlich eingesammelt, der fertige
  * Anzeigetext wird daraus berechnet und als 'preis' mitgespeichert.
  *
- * @param string $post_key    Name des POST-Arrays (z. B. 'material').
- * @param array  $text_fields Reine Text-Feldnamen pro Zeile.
+ * Sichtbarkeit: Pro Zeile wird ein Hidden-Feld aktiv=0 VOR der
+ * Checkbox aktiv=1 gerendert (gleicher Name, PHP nimmt den letzten
+ * Wert) — so kommt pro Zeile immer ein eindeutiger Wert an. Fehlt das
+ * Feld ganz (z. B. veraltetes Formular), gilt die Zeile als aktiv.
+ *
+ * Reihenfolge: $move (aus cl_parse_move_request()) verschiebt die Zeile
+ * mit dem gegebenen Formular-Index um eine Position unter den
+ * verbleibenden (nicht gelöschten, nicht leeren) Zeilen.
+ *
+ * @param string     $post_key    Name des POST-Arrays (z. B. 'material').
+ * @param array      $text_fields Reine Text-Feldnamen pro Zeile.
+ * @param array|null $move        array( 'table', 'index', 'dir' ) oder null.
  */
-function cl_collect_price_rows( $post_key, $text_fields ) {
+function cl_collect_price_rows( $post_key, $text_fields, $move = null ) {
 	if ( ! isset( $_POST[ $post_key ] ) || ! is_array( $_POST[ $post_key ] ) ) {
 		return array();
 	}
@@ -547,8 +594,8 @@ function cl_collect_price_rows( $post_key, $text_fields ) {
 	$valid_einheit  = array( 'm2', 'prozent', 'monat', 'stueck', 'anfrage', 'kostenlos' );
 
 	$clean = array();
-	foreach ( wp_unslash( $_POST[ $post_key ] ) as $row ) {
-		if ( ! empty( $row['delete'] ) ) {
+	foreach ( wp_unslash( $_POST[ $post_key ] ) as $idx => $row ) {
+		if ( ! is_array( $row ) || ! empty( $row['delete'] ) ) {
 			continue;
 		}
 
@@ -563,11 +610,12 @@ function cl_collect_price_rows( $post_key, $text_fields ) {
 			}
 		}
 
-		$entry['praefix']    = in_array( $row['praefix'] ?? '', $valid_praefix, true ) ? $row['praefix'] : '';
+		$entry['praefix']    = in_array( $row['praefix'] ?? '', $valid_praefix, true ) ? ( $row['praefix'] ?? '' ) : '';
 		$entry['betrag']     = isset( $row['betrag'] ) ? sanitize_text_field( $row['betrag'] ) : '';
 		$entry['betrag_bis'] = isset( $row['betrag_bis'] ) ? sanitize_text_field( $row['betrag_bis'] ) : '';
 		$entry['einheit']    = in_array( $row['einheit'] ?? '', $valid_einheit, true ) ? $row['einheit'] : 'm2';
 		$entry['hinweis']    = ! empty( $row['hinweis'] );
+		$entry['aktiv']      = isset( $row['aktiv'] ) ? ( '1' === (string) $row['aktiv'] ) : true;
 		$entry['preis']      = cl_format_price( $entry );
 
 		if ( '' !== $entry['betrag'] || in_array( $entry['einheit'], array( 'anfrage', 'kostenlos' ), true ) ) {
@@ -575,10 +623,88 @@ function cl_collect_price_rows( $post_key, $text_fields ) {
 		}
 
 		if ( $has_content ) {
-			$clean[] = $entry;
+			$clean[ (int) $idx ] = $entry;
 		}
 	}
-	return $clean;
+
+	if ( is_array( $move ) && $move['table'] === $post_key && isset( $clean[ $move['index'] ] ) ) {
+		$keys   = array_keys( $clean );
+		$pos    = array_search( $move['index'], $keys, true );
+		$target = 'up' === $move['dir'] ? $pos - 1 : $pos + 1;
+		$clean  = array_values( $clean );
+		if ( false !== $pos && $target >= 0 && $target < count( $clean ) ) {
+			$tmp              = $clean[ $pos ];
+			$clean[ $pos ]    = $clean[ $target ];
+			$clean[ $target ] = $tmp;
+		}
+	}
+
+	return array_values( $clean );
+}
+
+/**
+ * Liest den Sortier-Button aus (name="cl_move", value="tabelle:index:up|down").
+ * Gibt null zurück, wenn kein (gültiger) Sortier-Button geklickt wurde.
+ */
+function cl_parse_move_request() {
+	if ( empty( $_POST['cl_move'] ) || ! is_string( $_POST['cl_move'] ) ) {
+		return null;
+	}
+	$raw = sanitize_text_field( wp_unslash( $_POST['cl_move'] ) );
+	if ( ! preg_match( '/^(material|repair|zusatz|polster|pflegepakete):(\d+):(up|down)$/', $raw, $m ) ) {
+		return null;
+	}
+	return array(
+		'table' => $m[1],
+		'index' => (int) $m[2],
+		'dir'   => $m[3],
+	);
+}
+
+/**
+ * Rendert die beiden Steuer-Zellen einer Zeile: ▲/▼ (Reihenfolge) und
+ * die Sichtbar-Checkbox. Leere Zusatzzeilen ($i >= $count) bekommen
+ * keine Pfeile; erste/letzte echte Zeile bekommt den jeweils sinnlosen
+ * Pfeil deaktiviert.
+ *
+ * @param string $key   Tabellen-Schlüssel (material, repair, …).
+ * @param int    $i     Zeilen-Index im Formular.
+ * @param int    $count Anzahl echter (gespeicherter) Zeilen.
+ * @param array  $row   Zeilendaten.
+ * @param string $which 'move' oder 'aktiv'.
+ */
+function cl_row_control_cell( $key, $i, $count, $row, $which ) {
+	ob_start();
+	if ( 'move' === $which ) {
+		echo '<td class="cl-col-move">';
+		if ( $i < $count ) {
+			$anchor = '#cl-tabelle-' . $key;
+			printf(
+				'<button type="submit" class="button button-small cl-move" name="cl_move" value="%1$s" formaction="%2$s" title="Eine Position nach oben"%3$s>▲</button> ',
+				esc_attr( $key . ':' . $i . ':up' ),
+				esc_attr( $anchor ),
+				0 === $i ? ' disabled' : ''
+			);
+			printf(
+				'<button type="submit" class="button button-small cl-move" name="cl_move" value="%1$s" formaction="%2$s" title="Eine Position nach unten"%3$s>▼</button>',
+				esc_attr( $key . ':' . $i . ':down' ),
+				esc_attr( $anchor ),
+				( $count - 1 ) === $i ? ' disabled' : ''
+			);
+		}
+		echo '</td>';
+	} else {
+		$name = $key . '[' . $i . '][aktiv]';
+		echo '<td class="cl-col-aktiv">';
+		printf( '<input type="hidden" name="%s" value="0">', esc_attr( $name ) );
+		printf(
+			'<label title="Haken raus = auf der Website ausgeblendet, bleibt aber gespeichert"><input type="checkbox" class="cl-aktiv" name="%s" value="1" %s> sichtbar</label>',
+			esc_attr( $name ),
+			checked( cl_row_is_active( $row ), true, false )
+		);
+		echo '</td>';
+	}
+	return ob_get_clean();
 }
 
 /**
@@ -621,22 +747,34 @@ function cl_preise_page() {
 	}
 
 	if ( isset( $_POST['cl_preise_nonce'] ) && wp_verify_nonce( $_POST['cl_preise_nonce'], 'cl_preise_save' ) ) {
-		update_option( 'cl_prices_material', cl_collect_price_rows( 'material', array( 'art', 'verfahren' ) ) );
-		update_option( 'cl_prices_repair', cl_collect_price_rows( 'repair', array( 'leistung' ) ) );
-		update_option( 'cl_prices_zusatz', cl_collect_price_rows( 'zusatz', array( 'titel', 'beschreibung' ) ) );
-		update_option( 'cl_prices_polster', cl_collect_price_rows( 'polster', array( 'stueck' ) ) );
-		update_option( 'cl_prices_pflegepakete', cl_collect_price_rows( 'pflegepakete', array( 'titel', 'tag', 'leistungen', 'fuer' ) ) );
+		$move = cl_parse_move_request();
+		update_option( 'cl_prices_material', cl_collect_price_rows( 'material', array( 'art', 'verfahren' ), $move ) );
+		update_option( 'cl_prices_repair', cl_collect_price_rows( 'repair', array( 'leistung' ), $move ) );
+		update_option( 'cl_prices_zusatz', cl_collect_price_rows( 'zusatz', array( 'titel', 'beschreibung' ), $move ) );
+		update_option( 'cl_prices_polster', cl_collect_price_rows( 'polster', array( 'stueck' ), $move ) );
+		update_option( 'cl_prices_pflegepakete', cl_collect_price_rows( 'pflegepakete', array( 'titel', 'tag', 'leistungen', 'fuer' ), $move ) );
 		update_option( 'cl_prices_material_note', sanitize_text_field( wp_unslash( $_POST['material_note'] ?? '' ) ) );
 		update_option( 'cl_prices_repair_note', sanitize_text_field( wp_unslash( $_POST['repair_note'] ?? '' ) ) );
 		update_option( 'cl_prices_polster_note', sanitize_text_field( wp_unslash( $_POST['polster_note'] ?? '' ) ) );
+		if ( $move ) {
+			echo '<div class="notice notice-success is-dismissible"><p>Reihenfolge geändert und alle Eingaben gespeichert.</p></div>';
+		}
 		echo '<div class="notice notice-success is-dismissible"><p>Preise gespeichert. Änderungen sind sofort auf der Seite „Leistungen & Preise" und im Buchungs-Tool sichtbar.</p></div>';
 	}
 
-	$material     = cl_get_prices_material();
-	$repair       = cl_get_prices_repair();
-	$zusatz       = cl_get_prices_zusatz();
-	$polster      = cl_get_prices_polster();
-	$pflegepakete = cl_get_prices_pflegepakete();
+	// Admin sieht ALLE Zeilen, auch ausgeblendete.
+	$material     = cl_get_prices_material( true );
+	$repair       = cl_get_prices_repair( true );
+	$zusatz       = cl_get_prices_zusatz( true );
+	$polster      = cl_get_prices_polster( true );
+	$pflegepakete = cl_get_prices_pflegepakete( true );
+
+	// Anzahl echter Zeilen (für ▲/▼; die Leerzeilen unten bekommen keine Pfeile).
+	$n_material     = count( $material );
+	$n_repair       = count( $repair );
+	$n_zusatz       = count( $zusatz );
+	$n_polster      = count( $polster );
+	$n_pflegepakete = count( $pflegepakete );
 
 	// Ein paar Leerzeilen am Ende zum Hinzufügen neuer Teppicharten/Leistungen.
 	for ( $i = 0; $i < 3; $i++ ) {
@@ -649,19 +787,46 @@ function cl_preise_page() {
 	?>
 	<div class="wrap">
 		<h1>Preise</h1>
-		<p>Diese Preise erscheinen live auf <a href="<?php echo esc_url( home_url( '/leistungen-pakete/' ) ); ?>" target="_blank">/leistungen-pakete/</a> und im Buchungs-Tool. Betrag eintippen, Einheit auswählen — der fertige Preistext wird automatisch zusammengesetzt. Eingaben sind Brutto-Preise (inkl. MwSt.), daneben wird zur Kontrolle der Netto-Betrag (19 % MwSt.) angezeigt. Neue Zeile: einfach eine der leeren Zeilen unten ausfüllen. Zeile löschen: Haken bei „Löschen" setzen und speichern. Leere Zeilen werden beim Speichern automatisch verworfen.</p>
+		<p>Diese Preise erscheinen live auf <a href="<?php echo esc_url( home_url( '/leistungen-pakete/' ) ); ?>" target="_blank">/leistungen-pakete/</a> und im Buchungs-Tool. Betrag eintippen, Einheit auswählen — der fertige Preistext wird automatisch zusammengesetzt. Eingaben sind Brutto-Preise (inkl. MwSt.), daneben wird zur Kontrolle der Netto-Betrag (19 % MwSt.) angezeigt. Neue Zeile: einfach eine der leeren Zeilen unten ausfüllen. Leere Zeilen werden beim Speichern automatisch verworfen.</p>
+
+		<div class="cl-legende">
+			<strong>So funktionieren die Felder</strong> (gilt für alle Tabellen auf dieser Seite)
+			<dl>
+				<dt>▲ / ▼</dt>
+				<dd>Zeile eine Position nach oben/unten schieben. Die Reihenfolge hier ist auch die Reihenfolge auf der Website. Ein Klick speichert dabei alle anderen Eingaben gleich mit.</dd>
+				<dt>genau</dt>
+				<dd>Fester Preis, z. B. „9,90 €/m²".</dd>
+				<dt>ab</dt>
+				<dd>Startpreis, der Endpreis kann je nach Teppich höher liegen, z. B. „ab 24,99 €/m²".</dd>
+				<dt>Aufschlag +</dt>
+				<dd>Zuschlag/Aufpreis zu einem Grundpreis, z. B. „+10,90 €/m²" oder „+30 %".</dd>
+				<dt>Betrag – bis</dt>
+				<dd>„bis" nur ausfüllen, wenn es eine Spanne ist, z. B. „15–30 €/Monat". Sonst leer lassen.</dd>
+				<dt>Kästchen *</dt>
+				<dd>Hängt ein Sternchen an den Preis. Es verweist auf den Hinweistext unter der Tabelle (z. B. „Richtwert, wird nach Begutachtung final bestätigt").</dd>
+				<dt>sichtbar</dt>
+				<dd>Haken drin = Preis wird auf der Website, im Buchungs-Tool und im Chat-Assistenten angezeigt. Haken raus = ausgeblendet, aber nicht gelöscht (Zeile erscheint hier ausgegraut und lässt sich jederzeit wieder einschalten).</dd>
+				<dt>Löschen</dt>
+				<dd>Entfernt die Zeile beim Speichern endgültig.</dd>
+			</dl>
+		</div>
+
 		<form method="post">
 			<?php wp_nonce_field( 'cl_preise_save', 'cl_preise_nonce' ); ?>
+			<?php // Unsichtbarer Standard-Button: Enter in einem Textfeld soll normal speichern, nicht den ersten ▲-Button auslösen. ?>
+			<button type="submit" name="cl_save_default" value="1" tabindex="-1" aria-hidden="true" style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;">Speichern</button>
 
-			<h2>Grundreinigung nach Material</h2>
-			<table class="widefat striped" style="max-width:1400px;">
-				<thead><tr><th>Teppichart</th><th>Verfahren</th><th style="min-width:380px;">Preis</th><th>Löschen</th></tr></thead>
+			<h2 id="cl-tabelle-material">Grundreinigung nach Material</h2>
+			<table class="widefat striped cl-preise-table" style="max-width:1400px;">
+				<thead><tr><th class="cl-col-move">Reihenfolge</th><th>Teppichart</th><th>Verfahren</th><th style="min-width:380px;">Preis</th><th>Sichtbar</th><th>Löschen</th></tr></thead>
 				<tbody>
 					<?php foreach ( $material as $i => $row ) : ?>
-					<tr>
+					<tr class="<?php echo cl_row_is_active( $row ) ? '' : 'cl-row-inactive'; ?>">
+						<?php echo cl_row_control_cell( 'material', $i, $n_material, $row, 'move' ); ?>
 						<td><input type="text" name="material[<?php echo $i; ?>][art]" value="<?php echo esc_attr( $row['art'] ); ?>" class="regular-text" style="width:100%;"></td>
 						<td><input type="text" name="material[<?php echo $i; ?>][verfahren]" value="<?php echo esc_attr( $row['verfahren'] ); ?>" style="width:100%;"></td>
 						<td><?php echo cl_price_fields_html( "material[$i]", $row ); ?></td>
+						<?php echo cl_row_control_cell( 'material', $i, $n_material, $row, 'aktiv' ); ?>
 						<td><input type="checkbox" name="material[<?php echo $i; ?>][delete]" value="1"></td>
 					</tr>
 					<?php endforeach; ?>
@@ -672,14 +837,16 @@ function cl_preise_page() {
 				<input type="text" name="material_note" value="<?php echo esc_attr( cl_get_prices_material_note() ); ?>" style="width:100%;max-width:700px;"></label>
 			</p>
 
-			<h2 style="margin-top:36px;">Antik-Reparatur &amp; Teppichreparatur</h2>
-			<table class="widefat striped" style="max-width:1200px;">
-				<thead><tr><th>Leistung</th><th style="min-width:380px;">Preis</th><th>Löschen</th></tr></thead>
+			<h2 id="cl-tabelle-repair" style="margin-top:36px;">Antik-Reparatur &amp; Teppichreparatur</h2>
+			<table class="widefat striped cl-preise-table" style="max-width:1200px;">
+				<thead><tr><th class="cl-col-move">Reihenfolge</th><th>Leistung</th><th style="min-width:380px;">Preis</th><th>Sichtbar</th><th>Löschen</th></tr></thead>
 				<tbody>
 					<?php foreach ( $repair as $i => $row ) : ?>
-					<tr>
+					<tr class="<?php echo cl_row_is_active( $row ) ? '' : 'cl-row-inactive'; ?>">
+						<?php echo cl_row_control_cell( 'repair', $i, $n_repair, $row, 'move' ); ?>
 						<td><input type="text" name="repair[<?php echo $i; ?>][leistung]" value="<?php echo esc_attr( $row['leistung'] ); ?>" style="width:100%;"></td>
 						<td><?php echo cl_price_fields_html( "repair[$i]", $row ); ?></td>
+						<?php echo cl_row_control_cell( 'repair', $i, $n_repair, $row, 'aktiv' ); ?>
 						<td><input type="checkbox" name="repair[<?php echo $i; ?>][delete]" value="1"></td>
 					</tr>
 					<?php endforeach; ?>
@@ -690,29 +857,33 @@ function cl_preise_page() {
 				<input type="text" name="repair_note" value="<?php echo esc_attr( cl_get_prices_repair_note() ); ?>" style="width:100%;max-width:700px;"></label>
 			</p>
 
-			<h2 style="margin-top:36px;">Einzelleistungen</h2>
-			<table class="widefat striped" style="max-width:1500px;">
-				<thead><tr><th>Titel</th><th>Beschreibung</th><th style="min-width:380px;">Preis</th><th>Löschen</th></tr></thead>
+			<h2 id="cl-tabelle-zusatz" style="margin-top:36px;">Einzelleistungen</h2>
+			<table class="widefat striped cl-preise-table" style="max-width:1500px;">
+				<thead><tr><th class="cl-col-move">Reihenfolge</th><th>Titel</th><th>Beschreibung</th><th style="min-width:380px;">Preis</th><th>Sichtbar</th><th>Löschen</th></tr></thead>
 				<tbody>
 					<?php foreach ( $zusatz as $i => $row ) : ?>
-					<tr>
+					<tr class="<?php echo cl_row_is_active( $row ) ? '' : 'cl-row-inactive'; ?>">
+						<?php echo cl_row_control_cell( 'zusatz', $i, $n_zusatz, $row, 'move' ); ?>
 						<td><input type="text" name="zusatz[<?php echo $i; ?>][titel]" value="<?php echo esc_attr( $row['titel'] ); ?>" style="width:100%;"></td>
 						<td><input type="text" name="zusatz[<?php echo $i; ?>][beschreibung]" value="<?php echo esc_attr( $row['beschreibung'] ); ?>" style="width:100%;"></td>
 						<td><?php echo cl_price_fields_html( "zusatz[$i]", $row ); ?></td>
+						<?php echo cl_row_control_cell( 'zusatz', $i, $n_zusatz, $row, 'aktiv' ); ?>
 						<td><input type="checkbox" name="zusatz[<?php echo $i; ?>][delete]" value="1"></td>
 					</tr>
 					<?php endforeach; ?>
 				</tbody>
 			</table>
 
-			<h2 style="margin-top:36px;">Polsterreinigung</h2>
-			<table class="widefat striped" style="max-width:1200px;">
-				<thead><tr><th>Stück</th><th style="min-width:380px;">Preis</th><th>Löschen</th></tr></thead>
+			<h2 id="cl-tabelle-polster" style="margin-top:36px;">Polsterreinigung</h2>
+			<table class="widefat striped cl-preise-table" style="max-width:1200px;">
+				<thead><tr><th class="cl-col-move">Reihenfolge</th><th>Stück</th><th style="min-width:380px;">Preis</th><th>Sichtbar</th><th>Löschen</th></tr></thead>
 				<tbody>
 					<?php foreach ( $polster as $i => $row ) : ?>
-					<tr>
+					<tr class="<?php echo cl_row_is_active( $row ) ? '' : 'cl-row-inactive'; ?>">
+						<?php echo cl_row_control_cell( 'polster', $i, $n_polster, $row, 'move' ); ?>
 						<td><input type="text" name="polster[<?php echo $i; ?>][stueck]" value="<?php echo esc_attr( $row['stueck'] ); ?>" style="width:100%;"></td>
 						<td><?php echo cl_price_fields_html( "polster[$i]", $row ); ?></td>
+						<?php echo cl_row_control_cell( 'polster', $i, $n_polster, $row, 'aktiv' ); ?>
 						<td><input type="checkbox" name="polster[<?php echo $i; ?>][delete]" value="1"></td>
 					</tr>
 					<?php endforeach; ?>
@@ -723,18 +894,20 @@ function cl_preise_page() {
 				<input type="text" name="polster_note" value="<?php echo esc_attr( cl_get_prices_polster_note() ); ?>" style="width:100%;max-width:700px;"></label>
 			</p>
 
-			<h2 style="margin-top:36px;">Pflegepakete</h2>
+			<h2 id="cl-tabelle-pflegepakete" style="margin-top:36px;">Pflegepakete</h2>
 			<p class="description">Erscheinen als Kästen auf /leistungen-pakete/ (unter "Pflegepakete"). Betrag/Einheit wie überall, der Preis wird automatisch mit "Grundreinigung + " davor angezeigt. "Leistungen" ist eine Liste, eine Zeile pro Punkt.</p>
-			<table class="widefat striped" style="max-width:1500px;">
-				<thead><tr><th>Titel</th><th>Badge (optional, z. B. "Beliebt")</th><th>Leistungen (eine pro Zeile)</th><th>Für (Zielgruppe)</th><th style="min-width:380px;">Aufpreis</th><th>Löschen</th></tr></thead>
+			<table class="widefat striped cl-preise-table" style="max-width:1500px;">
+				<thead><tr><th class="cl-col-move">Reihenfolge</th><th>Titel</th><th>Badge (optional, z. B. "Beliebt")</th><th>Leistungen (eine pro Zeile)</th><th>Für (Zielgruppe)</th><th style="min-width:380px;">Aufpreis</th><th>Sichtbar</th><th>Löschen</th></tr></thead>
 				<tbody>
 					<?php foreach ( $pflegepakete as $i => $row ) : ?>
-					<tr>
+					<tr class="<?php echo cl_row_is_active( $row ) ? '' : 'cl-row-inactive'; ?>">
+						<?php echo cl_row_control_cell( 'pflegepakete', $i, $n_pflegepakete, $row, 'move' ); ?>
 						<td><input type="text" name="pflegepakete[<?php echo $i; ?>][titel]" value="<?php echo esc_attr( $row['titel'] ); ?>" style="width:100%;"></td>
 						<td><input type="text" name="pflegepakete[<?php echo $i; ?>][tag]" value="<?php echo esc_attr( $row['tag'] ?? '' ); ?>" style="width:100%;"></td>
 						<td><textarea name="pflegepakete[<?php echo $i; ?>][leistungen]" rows="4" style="width:100%;"><?php echo esc_textarea( $row['leistungen'] ?? '' ); ?></textarea></td>
 						<td><input type="text" name="pflegepakete[<?php echo $i; ?>][fuer]" value="<?php echo esc_attr( $row['fuer'] ?? '' ); ?>" style="width:100%;"></td>
 						<td><?php echo cl_price_fields_html( "pflegepakete[$i]", $row ); ?></td>
+						<?php echo cl_row_control_cell( 'pflegepakete', $i, $n_pflegepakete, $row, 'aktiv' ); ?>
 						<td><input type="checkbox" name="pflegepakete[<?php echo $i; ?>][delete]" value="1"></td>
 					</tr>
 					<?php endforeach; ?>
@@ -744,8 +917,27 @@ function cl_preise_page() {
 			<?php submit_button( 'Preise speichern' ); ?>
 		</form>
 	</div>
+	<style>
+		.cl-legende { background:#f6f7f7; border:1px solid #dcdcde; border-radius:4px; padding:10px 14px; margin:12px 0 20px; max-width:1000px; font-size:12px; color:#50575e; }
+		.cl-legende dl { display:grid; grid-template-columns:max-content 1fr; gap:3px 14px; margin:8px 0 0; }
+		.cl-legende dt { font-weight:600; color:#1d2327; }
+		.cl-legende dd { margin:0; }
+		.cl-preise-table .cl-col-move { width:72px; white-space:nowrap; }
+		.cl-preise-table .cl-move { min-height:24px; line-height:1; padding:0 6px; }
+		.cl-preise-table .cl-col-aktiv { white-space:nowrap; }
+		.cl-preise-table tr.cl-row-inactive td { opacity:.45; }
+		.cl-preise-table tr.cl-row-inactive td.cl-col-aktiv,
+		.cl-preise-table tr.cl-row-inactive td.cl-col-move { opacity:1; }
+		.cl-preise-table tr.cl-row-inactive td.cl-col-aktiv label::after { content:" (ausgeblendet)"; color:#b32d2e; }
+	</style>
 	<script>
 	(function(){
+		document.querySelectorAll('.cl-preise-table .cl-aktiv').forEach(function(cb){
+			cb.addEventListener('change', function(){
+				var tr = cb.closest('tr');
+				if (tr) tr.classList.toggle('cl-row-inactive', !cb.checked);
+			});
+		});
 		function recalc(el){
 			var group = el.closest('.cl-price-group');
 			if (!group) return;
