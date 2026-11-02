@@ -564,6 +564,53 @@ header.tl-intro.tl-intro-hero.tl-intro-split{ --split-pad:clamp(20px, 5vw, 96px)
 .faq-a p{ padding:0 0 24px; font-size:15px; line-height:1.7; color:var(--ink-soft); max-width:70ch; margin:0; }
 .faq-a a{ color:var(--ink); font-weight:600; }
 
+/* ---------- Fleckenlexikon & FAQ (eine Seite, /fleckenlexikon/) ---------- */
+/* Seit 02.11.2026 eine gemeinsame Seite. Apple-Karten-Stil wie .price-card/.paket/.zusatz-item: 1px Rahmen --line, Radius 24px (Handy 20px), grosszuegiges Padding. Gruppen-Titel links, Karten rechts (ab 1025px), darunter gestapelt. Flecken als Kartenraster, FAQ als einzelne Akkordeon-Karten mit nativem <details>/<summary> (kein JS). Die alten .faq-*-Klassen oben werden von keiner Seite mehr genutzt. */
+.help-jump{ display:flex; flex-wrap:wrap; gap:10px; margin-top:28px; }
+.help-jump a{ display:inline-flex; align-items:center; font-family:'Inter',Helvetica,Arial,sans-serif; font-size:14px; font-weight:600; line-height:1.2; color:var(--ink); text-decoration:none; padding:11px 20px; border:1px solid var(--line); border-radius:999px; background:var(--surface); transition:border-color .2s ease; }
+.help-jump a:hover{ border-color:var(--line-strong); }
+.help-jump a:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+.help-head{ margin-bottom:clamp(36px,4.5vw,64px); }
+.help-head h2{ font-size:clamp(24px,4vw,40px); }
+.help-head > p:not(.sec-label){ color:var(--ink-soft); font-size:15px; line-height:1.65; margin:12px 0 0; max-width:60ch; }
+.help-group{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2.4fr); gap:20px clamp(32px,4vw,72px); align-items:start; }
+.help-group + .help-group{ margin-top:clamp(40px,5vw,64px); padding-top:clamp(40px,5vw,64px); border-top:1px solid var(--line); }
+.tl-page h3.help-group-title{ font-size:clamp(19px,1.7vw,22px); font-weight:600; line-height:1.3; letter-spacing:-0.01em; margin:0; padding-top:4px; }
+.help-faq .help-group-title{ padding-top:22px; }
+@media (max-width:1024px){ .help-group{ grid-template-columns:minmax(0,1fr); } .help-faq .help-group-title{ padding-top:0; } }
+.fleck-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; min-width:0; }
+@media (max-width:620px){ .fleck-grid{ grid-template-columns:minmax(0,1fr); gap:12px; } }
+.fleck-card{ background:var(--surface); border:1px solid var(--line); border-radius:24px; padding:32px 30px 30px; min-width:0; transition:border-color .2s ease; }
+.fleck-card:hover{ border-color:var(--line-strong); }
+.fleck-card h4{ font-family:'Inter',Helvetica,Arial,sans-serif; font-size:17.5px; font-weight:600; line-height:1.35; letter-spacing:-0.01em; margin:0 0 12px; color:var(--ink); overflow-wrap:break-word; }
+.fleck-card p{ font-size:15px; line-height:1.65; color:var(--ink-soft); margin:0; }
+.help-page .help-note{ border-radius:24px; margin-top:clamp(40px,5vw,64px); }
+.help-faq{ background:var(--surface-2); }
+.faq-cards{ display:flex; flex-direction:column; gap:12px; min-width:0; }
+.faq-card{ background:var(--surface); border:1px solid var(--line); border-radius:24px; min-width:0; transition:border-color .2s ease; }
+.faq-card:hover{ border-color:var(--line-strong); }
+.faq-card summary{ list-style:none; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:20px; padding:24px 28px; font-family:'Inter',Helvetica,Arial,sans-serif; font-size:16.5px; font-weight:600; line-height:1.4; color:var(--ink); border-radius:24px; overflow-wrap:break-word; }
+.faq-card summary::-webkit-details-marker{ display:none; }
+.faq-card summary::marker{ content:""; }
+.faq-card summary:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+.faq-card summary > span:first-child{ min-width:0; }
+.faq-icon{ flex:none; position:relative; width:30px; height:30px; border-radius:50%; background:var(--accent-soft); }
+.faq-icon::before, .faq-icon::after{ content:""; position:absolute; left:50%; top:50%; width:12px; height:1.5px; margin:-0.75px 0 0 -6px; background:var(--ink); border-radius:1px; transition:transform .2s ease; }
+.faq-icon::after{ transform:rotate(90deg); }
+.faq-card[open] .faq-icon::after{ transform:rotate(0deg); }
+.faq-card-a{ padding:0 28px 26px; }
+.faq-card-a p{ margin:0; font-size:15px; line-height:1.7; color:var(--ink-soft); max-width:68ch; }
+@media (max-width:620px){
+  .fleck-card{ border-radius:20px; padding:24px 22px 22px; }
+  .fleck-card h4{ font-size:16.5px; margin-bottom:10px; }
+  .faq-card, .faq-card summary{ border-radius:20px; }
+  .faq-card summary{ padding:20px 20px 20px 22px; font-size:15.5px; gap:16px; }
+  .faq-icon{ width:28px; height:28px; }
+  .faq-card-a{ padding:0 22px 22px; }
+  .help-page .help-note{ border-radius:20px; padding:24px 22px; }
+}
+@media (prefers-reduced-motion: reduce){ .faq-icon::before, .faq-icon::after, .fleck-card, .faq-card, .help-jump a{ transition:none; } }
+
 /* ---------- Journal / Artikel ---------- */
 .article-body{ padding:clamp(56px,8vw,96px) 0 32px; }
 .article-body .container{ max-width:760px; }
