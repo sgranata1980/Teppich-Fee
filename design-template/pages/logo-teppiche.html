@@ -1,5 +1,5 @@
 <div class="tl-page alignfull">
-<header class="tl-intro">
+<header class="tl-intro tl-intro-hero" style="background-image:url('__HERO_LOGO_TEPPICHE__');background-color:#171A20;">
   <div class="container">
     <p class="mono">Für Gastronomie &amp; Einzelhandel</p>
     <h1>Der Teppich als Werbefläche, nicht nur als Fußabtreter.</h1>
@@ -50,6 +50,17 @@
   </div>
 </section>
 
+<section class="gastro-erfahrung">
+  <div class="container ge-grid">
+    <img class="ge-portrait" src="https://teppichlabor.de/wp-content/uploads/2026/10/stefano-portrait-edel.jpg" alt="Stefano Granata, Marke, Vertrieb und Marketing bei Care Lab" width="320" height="400" loading="lazy" decoding="async" />
+    <div class="ge-text">
+      <p class="mono" style="color:var(--ink-soft)">Erfahrung</p>
+      <h2>Gastronomie kennen wir nicht nur vom Boden aus.</h2>
+      <p>Stefano Granata, bei Care Lab für Marke, Vertrieb und Marketing zuständig, kommt selbst aus der Branche. In jungen Jahren hat er eigene Eisdielen geführt, später Veranstaltungen organisiert und im Großhandel Gastronomiebetriebe beliefert, dazu kamen eigene Supermärkte und seine Arbeit im Marketing. Er kennt die Gastronomie deshalb nicht aus der Sicht des Dienstleisters, sondern aus der des Unternehmers: der volle Eingang am Wochenende, die knappe Kalkulation, der Gast, der in den ersten Sekunden entscheidet, ob er sich wohlfühlt. Mit diesem Blick beraten wir dich auch bei deinem Logo-Teppich.</p>
+    </div>
+  </div>
+</section>
+
 <section class="b2b-process">
   <div class="container">
     <div class="b2b-process-head">
@@ -87,11 +98,12 @@
       <p class="mono" style="color:var(--ink-soft)">Preisbeispiel</p>
       <h2>Damit du eine erste Größenordnung hast.</h2>
     </div>
-    <div class="stats">
-      <div class="stat"><span class="v" style="font-size:26px;">ab 71,34 €</span><span class="l">60×40 cm, Einstiegsformat</span></div>
+    <div class="stats price-stats">
+      <div class="stat"><span class="v" style="font-size:26px;">ab 71,34 €</span><span class="l">60×40 cm, Einzelhandel, Einstiegsformat</span></div>
+      <div class="stat stat-soon"><span class="v" style="font-size:22px;">Gastronomie <span class="soon">Bald verfügbar</span></span><span class="l">Eingangsläufer &amp; Fußabtreter, Preise in Vorbereitung</span></div>
     </div>
     <div class="honest-box" style="margin-top:24px;">
-      <b>Und die anderen Größen?</b> Ab 100×60 cm rechnen wir Preis und Material für dich individuell durch, je nach Format, Qualität und Auflage.
+      <b>Und die anderen Größen?</b> Ab 100×60 cm rechnen wir Preis und Material für dich individuell durch, je nach Format, Qualität und Auflage. Das Angebot für Eingangsläufer und Fußabtreter in der Gastronomie stellen wir gerade zusammen, die Preise folgen, sobald es steht. Anfragen kannst du trotzdem schon jetzt.
     </div>
   </div>
 </section>
@@ -103,4 +115,15 @@
     <a href="/impressum-kontakt/" class="btn">Logo-Teppich anfragen →</a>
   </div>
 </section>
+
+<style>
+.gastro-erfahrung{ border-top:1px solid var(--line); }
+.gastro-erfahrung .ge-grid{ display:grid; grid-template-columns:minmax(0,220px) minmax(0,1fr); gap:clamp(28px,5vw,64px); align-items:start; }
+.gastro-erfahrung .ge-portrait{ width:100%; height:auto; aspect-ratio:4/5; object-fit:cover; object-position:50% 25%; border-radius:20px; border:1px solid var(--line); display:block; }
+.gastro-erfahrung .ge-text h2{ font-size:clamp(28px,4vw,44px); margin:0 0 18px; }
+.gastro-erfahrung .ge-text p:not(.mono){ font-size:16px; line-height:1.7; color:var(--ink); margin:0; max-width:62ch; }
+@media (max-width:700px){ .gastro-erfahrung .ge-grid{ grid-template-columns:minmax(0,1fr); gap:24px; } .gastro-erfahrung .ge-portrait{ width:120px; border-radius:16px; } }
+@media (max-width:480px){ .price-stats .stat{ flex-basis:100%; border-right:none; padding-left:0; padding-right:0; } .price-stats .stat + .stat{ border-top:1px solid var(--line); } }
+.stat-soon .soon{ display:inline-block; font-family:Inter,Helvetica,Arial,sans-serif; font-size:10px; font-weight:500; letter-spacing:.06em; line-height:1.4; text-transform:uppercase; color:#4D78FF; border:1px solid #4D78FF; border-radius:9999px; padding:3px 9px; margin-left:8px; vertical-align:middle; white-space:nowrap; }
+</style>
 </div>
