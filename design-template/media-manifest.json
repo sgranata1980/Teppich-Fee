@@ -108,8 +108,12 @@
     "https://teppichlabor.de/wp-content/uploads/2026/09/carpet-gastro-v2.png"
   ],
   "hero_leistungen": [
-    232,
-    "/wp-content/uploads/2026/09/hero-leistungen-v2.png"
+    650,
+    "/wp-content/uploads/2026/11/leistungen-hero-video-poster.jpg"
+  ],
+  "hero_leistungen_video": [
+    649,
+    "/wp-content/uploads/2026/11/leistungen-hero-video.mp4"
   ],
   "hero_abholung": [
     202,
