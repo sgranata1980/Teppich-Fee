@@ -122,6 +122,10 @@ function cl_auftrag_details_box( $post ) {
 	?>
 	<table class="form-table">
 		<tr><th>Kundentyp</th><td><?php echo esc_html( $kundentyp ); ?></td></tr>
+		<?php $kita_name = get_post_meta( $post->ID, 'cl_kita_name', true ); ?>
+		<?php if ( $kita_name ) : ?>
+		<tr><th>Kita</th><td><?php echo esc_html( $kita_name ); ?> (Anfrage über /kita/)</td></tr>
+		<?php endif; ?>
 		<tr><th>Name</th><td><?php echo esc_html( $name ); ?></td></tr>
 		<tr><th>Telefon</th><td><?php echo esc_html( $tel ); ?></td></tr>
 		<tr><th>E-Mail</th><td><?php echo esc_html( $email ); ?></td></tr>
@@ -242,6 +246,11 @@ function cl_handle_anfrage_request( WP_REST_Request $request ) {
 	$honeypot = (string) $request->get_param( 'website' );
 	if ( '' !== trim( $honeypot ) ) {
 		return array( 'status' => 'ok', 'id' => 0 );
+	}
+
+	// Kita-Landingpage (/kita/) schickt eine schlanke Anfrage ohne Teppichliste.
+	if ( 'kita' === (string) $request->get_param( 'anfrage_typ' ) ) {
+		return cl_handle_kita_anfrage( $request );
 	}
 
 	$kundentyp = sanitize_text_field( (string) $request->get_param( 'kundentyp' ) );
@@ -387,6 +396,74 @@ function cl_handle_anfrage_request( WP_REST_Request $request ) {
 	if ( is_email( $email ) ) {
 		wp_mail( $email, 'Deine Anfrage bei Care Lab ist eingegangen', implode( "\n", $customer_lines ) );
 	}
+
+	return array( 'status' => 'ok', 'id' => $post_id );
+}
+
+/**
+ * Kita-Anfrage von der Kampagnenseite /kita/ (seit 02.11.2026).
+ * Gleicher Endpoint und gleicher Post Type wie das Buchungs-Tool, nur
+ * ohne Teppichliste/Preisschätzung: Name der Kita, Ansprechperson,
+ * E-Mail, Telefon (optional), Nachricht/Wunschtermin.
+ */
+function cl_handle_kita_anfrage( WP_REST_Request $request ) {
+	$kita  = sanitize_text_field( (string) $request->get_param( 'kita_name' ) );
+	$name  = sanitize_text_field( (string) $request->get_param( 'name' ) );
+	$tel   = sanitize_text_field( (string) $request->get_param( 'tel' ) );
+	$email = sanitize_email( (string) $request->get_param( 'email' ) );
+	$msg   = sanitize_textarea_field( (string) $request->get_param( 'msg' ) );
+
+	if ( '' === $kita || '' === $name || ! is_email( $email ) ) {
+		return new WP_Error( 'invalid_contact', 'Bitte Name der Kita, Ansprechperson und eine gültige E-Mail-Adresse angeben.', array( 'status' => 400 ) );
+	}
+
+	$post_id = wp_insert_post( array(
+		'post_type'   => 'cl_auftrag',
+		'post_title'  => 'Kita: ' . $kita . ' — ' . wp_date( 'd.m.Y H:i' ),
+		'post_status' => 'publish',
+	) );
+
+	if ( is_wp_error( $post_id ) ) {
+		return new WP_Error( 'save_failed', 'Anfrage konnte nicht gespeichert werden. Bitte nutzt stattdessen Telefon oder E-Mail.', array( 'status' => 500 ) );
+	}
+
+	update_post_meta( $post_id, 'cl_kundentyp', 'Kita' );
+	update_post_meta( $post_id, 'cl_quelle', 'kita-landingpage' );
+	update_post_meta( $post_id, 'cl_kita_name', $kita );
+	update_post_meta( $post_id, 'cl_name', $name );
+	update_post_meta( $post_id, 'cl_vorname', $name );
+	update_post_meta( $post_id, 'cl_tel', $tel );
+	update_post_meta( $post_id, 'cl_email', $email );
+	update_post_meta( $post_id, 'cl_msg', $msg );
+	update_post_meta( $post_id, 'cl_carpets', array() );
+
+	$lines = array(
+		'Neue Kita-Anfrage (Landingpage /kita/)',
+		'',
+		'Kita: ' . $kita,
+		'Ansprechperson: ' . $name,
+		'E-Mail: ' . $email,
+		'Telefon: ' . ( $tel ? $tel : '-' ),
+		'',
+		'Nachricht / Wunschtermin: ' . ( $msg ? $msg : '-' ),
+		'',
+		'Im Backend ansehen: ' . admin_url( 'post.php?post=' . $post_id . '&action=edit' ),
+	);
+	wp_mail( 'zerenmobil@googlemail.com', 'Neue Kita-Anfrage: ' . $kita, implode( "\n", $lines ), array( 'Reply-To: ' . $name . ' <' . $email . '>' ) );
+
+	$customer_lines = array(
+		'Hallo ' . $name . ',',
+		'',
+		'danke für eure Anfrage bei Care Lab. Sie ist bei uns angekommen. Euer Ansprechpartner meldet sich in der Regel innerhalb eines Werktags, um Umfang und Termin mit euch abzustimmen.',
+		'',
+		'Abholung und Reinigung sind jederzeit nach Absprache möglich. Abholung und Lieferung sind aktuell kostenlos.',
+		'',
+		'Fragen? Ruft uns an: 0172 8293606, oder antwortet einfach auf diese E-Mail.',
+		'',
+		'Viele Grüße',
+		'Care Lab',
+	);
+	wp_mail( $email, 'Eure Anfrage bei Care Lab ist angekommen', implode( "\n", $customer_lines ) );
 
 	return array( 'status' => 'ok', 'id' => $post_id );
 }
