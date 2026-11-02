@@ -770,6 +770,37 @@ header.tl-intro.tl-intro-hero.tl-intro-split{ --split-pad:clamp(20px, 5vw, 96px)
 .soon-card h3{ font-size:22px; }
 .soon-card p{ font-size:15px; color:var(--ink-soft); line-height:1.65; margin:0; font-weight:500; }
 @media (max-width:620px){ .soon-card{ border-radius:20px; padding:24px 22px; } }
+/* Wer wir sind (02.11.2026): Gruender-Karten mit kleinem Passfoto statt Grossformat, Detailzeilen mit Innenabstand + Icons (ul-Margin wurde von ".story-figure ul{margin:0}" ueberschrieben, Text klebte am Kartenrand), Einleitungstext im abgerundeten Kasten, neuer Abschnitt Ruf & Netzwerk mit Mitgliedschafts-Karten. */
+.story-figure{ border-color:var(--line); border-radius:24px; padding:28px 0 10px; }
+@media (min-width:861px){ .story{ grid-template-columns:minmax(0,0.72fr) minmax(0,1.28fr); } }
+.story-figure img.portrait{ width:96px; height:120px; aspect-ratio:auto; object-fit:cover; object-position:50% 25%; border-radius:14px; border:1px solid var(--line); margin:0 32px 20px; }
+.story-figure ul{ margin:0 32px; }
+.story-figure li{ display:grid; grid-template-columns:auto minmax(0,1fr); align-items:center; column-gap:14px; padding:14px 0; }
+.story-figure li:last-child{ border-bottom:none; }
+.story-figure li span.sec-icon{ width:32px; height:32px; color:#4D78FF; background:var(--surface); font-size:inherit; text-transform:none; letter-spacing:0; }
+.story-figure li span.sec-icon svg{ width:18px; height:18px; margin:0; }
+.story-figure li span.row-text{ display:flex; flex-direction:column; gap:3px; min-width:0; font-weight:400; text-align:left; }
+.story-figure li span.row-label{ color:var(--ink-soft); font-family:'Inter',Helvetica,Arial,sans-serif; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; font-weight:400; }
+.story-figure li span.row-value{ font-weight:700; text-align:left; font-size:14px; line-height:1.4; overflow-wrap:anywhere; }
+.story-text .lead-box{ background:var(--surface-2); border:1px solid var(--line); border-radius:24px; padding:clamp(24px,3vw,36px); margin:0 0 32px; }
+.story-text .lead-box p.lead{ margin:0; max-width:none; }
+.rep-grid{ display:grid; grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr); gap:clamp(28px,5vw,64px); align-items:start; }
+.rep-head h2{ font-size:clamp(28px,4vw,48px); margin-top:14px; }
+.rep-body p{ font-size:16px; line-height:1.75; color:var(--ink); margin:0 0 18px; max-width:62ch; }
+.rep-sectors{ list-style:none; margin:26px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:10px; }
+.rep-sectors li{ display:inline-flex; align-items:center; gap:10px; padding:5px 16px 5px 5px; border:1px solid var(--line); border-radius:9999px; font-family:'Inter',Helvetica,Arial,sans-serif; font-size:14px; font-weight:600; }
+.rep-sectors .sec-icon{ width:32px; height:32px; }
+.rep-sectors .sec-icon svg{ width:18px; height:18px; }
+.tl-page .member-label{ margin:clamp(44px,6vw,80px) 0 18px; }
+.member-grid{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(16px,2vw,24px); }
+.member-card{ background:var(--surface-2); border:1px solid var(--line); border-radius:24px; padding:clamp(22px,2.6vw,30px); display:flex; align-items:center; gap:16px; min-width:0; }
+.member-card .sec-icon{ width:44px; height:44px; background:var(--surface); }
+.member-card .sec-icon svg{ width:22px; height:22px; }
+.member-card strong{ display:block; font-family:'Inter',Helvetica,Arial,sans-serif; font-size:17px; font-weight:600; line-height:1.3; }
+.member-card .l{ display:block; margin-top:4px; font-family:'Inter',Helvetica,Arial,sans-serif; font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft); line-height:1.5; }
+@media (max-width:980px){ .member-grid{ grid-template-columns:minmax(0,1fr); } }
+@media (max-width:860px){ .rep-grid{ grid-template-columns:minmax(0,1fr); gap:20px; } }
+@media (max-width:620px){ .story-figure{ border-radius:20px; padding-top:24px; } .story-figure img.portrait{ width:84px; height:105px; margin:0 24px 18px; } .story-figure h3, .story-figure .role, .story-figure ul{ margin-left:24px; margin-right:24px; } .story-text .lead-box{ border-radius:20px; padding:22px 20px; } .member-card{ border-radius:20px; } .story-figure li span.sec-icon{ width:32px; height:32px; } .story-figure li span.sec-icon svg{ width:18px; height:18px; } }
 </style>
 <header class="tl-header">
   <div class="nav-row">
