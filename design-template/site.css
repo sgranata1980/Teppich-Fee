@@ -311,6 +311,15 @@ header.tl-intro.tl-intro-hero.tl-intro-split{ --split-pad:clamp(20px, 5vw, 96px)
 
 /* ---------- Leistungen & Pakete ---------- */
 .basetable{ padding-top:56px; }
+/* Abstand zwischen direkt aufeinanderfolgenden Preistabellen: .tl-page section (Spezifitaet 0,1,1) setzte oben UND unten je clamp(56px,9vw,168px) und ueberstimmte .basetable{padding-top}; zwei weisse Sektionen addierten sich so auf bis zu ~280px Leerraum. Jetzt nur noch ein normaler Zwischenabstand, erste/letzte Tabelle behalten den Sektionsabstand. */
+.tl-page section.basetable + section.basetable{ padding-top:clamp(40px,5vw,80px); }
+.tl-page section.basetable:has(+ section.basetable){ padding-bottom:0; }
+/* Sektions-Label mit kleinem Linien-Icon (Stil wie .kcard .icon: stroke 1.5, Marken-Blau) in dezentem runden Chip. */
+.tl-page .sec-label{ display:flex; align-items:center; gap:12px; margin:0 0 14px; }
+.sec-icon{ flex:none; width:36px; height:36px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; color:#4D78FF; background:rgba(77,120,255,.08); }
+.sec-icon svg{ width:20px; height:20px; display:block; }
+:root[data-theme="dark"] .sec-icon{ background:rgba(77,120,255,.16); }
+@media (max-width:620px){ .tl-page .sec-label{ gap:10px; } .sec-icon{ width:32px; height:32px; } .sec-icon svg{ width:18px; height:18px; } }
 .basetable .table-scroll{ width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; position:relative; }
 /* Preistabellen als umrandete, abgerundete Karte (Apple-"Modelle vergleichen"-Stil): eine zusammenhaengende Box pro Tabelle, dezente Trennlinien innen, grosszuegiges Padding. Radius 24px wie .kcard/.step/.value. overflow-x:auto der .table-scroll schneidet die Ecken mit ab. */
 .basetable .price-card{ background:var(--surface); border:1px solid var(--line); border-radius:24px; margin-top:8px; }
