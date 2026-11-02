@@ -10,37 +10,66 @@
   </div>
 </header>
 
-<section class="segments">
+<section class="segments betriebe">
   <div class="container">
     <div class="segments-head">
       <p class="mono" style="color:var(--ink-soft)">Für wen</p>
-      <h2>Fünf Betriebstypen, fünf unterschiedliche Probleme.</h2>
+      <h2>Acht Betriebstypen, acht unterschiedliche Probleme.</h2>
       <p>Kein Pauschalpaket: jede Zusammenarbeit beginnt mit einer Einschätzung vor Ort, nicht mit einer Preisliste.</p>
     </div>
     <div class="seg-grid">
       <div class="seg" id="hotels">
+        <div class="seg-img"><img src="__BETRIEB_HOTELS__" alt="Hotelflur mit Teppichläufer" width="600" height="400" loading="lazy" decoding="async"></div>
         <h3>Hotels</h3>
         <p>Laufflächen mit hoher Frequenz, sichtbare Abnutzung im Eingangs- und Flurbereich, Reinigung, die den Betrieb nicht stört.</p>
       </div>
       <div class="seg" id="kitas">
+        <div class="seg-img"><img src="__BETRIEB_KITAS__" alt="Spielteppich in einem Kita-Gruppenraum" width="600" height="400" loading="lazy" decoding="async"></div>
         <h3>Kitas</h3>
         <p>Häufige Verschmutzung, Hygieneanspruch, Materialien, die kindersicher bleiben müssen, auch nach der Behandlung.</p>
       </div>
       <div class="seg" id="buros">
+        <div class="seg-img"><img src="__BETRIEB_BUEROS__" alt="Büro mit Teppichfliesen" width="600" height="400" loading="lazy" decoding="async"></div>
         <h3>Büros</h3>
         <p>Teppichfliesen und Auslegware im laufenden Betrieb, planbare Termine außerhalb der Kernarbeitszeit.</p>
       </div>
       <div class="seg" id="hausverwaltungen">
+        <div class="seg-img"><img src="__BETRIEB_HAUSVERWALTUNGEN__" alt="Treppenhaus eines Mehrfamilienhauses mit Teppichläufer" width="600" height="400" loading="lazy" decoding="async"></div>
         <h3>Hausverwaltungen</h3>
         <p>Mehrere Objekte, ein Ansprechpartner, eine Rechnung statt vieler Einzelaufträge mit unterschiedlichen Anbietern.</p>
       </div>
       <div class="seg" id="gastronomie">
+        <div class="seg-img"><img src="__BETRIEB_GASTRONOMIE__" alt="Gastraum eines Restaurants mit Teppich" width="600" height="400" loading="lazy" decoding="async"></div>
         <h3>Gastronomie</h3>
         <p>Teppiche und Auslegware mit Lauf-, Fett- und Fleckbelastung, dazu oft Hygieneanspruch durch Lebensmittelbetrieb.</p>
+      </div>
+      <div class="seg" id="pflegeeinrichtungen">
+        <div class="seg-img"><img src="__BETRIEB_PFLEGE__" alt="Gemeinschaftsraum einer Senioreneinrichtung mit Teppich" width="600" height="400" loading="lazy" decoding="async"></div>
+        <h3>Pflegeeinrichtungen</h3>
+        <p>Flure und Gemeinschaftsräume im Dauerbetrieb, festsitzende Gerüche, Teppiche, die danach flach und stolperfrei liegen müssen.</p>
+      </div>
+      <div class="seg" id="arztpraxen">
+        <div class="seg-img"><img src="__BETRIEB_ARZTPRAXEN__" alt="Wartezimmer einer Arztpraxis mit Teppich" width="600" height="400" loading="lazy" decoding="async"></div>
+        <h3>Arztpraxen</h3>
+        <p>Wartezimmer mit ständigem Publikumsverkehr, hoher Hygieneanspruch, Termine außerhalb der Sprechstunden.</p>
+      </div>
+      <div class="seg" id="notare">
+        <div class="seg-img"><img src="__BETRIEB_NOTARE__" alt="Besprechungsraum einer Notarkanzlei mit Orientteppich" width="600" height="400" loading="lazy" decoding="async"></div>
+        <h3>Notarkanzleien</h3>
+        <p>Repräsentative Besprechungsräume, oft hochwertige Woll- oder Orientteppiche, Reinigung, die keinen Beurkundungstermin verschiebt.</p>
       </div>
     </div>
   </div>
 </section>
+<style>
+/* Unternehmen, "Für wen" (02.11.2026): kleines Bild pro Betriebstyp. Bis echte Fotos da sind, zeigt die Fläche ein dezentes, etwas dunkleres Grau als der graue Sektionsgrund; kaputte Bilder werden per ::after ebenfalls grau überdeckt. */
+.betriebe .seg{ border-top:0; padding-top:0; min-width:0; }
+.betriebe .seg-img{ position:relative; aspect-ratio:3/2; border-radius:16px; overflow:hidden; background:#E1E1E1; background:color-mix(in srgb, var(--ink) 6%, var(--surface-2)); margin:0 0 20px; }
+.betriebe .seg-img img{ position:relative; display:block; width:100%; height:100%; object-fit:cover; color:transparent; font-size:0; }
+.betriebe .seg-img img::after{ content:""; position:absolute; inset:0; background:#E1E1E1; background:color-mix(in srgb, var(--ink) 6%, var(--surface-2)); }
+.betriebe .seg h3{ border-top:2px solid var(--ink); padding-top:20px; hyphens:auto; overflow-wrap:break-word; }
+@media (max-width:520px){ .betriebe .seg-img{ aspect-ratio:16/9; border-radius:14px; } }
+</style>
 
 <section class="b2b-process">
   <div class="container">

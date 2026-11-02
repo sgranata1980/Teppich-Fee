@@ -278,5 +278,37 @@
   "journal_img_fachkraefte": [
     615,
     "https://teppichlabor.de/wp-content/uploads/2026/10/journal-abholservice-1024x578.jpg"
+  ],
+  "betrieb_hotels": [
+    null,
+    "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+  ],
+  "betrieb_kitas": [
+    null,
+    "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+  ],
+  "betrieb_bueros": [
+    null,
+    "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+  ],
+  "betrieb_hausverwaltungen": [
+    null,
+    "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+  ],
+  "betrieb_gastronomie": [
+    null,
+    "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+  ],
+  "betrieb_pflege": [
+    null,
+    "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+  ],
+  "betrieb_arztpraxen": [
+    null,
+    "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+  ],
+  "betrieb_notare": [
+    null,
+    "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
   ]
 }
