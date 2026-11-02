@@ -8,7 +8,7 @@ Nutzung (Update, Seite existiert schon):
 Nutzung (neu anlegen):
     WP_BASE=... WP_USER=... WP_APP_PASSWORD="..." python3 push_page.py <slug> --create "Titel" <ziel-slug>
 """
-import os, sys, requests
+import os, re, sys, json, requests
 
 BASE = os.environ["WP_BASE"].rstrip("/") + "/wp-json/wp/v2"
 AUTH = (os.environ["WP_USER"], os.environ["WP_APP_PASSWORD"])
@@ -20,6 +20,17 @@ def wrap_html_block(inner):
 
 slug = sys.argv[1]
 html = open(os.path.join(ROOT, "pages", slug + ".html")).read()
+
+# __TOKEN__-Platzhalter aus media-manifest.json auflösen (nur beim Senden,
+# die Quelldatei bleibt unverändert). Schlüssel = Token in Kleinbuchstaben.
+manifest = json.load(open(os.path.join(ROOT, "media-manifest.json")))
+def _resolve(m):
+    entry = manifest.get(m.group(1).lower())
+    if entry is None:
+        sys.exit(f"Token {m.group(0)} fehlt in media-manifest.json")
+    return entry[1] if isinstance(entry, list) else entry
+html = re.sub(r"__([A-Z][A-Z0-9_]*[A-Z0-9])__", _resolve, html)
+
 content = wrap_html_block(html)
 
 if len(sys.argv) > 2 and sys.argv[2] == "--create":
