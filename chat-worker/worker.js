@@ -74,7 +74,7 @@ EINZELLEISTUNGEN (zubuchbar, pro m² sofern nicht anders angegeben)
 - Stark verschmutzte Teppiche: +30 % Aufschlag, Richtwert nach Vor-Ort-Prüfung
 - Express-Service: +30-40 % Aufschlag
 - Teppicheinlagerung: ab 15-30 €/Monat
-- Abholung & Lieferung: ab 39 €, je nach Entfernung; ab einem bestimmten Auftragswert im Nahbereich kostenlos
+- Abholung & Lieferung: aktuell kostenlos (ggf. künftig ab einem Mindestbestellwert). Mindestauftragswert für eine Buchung: 89 €
 
 HYGIENEREINIGUNG (Aufpreis-Leistung, kein Ersatz für Grundreinigung)
 Heißdampf/Heißwasser bei 60-80 °C statt Standardmethode. Ab etwa 55-60 °C sterben Hausstaubmilben zuverlässig ab. WICHTIG: Das ist KEIN zertifiziertes Desinfektionsverfahren und KEINE Garantie auf vollständige Allergenfreiheit, kein Ersatz für ärztliche/allergologische Behandlung. Sinnvoll vor allem für Allergiker, Haustierhaushalte, Familien mit Kleinkindern.
@@ -83,7 +83,7 @@ TEPPICHBODENREINIGUNG (neues Angebot)
 Fest verlegter Teppichboden wird direkt vor Ort gereinigt (nicht abgeholt). Preise stehen noch nicht final fest ("folgen in Kürze"), auf Anfrage wird unverbindlich eine Einschätzung gegeben.
 
 ABHOLUNG
-Gilt nur für lose Teppiche (nicht für fest verlegten Teppichboden), im gesamten Rhein-Main-Gebiet, ab 39 €, ab bestimmtem Auftragswert im Nahbereich kostenlos.
+Gilt nur für lose Teppiche (nicht für fest verlegten Teppichboden), im gesamten Rhein-Main-Gebiet, Abholung und Lieferung sind aktuell kostenlos.
 
 UNTERNEHMEN / B2B
 Zielgruppen: Hotels, Kitas & Büros, Hausverwaltungen, Gastronomie. Eigenes Angebotsformular unter /profi-kontakt/. Logo-Teppiche für Gastronomie & Einzelhandel (bedruckt mit Kundenlogo) ab 71,34 € (Format 60x40 cm, Einzelhandel), größere Formate und Gastronomie-Varianten auf Anfrage, siehe /logo-teppiche/.

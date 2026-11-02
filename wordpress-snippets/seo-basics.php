@@ -18,7 +18,7 @@ function cl_meta_descriptions() {
 		'app'                                               => 'Care Lab entwickelt eine App zur Einschätzung des Verschmutzungsgrads von Teppichen per Foto. Aktueller Entwicklungsstand.',
 		'innovation'                                       => 'Woran Care Lab technisch arbeitet: KI-gestützte Reinigung, Materialforschung und neue Pflegeprodukte für Teppiche.',
 		'journal'                                          => 'Das Journal von Care Lab: Artikel über Teppichpflege, Hygienereinigung, den Ablauf der Abholung und Teppichreinigung für Unternehmen.',
-		'abholung'                                         => 'Teppich abholen lassen statt selbst transportieren: Care Lab holt und liefert im gesamten Rhein-Main-Gebiet, ab 39 €.',
+		'abholung'                                         => 'Teppich abholen lassen statt selbst transportieren: Care Lab holt und liefert im gesamten Rhein-Main-Gebiet, Abholung und Lieferung aktuell kostenlos.',
 		'impressum'                                        => 'Impressum von Care Lab (Teppichlabor, Inh. Cem Zeren), Kelkheim. Anbieterkennzeichnung gemäß § 5 TMG.',
 		'datenschutz'                                      => 'Datenschutzerklärung von Care Lab: wie personenbezogene Daten bei Anfragen und beim Website-Besuch verarbeitet werden.',
 		'faq'                                              => 'Häufige Fragen zur Teppichreinigung bei Care Lab: Ablauf, Preise, Material, Hygienereinigung und Einzugsgebiet.',
