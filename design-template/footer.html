@@ -304,38 +304,33 @@
   }
 
   /* Vanta.NET-Netz als Hintergrund dunkler Sektionen. Mehrere Instanzen moeglich, jede Sektion
-     max. einmal (el.__vantaNet). Start erst, wenn die Sektion sichtbar wird; ausserhalb des
-     Viewports wird die Render-Schleife angehalten (spart GPU/Akku). Bei "Bewegung reduzieren"
-     wird ein stehendes Netz ohne Animation und ohne Mausreaktion gezeigt statt gar nichts. */
+     max. einmal (el.__vantaNet). Start erst, wenn die Sektion sichtbar wird; danach laeuft Vanta
+     durchgehend (kein eigenes Pause/Resume mehr: Vanta rendert ausserhalb des Viewports ohnehin
+     nicht, siehe isOnScreen() in Vanta). Nur bei "Bewegung reduzieren" wird die Schleife nach dem
+     ersten Bild angehalten: stehendes Netz ohne Animation und ohne Mausreaktion statt gar nichts. */
   function initVantaNet(el, opts) {
     if (!el || el.__vantaNet || !window.VANTA || !window.VANTA.NET || !('IntersectionObserver' in window)) return;
     el.__vantaNet = true;
     var effect = null;
-    var stop = function(){ if (effect && effect.req) { cancelAnimationFrame(effect.req); effect.req = null; } };
-    var start = function(){ if (effect && !effect.req && typeof effect.animationLoop === 'function') effect.req = requestAnimationFrame(effect.animationLoop); };
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
-        if (entry.isIntersecting) {
-          if (!effect) {
-            try {
-              effect = VANTA.NET(Object.assign({
-                el: el,
-                mouseControls: !reduceMotion,
-                touchControls: !reduceMotion,
-                gyroControls: false,
-                minHeight: 200.00,
-                minWidth: 200.00,
-                scale: 1.0,
-                scaleMobile: 1.0
-              }, opts));
-            } catch (e) { effect = null; return; }
-            if (reduceMotion) setTimeout(stop, 400);
-          } else if (!reduceMotion) {
-            start();
-          }
-        } else if (!reduceMotion) {
-          stop();
-        }
+        if (!entry.isIntersecting || effect) return;
+        io.disconnect();
+        try {
+          effect = VANTA.NET(Object.assign({
+            el: el,
+            mouseControls: !reduceMotion,
+            touchControls: !reduceMotion,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.0,
+            scaleMobile: 1.0
+          }, opts));
+        } catch (e) { effect = null; return; }
+        if (reduceMotion) setTimeout(function(){
+          if (effect && effect.req) { cancelAnimationFrame(effect.req); effect.req = null; }
+        }, 400);
       });
     }, { threshold: 0.05 });
     io.observe(el);
