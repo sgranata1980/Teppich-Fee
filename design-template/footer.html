@@ -193,6 +193,16 @@
     tryPlay(v);
   });
   if (reduce) return;
+  /* Wie bei den Startseiten-Kacheln (.showcase-tile video, siehe unten): play() zusaetzlich per IntersectionObserver anstossen, sobald das Video zu 25 % sichtbar ist, und ausserhalb des Viewports pausieren. Bewusst hier im fruehen Block statt im Kachel-Observer nach den CDN-Skripten, damit der Hero nicht auf deren Laden wartet. */
+  if ('IntersectionObserver' in window) {
+    var ioHero = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) { tryPlay(entry.target); }
+        else { entry.target.pause(); }
+      });
+    }, { threshold: 0.25 });
+    vids.forEach(function(v){ ioHero.observe(v); });
+  }
   var kick = function(){
     vids.forEach(tryPlay);
     ['pointerdown', 'keydown', 'touchend'].forEach(function(t){ document.removeEventListener(t, kick, true); });
