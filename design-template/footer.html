@@ -303,34 +303,57 @@
     setActiveS(0);
   }
 
+  /* Vanta.NET-Netz als Hintergrund dunkler Sektionen. Mehrere Instanzen moeglich, jede Sektion
+     max. einmal (el.__vantaNet). Start erst, wenn die Sektion sichtbar wird; ausserhalb des
+     Viewports wird die Render-Schleife angehalten (spart GPU/Akku). Bei "Bewegung reduzieren"
+     wird ein stehendes Netz ohne Animation und ohne Mausreaktion gezeigt statt gar nichts. */
   function initVantaNet(el, opts) {
-    if (!el || !window.VANTA || !window.VANTA.NET) return;
+    if (!el || el.__vantaNet || !window.VANTA || !window.VANTA.NET || !('IntersectionObserver' in window)) return;
+    el.__vantaNet = true;
     var effect = null;
+    var stop = function(){ if (effect && effect.req) { cancelAnimationFrame(effect.req); effect.req = null; } };
+    var start = function(){ if (effect && !effect.req && typeof effect.animationLoop === 'function') effect.req = requestAnimationFrame(effect.animationLoop); };
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
-        if (entry.isIntersecting && !effect) {
-          effect = VANTA.NET(Object.assign({
-            el: el,
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
-            scale: 1.0,
-            scaleMobile: 1.0
-          }, opts));
+        if (entry.isIntersecting) {
+          if (!effect) {
+            try {
+              effect = VANTA.NET(Object.assign({
+                el: el,
+                mouseControls: !reduceMotion,
+                touchControls: !reduceMotion,
+                gyroControls: false,
+                minHeight: 200.00,
+                minWidth: 200.00,
+                scale: 1.0,
+                scaleMobile: 1.0
+              }, opts));
+            } catch (e) { effect = null; return; }
+            if (reduceMotion) setTimeout(stop, 400);
+          } else if (!reduceMotion) {
+            start();
+          }
+        } else if (!reduceMotion) {
+          stop();
         }
       });
     }, { threshold: 0.05 });
     io.observe(el);
+    if (reduceMotion) {
+      window.addEventListener('resize', function(){
+        requestAnimationFrame(function(){
+          if (effect && effect.renderer && effect.scene && effect.camera) effect.renderer.render(effect.scene, effect.camera);
+        });
+      });
+    }
   }
 
-  if (!reduceMotion) {
-    initVantaNet(document.getElementById('vanta-partner'), {
-      color: 0xf5f5f3, backgroundColor: 0x0b0f14,
-      points: 8.0, maxDistance: 22.0, spacing: 20.0, showDots: false
-    });
-  }
+  var vantaNetLook = {
+    color: 0xf5f5f3, backgroundColor: 0x0b0f14,
+    points: 8.0, maxDistance: 22.0, spacing: 20.0, showDots: false
+  };
+  initVantaNet(document.getElementById('vanta-partner'), vantaNetLook);
+  document.querySelectorAll('.vanta-bg').forEach(function(el){ initVantaNet(el, vantaNetLook); });
 
   var tileVideos = document.querySelectorAll('.showcase-tile video, .wissen-card .card-media video:not(.has-audio)');
   if (tileVideos.length) {

@@ -155,6 +155,11 @@ body.admin-bar .tl-header{ top:var(--wp-admin--admin-bar--height,32px); }
 .tl-page .legal p{ font-size:15px; line-height:1.75; max-width:70ch; margin:0 0 14px; }
 .tl-page .legal ul{ margin:0 0 22px; padding-left:20px; font-size:15px; line-height:1.85; max-width:70ch; }
 .tl-page .legal .note{ font-size:12px; color:rgba(245,245,243,0.5); border-top:1px solid rgba(245,245,243,.2); padding-top:16px; margin-top:20px; }
+/* Vanta.NET-Hintergrund fuer weitere dunkle Sektionen, opt-in per Klasse .vanta-bg (z.B. "Ehrlich statt vollmundig" auf Leistungen & Preise). Gleicher Look wie der Partner-Streifen der Startseite (Canvas 50 % Deckkraft unter dem Text). Der dunkle Sektionshintergrund bleibt als Fallback, falls WebGL/Three.js nicht laedt. Vanta legt leere Text-Spans als Kinder an, die werden ausgeblendet. */
+.vanta-bg{ position:relative; overflow:hidden; isolation:isolate; }
+.vanta-bg > canvas{ position:absolute !important; inset:0; width:100% !important; height:100% !important; z-index:0; opacity:.5; pointer-events:none; }
+.vanta-bg > span{ display:none; }
+.vanta-bg > .container{ position:relative; z-index:1; }
 .tl-contact-photo{ width:100%; aspect-ratio:21/9; background-size:cover; background-position:center; }
 @media (max-width:640px){ .tl-contact-photo{ aspect-ratio:4/3; } }
 .tl-contact-band{ background:var(--ink); padding:clamp(40px,6vw,72px) 0; border-bottom:1px solid var(--line); }
