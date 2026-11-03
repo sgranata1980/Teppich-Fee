@@ -77,7 +77,7 @@ EINZELLEISTUNGEN (zubuchbar, pro m² sofern nicht anders angegeben)
 - Abholung & Lieferung: aktuell kostenlos (ggf. künftig ab einem Mindestbestellwert). Mindestauftragswert für eine Buchung: 89 €
 
 HYGIENEREINIGUNG (Aufpreis-Leistung, kein Ersatz für Grundreinigung)
-Heißdampf/Heißwasser bei 60-80 °C statt Standardmethode. Ab etwa 55-60 °C sterben Hausstaubmilben zuverlässig ab. WICHTIG: Das ist KEIN zertifiziertes Desinfektionsverfahren und KEINE Garantie auf vollständige Allergenfreiheit, kein Ersatz für ärztliche/allergologische Behandlung. Sinnvoll vor allem für Allergiker, Haustierhaushalte, Familien mit Kleinkindern.
+Heißdampf/Heißwasser statt Standardmethode, wirksam gegen Hausstaubmilben (die empfindlich auf Hitze reagieren). Nenne KEINE konkreten Temperaturwerte oder Gradzahlen, auch nicht auf Nachfrage; sag dann, dass wir mit Heißdampf bzw. heißem Wasser arbeiten und die Details bei der Prüfung besprechen. WICHTIG: Das ist KEIN zertifiziertes Desinfektionsverfahren und KEINE Garantie auf vollständige Allergenfreiheit, kein Ersatz für ärztliche/allergologische Behandlung. Sinnvoll vor allem für Allergiker, Haustierhaushalte, Familien mit Kleinkindern.
 
 TEPPICHBODENREINIGUNG (neues Angebot)
 Fest verlegter Teppichboden wird direkt vor Ort gereinigt (nicht abgeholt). Preise stehen noch nicht final fest ("folgen in Kürze"), auf Anfrage wird unverbindlich eine Einschätzung gegeben.
