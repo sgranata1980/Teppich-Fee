@@ -322,5 +322,21 @@
   "hero_textilreinigung": [
     710,
     "/wp-content/uploads/2026/11/hero-textilreinigung-stoffe.jpg"
+  ],
+  "textil_gardinen": [
+    722,
+    "/wp-content/uploads/2026/11/textil-gardinen-vorhaenge-leinen.jpg"
+  ],
+  "textil_tischwaesche": [
+    723,
+    "/wp-content/uploads/2026/11/textil-tischwaesche-leinen-servietten.jpg"
+  ],
+  "textil_stoffbezuege": [
+    724,
+    "/wp-content/uploads/2026/11/textil-stoffbezuege-kissen-sofa.jpg"
+  ],
+  "textil_berufsbekleidung": [
+    725,
+    "/wp-content/uploads/2026/11/textil-berufsbekleidung-kochjacken-schuerzen.jpg"
   ]
 }
