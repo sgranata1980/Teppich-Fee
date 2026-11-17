@@ -23,10 +23,11 @@
         <h3>Hotels</h3>
         <p>Laufflächen mit hoher Frequenz, sichtbare Abnutzung im Eingangs- und Flurbereich, Reinigung, die den Betrieb nicht stört.</p>
       </div>
-      <div class="seg" id="kitas">
-        <div class="seg-img"><img src="__BETRIEB_KITAS__" alt="Spielteppich in einem Kita-Gruppenraum" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="seg seg-feature" id="kitas">
+        <a class="seg-img" href="/kita/" tabindex="-1" aria-hidden="true"><img src="__BETRIEB_KITAS__" alt="" width="600" height="400" loading="lazy" decoding="async"></a>
         <h3>Kitas</h3>
-        <p>Häufige Verschmutzung, Hygieneanspruch, Materialien, die kindersicher bleiben müssen, auch nach der Behandlung.</p>
+        <p>Häufige Verschmutzung, Hygieneanspruch, Materialien, die kindersicher bleiben müssen, auch nach der Behandlung. Dafür gibt es ein eigenes Angebot mit Anfrageformular.</p>
+        <a class="btn primary seg-cta" href="/kita/">Mehr erfahren &amp; Termin anfragen →</a>
       </div>
       <div class="seg" id="buros">
         <div class="seg-img"><img src="__BETRIEB_BUEROS__" alt="Büro mit Teppichfliesen" width="600" height="400" loading="lazy" decoding="async"></div>
@@ -68,6 +69,9 @@
 .betriebe .seg-img img{ position:relative; display:block; width:100%; height:100%; object-fit:cover; color:transparent; font-size:0; }
 .betriebe .seg-img img::after{ content:""; position:absolute; inset:0; background:#E1E1E1; background:color-mix(in srgb, var(--ink) 6%, var(--surface-2)); }
 .betriebe .seg h3{ border-top:2px solid var(--ink); padding-top:20px; hyphens:auto; overflow-wrap:break-word; }
+/* Kitas (17.11.2026): einzige Karte mit eigenem Angebot, verlinkt auf /kita/ mit Anfrageformular. */
+.betriebe a.seg-img{ display:block; }
+.betriebe .seg-feature .seg-cta{ display:inline-block; margin-top:6px; padding:12px 20px; border-radius:4px; font-size:14px; font-weight:600; line-height:1.3; text-decoration:none; max-width:100%; white-space:normal; }
 @media (max-width:520px){ .betriebe .seg-img{ aspect-ratio:16/9; border-radius:14px; } }
 </style>
 
