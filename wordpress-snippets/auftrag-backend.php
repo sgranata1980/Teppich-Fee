@@ -126,6 +126,10 @@ function cl_auftrag_details_box( $post ) {
 		<?php if ( $kita_name ) : ?>
 		<tr><th>Kita</th><td><?php echo esc_html( $kita_name ); ?> (Anfrage über /kita/)</td></tr>
 		<?php endif; ?>
+		<?php $betrieb_name = get_post_meta( $post->ID, 'cl_betrieb_name', true ); ?>
+		<?php if ( $betrieb_name ) : ?>
+		<tr><th>Betrieb</th><td><?php echo esc_html( $betrieb_name ); ?> (Partneranfrage Textilreinigung über /partner-textilreinigung/)</td></tr>
+		<?php endif; ?>
 		<tr><th>Name</th><td><?php echo esc_html( $name ); ?></td></tr>
 		<tr><th>Telefon</th><td><?php echo esc_html( $tel ); ?></td></tr>
 		<tr><th>E-Mail</th><td><?php echo esc_html( $email ); ?></td></tr>
@@ -251,6 +255,11 @@ function cl_handle_anfrage_request( WP_REST_Request $request ) {
 	// Kita-Landingpage (/kita/) schickt eine schlanke Anfrage ohne Teppichliste.
 	if ( 'kita' === (string) $request->get_param( 'anfrage_typ' ) ) {
 		return cl_handle_kita_anfrage( $request );
+	}
+
+	// Partnerprogramm (/partner-textilreinigung/): Textilreinigung fragt White-Label-Partnerschaft an.
+	if ( 'textilreiniger_partner' === (string) $request->get_param( 'anfrage_typ' ) ) {
+		return cl_handle_textilreiniger_partner_anfrage( $request );
 	}
 
 	$kundentyp = sanitize_text_field( (string) $request->get_param( 'kundentyp' ) );
@@ -464,6 +473,74 @@ function cl_handle_kita_anfrage( WP_REST_Request $request ) {
 		'Care Lab',
 	);
 	wp_mail( $email, 'Eure Anfrage bei Care Lab ist angekommen', implode( "\n", $customer_lines ) );
+
+	return array( 'status' => 'ok', 'id' => $post_id );
+}
+
+/**
+ * Partneranfrage einer Textilreinigung von /partner-textilreinigung/ (seit 18.11.2026).
+ * White-Label-Modell: Care Lab reinigt die Teppiche der Kunden des
+ * Textilreinigers unter dessen Marke. Gleicher Endpoint/Post Type wie Kita,
+ * ohne Teppichliste. Felder: Name des Betriebs, Ansprechperson, E-Mail,
+ * Telefon (optional), Nachricht/Betriebsgröße. Konditionen werden bewusst
+ * nicht in E-Mails genannt, nur im persönlichen Gespräch.
+ */
+function cl_handle_textilreiniger_partner_anfrage( WP_REST_Request $request ) {
+	$betrieb = sanitize_text_field( (string) $request->get_param( 'betrieb_name' ) );
+	$name    = sanitize_text_field( (string) $request->get_param( 'name' ) );
+	$tel     = sanitize_text_field( (string) $request->get_param( 'tel' ) );
+	$email   = sanitize_email( (string) $request->get_param( 'email' ) );
+	$msg     = sanitize_textarea_field( (string) $request->get_param( 'msg' ) );
+
+	if ( '' === $betrieb || '' === $name || ! is_email( $email ) ) {
+		return new WP_Error( 'invalid_contact', 'Bitte Name des Betriebs, Ansprechperson und eine gültige E-Mail-Adresse angeben.', array( 'status' => 400 ) );
+	}
+
+	$post_id = wp_insert_post( array(
+		'post_type'   => 'cl_auftrag',
+		'post_title'  => 'Partner Textilreinigung: ' . $betrieb . ' — ' . wp_date( 'd.m.Y H:i' ),
+		'post_status' => 'publish',
+	) );
+
+	if ( is_wp_error( $post_id ) ) {
+		return new WP_Error( 'save_failed', 'Anfrage konnte nicht gespeichert werden. Bitte nutzen Sie stattdessen Telefon oder E-Mail.', array( 'status' => 500 ) );
+	}
+
+	update_post_meta( $post_id, 'cl_kundentyp', 'Textilreinigung (Partner)' );
+	update_post_meta( $post_id, 'cl_quelle', 'partner-textilreinigung' );
+	update_post_meta( $post_id, 'cl_betrieb_name', $betrieb );
+	update_post_meta( $post_id, 'cl_name', $name );
+	update_post_meta( $post_id, 'cl_vorname', $name );
+	update_post_meta( $post_id, 'cl_tel', $tel );
+	update_post_meta( $post_id, 'cl_email', $email );
+	update_post_meta( $post_id, 'cl_msg', $msg );
+	update_post_meta( $post_id, 'cl_carpets', array() );
+
+	$lines = array(
+		'Neue Partneranfrage einer Textilreinigung (/partner-textilreinigung/)',
+		'',
+		'Betrieb: ' . $betrieb,
+		'Ansprechperson: ' . $name,
+		'E-Mail: ' . $email,
+		'Telefon: ' . ( $tel ? $tel : '-' ),
+		'',
+		'Nachricht / Betriebsgröße: ' . ( $msg ? $msg : '-' ),
+		'',
+		'Im Backend ansehen: ' . admin_url( 'post.php?post=' . $post_id . '&action=edit' ),
+	);
+	wp_mail( 'zerenmobil@googlemail.com', 'Neue Partneranfrage Textilreinigung: ' . $betrieb, implode( "\n", $lines ), array( 'Reply-To: ' . $name . ' <' . $email . '>' ) );
+
+	$customer_lines = array(
+		'Guten Tag ' . $name . ',',
+		'',
+		'vielen Dank für Ihr Interesse an einer Partnerschaft mit Care Lab. Ihre Anfrage ist bei uns angekommen. Wir melden uns in der Regel innerhalb eines Werktags, um die Zusammenarbeit und die Konditionen persönlich mit Ihnen zu besprechen.',
+		'',
+		'Fragen vorab? Rufen Sie uns an: 0172 8293606, oder antworten Sie einfach auf diese E-Mail.',
+		'',
+		'Viele Grüße',
+		'Care Lab',
+	);
+	wp_mail( $email, 'Ihre Partneranfrage bei Care Lab ist angekommen', implode( "\n", $customer_lines ) );
 
 	return array( 'status' => 'ok', 'id' => $post_id );
 }

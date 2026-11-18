@@ -18,6 +18,10 @@ function cl_redirect_map() {
 	return array(
 		// 02.11.2026: FAQ in die Fleckenlexikon-Seite integriert (Seite 155 auf Entwurf).
 		'faq' => '/fleckenlexikon/#haeufige-fragen',
+		// 18.11.2026: /textilreinigung/ war ein Missverstaendnis (Care Lab bietet keine
+		// eigene Textilreinigung an). Gemeint war das White-Label-Partnerprogramm fuer
+		// Textilreinigungen; Seite 702 auf Entwurf.
+		'textilreinigung' => '/partner-textilreinigung/',
 	);
 }
 
